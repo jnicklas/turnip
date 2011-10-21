@@ -1,0 +1,10 @@
+require "gherkin"
+require "gherkin/formatter/tag_count_formatter"
+
+require "carrot/version"
+require "carrot/loader"
+require "carrot/builder"
+require "carrot/run"
+require "carrot/steps"
+require "carrot/dsl"
+require "carrot/rspec"
