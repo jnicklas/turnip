@@ -63,4 +63,17 @@ step "there is a monster" do
 end
 ```
 
-Note that unlike Cucumber, Turnip does not support regexps in step definitions.
+Note that unlike Cucumber, Turnip does not support regexps in step definitions. You can however use placeholders in your step definitions, like this:
+
+``` ruby
+step "there is a monster called :name" do |name|
+  @monster = Monster.new(name)
+end
+```
+
+You can now put values in this placeholder, either quoted or not:
+
+``` cucumber
+Given there is a monster called Jonas
+And there is a monster called "Jonas Nicklas"
+```

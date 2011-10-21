@@ -19,3 +19,15 @@ end
 
 step "this is ambiguous" do
 end
+
+step "there is a monster called :name" do |name|
+  @monster_name = name
+end
+
+step 'it should be called "John Smith"' do
+  @monster_name.should == "John Smith"
+end
+
+step 'it should be called "John"' do
+  @monster_name.should == "John"
+end
