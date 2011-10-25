@@ -31,3 +31,23 @@ end
 step 'it should be called "John"' do
   @monster_name.should == "John"
 end
+
+step "there are :count monkeys with :color hair" do |count, color|
+  @monkeys = Array.new(count) { color }
+end
+
+step "there should be 3 monkeys with blue hair" do
+  @monkeys.should == [:blue, :blue, :blue]
+end
+
+placeholder :count do
+  match /\d+/ do |count|
+    count.to_i
+  end
+end
+
+placeholder :color do
+  match /blue|green|red/ do |color|
+    color.to_sym
+  end
+end

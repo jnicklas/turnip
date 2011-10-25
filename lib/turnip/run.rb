@@ -6,18 +6,18 @@ module Turnip
     parser.parse(content, nil, 0)
 
     builder.features.each do |feature|
-      describe feature.name do
+      describe feature.name, feature.metadata_hash do
         feature.backgrounds.each do |background|
           before do
             background.steps.each do |step|
-              Turnip::Steps.execute_step(self, step.name)
+              Turnip::StepDefinition.execute(self, step.name)
             end
           end
         end
         feature.scenarios.each do |scenario|
           it scenario.name, scenario.metadata_hash do
             scenario.steps.each do |step|
-              Turnip::Steps.execute_step(self, step.name)
+              Turnip::StepDefinition.execute(self, step.name)
             end
           end
         end

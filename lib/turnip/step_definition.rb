@@ -1,8 +1,36 @@
 module Turnip
   class StepDefinition
     class Match < Struct.new(:params, :block); end
+    class Pending < StandardError; end
+    class Ambiguous < StandardError; end
 
     attr_reader :expression, :block
+
+    class << self
+      def execute(context, description)
+        match = find(description)
+        context.instance_exec(*match.params, &match.block)
+      rescue Pending
+        context.pending "the step '#{description}' is not implemented"
+      end
+
+      def add(expression, &block)
+        steps << StepDefinition.new(expression, &block)
+      end
+
+      def find(description)
+        found = steps.map do |step|
+          step.match(description)
+        end.compact
+        raise Pending, description if found.length == 0
+        raise Ambiguous, description if found.length > 1
+        found[0]
+      end
+
+      def steps
+        @steps ||= []
+      end
+    end
 
     def initialize(expression, &block)
       @expression = expression
@@ -14,9 +42,13 @@ module Turnip
     end
 
     def match(description)
-      result = description.scan(regexp)
-      unless result.empty?
-        Match.new([result.first].flatten.compact, block)
+      result = description.match(regexp)
+      if result
+        params = result.captures
+        result.names.each_with_index do |name, index|
+          params[index] = Turnip::Placeholder.apply(name.to_sym, params[index])
+        end
+        Match.new(params, block)
       end
     end
 
@@ -24,8 +56,8 @@ module Turnip
 
     def compile_regexp
       regexp = Regexp.escape(expression)
-      regexp = expression.gsub(/:[\w]+/) do |match|
-        %((?:"([^"]+)"|([a-zA-Z0-9_-]+)))
+      regexp = expression.gsub(/:([\w]+)/) do |_|
+        "(?<#{$1}>#{Placeholder.resolve($1.to_sym)})"
       end
       Regexp.new("^#{regexp}$")
     end
