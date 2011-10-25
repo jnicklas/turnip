@@ -132,8 +132,8 @@ placeholder :monster do
 end
 ```
 
-These regular expressions must not use anchors, e.g. ^ or $. They may not
-contain named capture groups, e.g. (?<color>blue|green).
+These regular expressions must not use anchors, e.g. `^` or `$`. They may not
+contain named capture groups, e.g. `(?<color>blue|green)`.
 
 ## Using with Capybara
 
