@@ -9,3 +9,11 @@ require "turnip/steps"
 require "turnip/step_definition"
 require "turnip/dsl"
 require "turnip/rspec"
+
+module Turnip
+  class << self
+    attr_accessor :type
+  end
+end
+
+Turnip.type = :turnip
