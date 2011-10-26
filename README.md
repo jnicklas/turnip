@@ -92,15 +92,15 @@ Given there is a monster called Jonas
 And there is a monster called "Jonas Nicklas"
 ```
 
-You can also specify alternative words, like this:
+You can also specify alternative words and optional parts of words, like this:
 
 ``` ruby
-step "there is/are :count monsters" do |count|
+step "there is/are :count monster(s)" do |count|
   @monsters = Array.new(count) { Monster.new }
 end
 ```
 
-That will match either "there is X monsters" or "there are X monsters".
+That will match both "there is X monster" or "there are X monsters".
 
 ## Defining placeholders
 
