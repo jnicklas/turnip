@@ -56,8 +56,11 @@ module Turnip
 
     def compile_regexp
       regexp = Regexp.escape(expression)
-      regexp = expression.gsub(/:([\w]+)/) do |_|
+      regexp = regexp.gsub(/:([\w]+)/) do |_|
         "(?<#{$1}>#{Placeholder.resolve($1.to_sym)})"
+      end
+      regexp = regexp.gsub(/(\w+)\/(\w+)/) do |_|
+        "(?:#{$1}|#{$2})"
       end
       Regexp.new("^#{regexp}$")
     end
