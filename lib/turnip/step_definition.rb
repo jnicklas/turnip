@@ -62,8 +62,8 @@ module Turnip
       regexp = regexp.gsub(/(\s):([\w]+)/) do |_|
         "#{$1}(?<#{$2}>#{Placeholder.resolve($2.to_sym)})"
       end
-      regexp = regexp.gsub(/(\w+)\/(\w+)/) do |_|
-        "(?:#{$1}|#{$2})"
+      regexp = regexp.gsub(/(\w+)((\/\w+)+)/) do |_|
+        "(?:#{$1}#{$2.tr('/', '|')})"
       end
       Regexp.new("^#{regexp}$")
     end
