@@ -17,5 +17,19 @@ describe Turnip::StepDefinition do
       step = Turnip::StepDefinition.new("there is/are X monster(s)") {}
       step.should match("there is X monster")
     end
+
+    it "matches optional words" do
+      step = Turnip::StepDefinition.new("there is a (scary) monster") {}
+      step.should match("there is a monster")
+      step.should match("there is a scary monster")
+
+      step = Turnip::StepDefinition.new("there is a monster (that is scary)") {}
+      step.should match("there is a monster that is scary")
+      step.should match("there is a monster")
+
+      step = Turnip::StepDefinition.new("(there is) a monster") {}
+      step.should match("there is a monster")
+      step.should match("a monster")
+    end
   end
 end

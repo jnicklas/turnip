@@ -54,14 +54,14 @@ module Turnip
 
   protected
 
-    OPTIONAL_WORD_REGEXP = /\\\(([a-z]+)\\\)/
+    OPTIONAL_WORD_REGEXP = /(\\\s)?\\\(([^)]+)\\\)(\\\s)?/
     PLACEHOLDER_REGEXP = /:([\w]+)/
     ALTERNATIVE_WORD_REGEXP = /(\w+)((\/\w+)+)/
     
     def compile_regexp
       regexp = Regexp.escape(expression)
       regexp.gsub!(OPTIONAL_WORD_REGEXP) do |_|
-        "(#{$1})?"
+        [$1, $2, $3].compact.map { |m| "(#{m})?" }.join
       end
       regexp.gsub!(PLACEHOLDER_REGEXP) do |_|
         "(?<#{$1}>#{Placeholder.resolve($1.to_sym)})"
