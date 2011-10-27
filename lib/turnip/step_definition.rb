@@ -54,15 +54,19 @@ module Turnip
 
   protected
 
+    OPTIONAL_WORD_REGEXP = /\\\(([a-z]+)\\\)/
+    PLACEHOLDER_REGEXP = /:([\w]+)/
+    ALTERNATIVE_WORD_REGEXP = /(\w+)((\/\w+)+)/
+    
     def compile_regexp
       regexp = Regexp.escape(expression)
-      regexp = regexp.gsub(/\\\(([a-z]+)\\\)/) do |_|
-        "(?:#{$1})?"
+      regexp.gsub!(OPTIONAL_WORD_REGEXP) do |_|
+        "(#{$1})?"
       end
-      regexp = regexp.gsub(/(\s):([\w]+)/) do |_|
-        "#{$1}(?<#{$2}>#{Placeholder.resolve($2.to_sym)})"
+      regexp.gsub!(PLACEHOLDER_REGEXP) do |_|
+        "(?<#{$1}>#{Placeholder.resolve($1.to_sym)})"
       end
-      regexp = regexp.gsub(/(\w+)((\/\w+)+)/) do |_|
+      regexp.gsub!(ALTERNATIVE_WORD_REGEXP) do |_|
         "(?:#{$1}#{$2.tr('/', '|')})"
       end
       Regexp.new("^#{regexp}$")
