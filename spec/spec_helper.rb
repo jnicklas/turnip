@@ -1,53 +1,20 @@
-step "there is a monster" do
-  @monster = 1
-end
+module IntegrationHelpers
+  def command
+    example.metadata[:example_group][:description_args].first
+  end
 
-step "there is a strong monster" do
-  @monster = 2
-end
+  def run_command
+    %x(#{command})
+  end
 
-step "I attack it" do
-  @monster -= 1
-end
-
-step "it should die" do
-  @monster.should eq(0)
-end
-
-step "this is ambiguous" do
-end
-
-step "this is ambiguous" do
-end
-
-step "there is a monster called :name" do |name|
-  @monster_name = name
-end
-
-step 'it should be called "John Smith"' do
-  @monster_name.should == "John Smith"
-end
-
-step 'it should be called "John"' do
-  @monster_name.should == "John"
-end
-
-step "there are :count monkeys with :color hair" do |count, color|
-  @monkeys = Array.new(count) { color }
-end
-
-step "there should be 3 monkeys with blue hair" do
-  @monkeys.should == [:blue, :blue, :blue]
-end
-
-placeholder :count do
-  match /\d+/ do |count|
-    count.to_i
+  def result
+    @result ||= run_command
   end
 end
 
-placeholder :color do
-  match /blue|green|red/ do |color|
-    color.to_sym
+RSpec.configure do |config|
+  config.include IntegrationHelpers, :type => :integration
+  config.before(:each, :turnip => true) do
+    require File.expand_path('../examples/steps', File.dirname(__FILE__))
   end
 end
