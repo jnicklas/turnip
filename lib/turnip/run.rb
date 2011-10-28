@@ -1,11 +1,6 @@
 module Turnip
   def self.run(content)
-    builder = Turnip::Builder.new
-    formatter = Gherkin::Formatter::TagCountFormatter.new(builder, {})
-    parser = Gherkin::Parser::Parser.new(formatter, true, "root", false)
-    parser.parse(content, nil, 0)
-
-    builder.features.each do |feature|
+    Turnip::Builder.build(content).features.each do |feature|
       describe feature.name, feature.metadata_hash do
         feature.backgrounds.each do |background|
           before do

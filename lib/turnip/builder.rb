@@ -67,6 +67,16 @@ module Turnip
 
     attr_reader :features
 
+    class << self
+      def build(content)
+        Turnip::Builder.new.tap do |builder|
+          formatter = Gherkin::Formatter::TagCountFormatter.new(builder, {})
+          parser = Gherkin::Parser::Parser.new(formatter, true, "root", false)
+          parser.parse(content, nil, 0)
+        end
+      end
+    end
+
     def initialize
       @features = []
     end
