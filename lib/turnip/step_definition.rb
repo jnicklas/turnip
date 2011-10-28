@@ -1,6 +1,11 @@
 module Turnip
   class StepDefinition
-    class Match < Struct.new(:params, :block); end
+    class Match < Struct.new(:step_definition, :params, :block)
+      def expression
+        step_definition.expression
+      end
+    end
+
     class Pending < StandardError; end
     class Ambiguous < StandardError; end
 
@@ -15,11 +20,11 @@ module Turnip
       end
 
       def add(expression, &block)
-        steps << StepDefinition.new(expression, &block)
+        all << StepDefinition.new(expression, &block)
       end
 
       def find(description)
-        found = steps.map do |step|
+        found = all.map do |step|
           step.match(description)
         end.compact
         raise Pending, description if found.length == 0
@@ -27,8 +32,8 @@ module Turnip
         found[0]
       end
 
-      def steps
-        @steps ||= []
+      def all
+        @all ||= []
       end
     end
 
@@ -48,7 +53,7 @@ module Turnip
         result.names.each_with_index do |name, index|
           params[index] = Turnip::Placeholder.apply(name.to_sym, params[index])
         end
-        Match.new(params, block)
+        Match.new(self, params, block)
       end
     end
 
@@ -57,7 +62,7 @@ module Turnip
     OPTIONAL_WORD_REGEXP = /(\\\s)?\\\(([^)]+)\\\)(\\\s)?/
     PLACEHOLDER_REGEXP = /:([\w]+)/
     ALTERNATIVE_WORD_REGEXP = /(\w+)((\/\w+)+)/
-    
+
     def compile_regexp
       regexp = Regexp.escape(expression)
       regexp.gsub!(OPTIONAL_WORD_REGEXP) do |_|
