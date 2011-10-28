@@ -63,11 +63,11 @@ module Turnip
       regexp.gsub!(OPTIONAL_WORD_REGEXP) do |_|
         [$1, $2, $3].compact.map { |m| "(#{m})?" }.join
       end
+      regexp.gsub!(ALTERNATIVE_WORD_REGEXP) do |_|
+        "(#{$1}#{$2.tr('/', '|')})"
+      end
       regexp.gsub!(PLACEHOLDER_REGEXP) do |_|
         "(?<#{$1}>#{Placeholder.resolve($1.to_sym)})"
-      end
-      regexp.gsub!(ALTERNATIVE_WORD_REGEXP) do |_|
-        "(?:#{$1}#{$2.tr('/', '|')})"
       end
       Regexp.new("^#{regexp}$")
     end
