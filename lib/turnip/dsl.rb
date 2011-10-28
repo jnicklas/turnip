@@ -9,5 +9,3 @@ module Turnip
     end
   end
 end
-
-self.extend Turnip::DSL
