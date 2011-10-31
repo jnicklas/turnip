@@ -49,7 +49,7 @@ module Turnip
       include Tags
       include Name
 
-      attr_reader :steps
+      attr_accessor :steps
 
       def initialize(raw)
         @raw = raw
@@ -57,11 +57,27 @@ module Turnip
       end
     end
 
-    class Step
+    class ScenarioOutline
+      include Tags
       include Name
+
+      attr_reader :steps
 
       def initialize(raw)
         @raw = raw
+        @steps = []
+      end
+
+      def to_scenarios(examples)
+        rows = examples.rows.map(&:cells)
+        headers = rows.shift
+        rows.map do |row|
+          Scenario.new(@raw).tap do |scenario|
+            scenario.steps = steps.map do |step|
+              step.gsub(/<([^>]*)>/) { |_| Hash[headers.zip(row)][$1] }
+            end
+          end
+        end
       end
     end
 
@@ -96,9 +112,16 @@ module Turnip
       @current_feature.scenarios << @current_step_context
     end
 
+    def scenario_outline(outline)
+      @current_step_context = ScenarioOutline.new(outline)
+    end
+
+    def examples(examples)
+      @current_feature.scenarios.push(*@current_step_context.to_scenarios(examples))
+    end
+
     def step(step)
-      @current_step = Step.new(step)
-      @current_step_context.steps << @current_step
+      @current_step_context.steps << step.name
     end
 
     def eof

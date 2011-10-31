@@ -40,6 +40,22 @@ step "there should be 3 monkeys with blue hair" do
   @monkeys.should == [:blue, :blue, :blue]
 end
 
+step "there is a monster with :count hitpoints" do |count|
+  @monster = count
+end
+
+step "I attack the monster and do :count points damage" do |count|
+  @monster -= count
+end
+
+step "the monster should be alive" do
+  @monster.should > 0
+end
+
+step "the monster should be dead" do
+  @monster.should <= 0
+end
+
 placeholder :count do
   match /\d+/ do |count|
     count.to_i

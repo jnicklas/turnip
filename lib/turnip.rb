@@ -19,14 +19,14 @@ module Turnip
           feature.backgrounds.each do |background|
             before do
               background.steps.each do |step|
-                Turnip::StepDefinition.execute(self, step.name)
+                Turnip::StepDefinition.execute(self, step)
               end
             end
           end
           feature.scenarios.each do |scenario|
             it scenario.name, scenario.metadata_hash do
               scenario.steps.each do |step|
-                Turnip::StepDefinition.execute(self, step.name)
+                Turnip::StepDefinition.execute(self, step)
               end
             end
           end
