@@ -31,14 +31,28 @@ describe Turnip::StepDefinition do
     it "executes a step in the given context" do
       context = stub
       Turnip::StepDefinition.add("there are :count monsters") { @testing = 123 }
-      Turnip::StepDefinition.execute(context, "there are 23 monsters")
+      Turnip::StepDefinition.execute(context, stub(:description => "there are 23 monsters", :extra_arg => nil))
       context.instance_variable_get(:@testing).should == 123
     end
 
     it "tells the context that the step is pending" do
       context = stub
       context.should_receive(:pending).with("the step 'there are 23 monsters' is not implemented")
-      Turnip::StepDefinition.execute(context, "there are 23 monsters")
+      Turnip::StepDefinition.execute(context, stub(:description => "there are 23 monsters", :extra_arg => nil))
+    end
+
+    it "sends along arguments" do
+      context = stub
+      Turnip::StepDefinition.add("there are :count monsters") { |count| @testing = count.to_i }
+      Turnip::StepDefinition.execute(context, stub(:description => "there are 23 monsters", :extra_arg => nil))
+      context.instance_variable_get(:@testing).should == 23
+    end
+
+    it "sends along extra arguments" do
+      context = stub
+      Turnip::StepDefinition.add("there are :count monsters") { |count, extra| @testing = extra }
+      Turnip::StepDefinition.execute(context, stub(:description => "there are 23 monsters", :extra_arg => 'foo'))
+      context.instance_variable_get(:@testing).should == 'foo'
     end
   end
 

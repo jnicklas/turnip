@@ -12,11 +12,13 @@ module Turnip
     attr_reader :expression, :block
 
     class << self
-      def execute(context, description)
-        match = find(description)
-        context.instance_exec(*match.params, &match.block)
+      def execute(context, step)
+        match = find(step.description)
+        params = match.params
+        params << step.extra_arg if step.extra_arg
+        context.instance_exec(*params, &match.block)
       rescue Pending
-        context.pending "the step '#{description}' is not implemented"
+        context.pending "the step '#{step.description}' is not implemented"
       end
 
       def add(expression, &block)

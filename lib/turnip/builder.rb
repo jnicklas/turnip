@@ -74,11 +74,15 @@ module Turnip
         rows.map do |row|
           Scenario.new(@raw).tap do |scenario|
             scenario.steps = steps.map do |step|
-              step.gsub(/<([^>]*)>/) { |_| Hash[headers.zip(row)][$1] }
+              new_description = step.description.gsub(/<([^>]*)>/) { |_| Hash[headers.zip(row)][$1] }
+              Step.new(new_description, step.extra_arg)
             end
           end
         end
       end
+    end
+
+    class Step < Struct.new(:description, :extra_arg)
     end
 
     attr_reader :features
@@ -121,7 +125,7 @@ module Turnip
     end
 
     def step(step)
-      @current_step_context.steps << step.name
+      @current_step_context.steps << Step.new(step.name, step.doc_string && step.doc_string.value)
     end
 
     def eof

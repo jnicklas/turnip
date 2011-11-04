@@ -56,6 +56,17 @@ step "the monster should be dead" do
   @monster.should <= 0
 end
 
+step "there are the following monsters:" do |table|
+end
+
+step "the monster sings the following song" do |song|
+  @song = song
+end
+
+step "the song should have :count lines" do |count|
+  @song.to_s.split("\n").length.should eq(count)
+end
+
 placeholder :count do
   match /\d+/ do |count|
     count.to_i

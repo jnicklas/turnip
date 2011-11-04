@@ -15,12 +15,12 @@ describe Turnip::Builder do
     end
 
     it "replaces placeholders in steps" do
-      feature.scenarios[0].steps.should eq([
+      feature.scenarios[0].steps.map(&:description).should eq([
         "there is a monster with 10 hitpoints",
         "I attack the monster and do 13 points damage",
         "the monster should be dead"
       ])
-      feature.scenarios[1].steps.should eq([
+      feature.scenarios[1].steps.map(&:description).should eq([
         "there is a monster with 8 hitpoints",
         "I attack the monster and do 5 points damage",
         "the monster should be alive"
