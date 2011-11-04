@@ -5,12 +5,6 @@ extension for RSpec. It allows you to write tests in Gherkin and run them
 through your RSpec environment. Basically you can write cucumber features in
 RSpec.
 
-## DISCLAIMER, READ THIS!!!
-
-Turnip is a proof of concept, there are currently VERY FEW TESTS, and there is
-a lot of cucumber's syntax it does NOT support. There are currently no tables,
-multiline string or scenario outlines.
-
 ## Installation
 
 Install the gem
