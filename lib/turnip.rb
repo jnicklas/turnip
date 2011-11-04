@@ -9,6 +9,7 @@ module Turnip
   autoload :Builder, 'turnip/builder'
   autoload :StepDefinition, 'turnip/step_definition'
   autoload :Placeholder, 'turnip/placeholder'
+  autoload :Table, 'turnip/table'
 
   class << self
     attr_accessor :type

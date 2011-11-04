@@ -57,6 +57,14 @@ step "the monster should be dead" do
 end
 
 step "there are the following monsters:" do |table|
+  @monsters = {}
+  table.hashes.each do |hash|
+    @monsters[hash['Name']] = hash['Hitpoints'].to_i
+  end
+end
+
+step ":name should have :count hitpoints" do |name, count|
+  @monsters[name].should eq(count.to_i)
 end
 
 step "the monster sings the following song" do |song|

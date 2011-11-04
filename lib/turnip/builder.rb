@@ -125,7 +125,12 @@ module Turnip
     end
 
     def step(step)
-      @current_step_context.steps << Step.new(step.name, step.doc_string && step.doc_string.value)
+      if step.doc_string
+        extra_arg = step.doc_string.value
+      elsif step.rows
+        extra_arg = Turnip::Table.new(step.rows.map { |row| row.cells(&:value) })
+      end
+      @current_step_context.steps << Step.new(step.name, extra_arg)
     end
 
     def eof
