@@ -1,19 +1,18 @@
 module Turnip
   class StepDefinition
     class Match < Struct.new(:step_definition, :params, :block)
-      def expression
-        step_definition.expression
-      end
+      def expression; step_definition.expression; end
+      def options; step_definition.options; end
     end
 
     class Pending < StandardError; end
     class Ambiguous < StandardError; end
 
-    attr_reader :expression, :block
+    attr_reader :expression, :block, :options
 
     class << self
       def execute(context, step)
-        match = find(step.description)
+        match = find(step.description, context.example.metadata)
         params = match.params
         params << step.extra_arg if step.extra_arg
         context.instance_exec(*params, &match.block)
@@ -21,13 +20,13 @@ module Turnip
         context.pending "the step '#{step.description}' is not implemented"
       end
 
-      def add(expression, &block)
-        all << StepDefinition.new(expression, &block)
+      def add(expression, options={}, &block)
+        all << StepDefinition.new(expression, options, &block)
       end
 
-      def find(description)
+      def find(description, metadata={})
         found = all.map do |step|
-          step.match(description)
+          step.match(description, metadata)
         end.compact
         raise Pending, description if found.length == 0
         raise Ambiguous, description if found.length > 1
@@ -39,27 +38,34 @@ module Turnip
       end
     end
 
-    def initialize(expression, &block)
+    def initialize(expression, options={}, &block)
       @expression = expression
       @block = block
+      @options = options
     end
 
     def regexp
       @regexp ||= compile_regexp
     end
 
-    def match(description)
-      result = description.match(regexp)
-      if result
-        params = result.captures
-        result.names.each_with_index do |name, index|
-          params[index] = Turnip::Placeholder.apply(name.to_sym, params[index])
+    def match(description, metadata={})
+      if matches_metadata?(metadata)
+        result = description.match(regexp)
+        if result
+          params = result.captures
+          result.names.each_with_index do |name, index|
+            params[index] = Turnip::Placeholder.apply(name.to_sym, params[index])
+          end
+          Match.new(self, params, block)
         end
-        Match.new(self, params, block)
       end
     end
 
   protected
+
+    def matches_metadata?(metadata)
+      not options[:for] or [options[:for]].flatten.any? { |option| metadata.has_key?(option) }
+    end
 
     OPTIONAL_WORD_REGEXP = /(\\\s)?\\\(([^)]+)\\\)(\\\s)?/
     PLACEHOLDER_REGEXP = /:([\w]+)/

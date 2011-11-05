@@ -75,6 +75,20 @@ step "the song should have :count lines" do |count|
   @song.to_s.split("\n").length.should eq(count)
 end
 
+step "the monster has an alignment", :for => :evil do
+  @alignment = 'Evil'
+end
+
+steps_for :neutral do
+  step "the monster has an alignment" do
+    @alignment = 'Neutral'
+  end
+end
+
+step "that alignment should be :alignment" do |alignment|
+  @alignment.should eq(alignment)
+end
+
 placeholder :count do
   match /\d+/ do |count|
     count.to_i

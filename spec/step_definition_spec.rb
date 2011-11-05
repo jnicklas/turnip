@@ -16,6 +16,12 @@ describe Turnip::StepDefinition do
       Turnip::StepDefinition.find("there are 23 monsters").expression.should eq("there are :count monsters")
     end
 
+    it "respects the for option" do
+      Turnip::StepDefinition.add "alignment", :for => [:evil]
+      Turnip::StepDefinition.add "alignment", :for => [:good]
+      Turnip::StepDefinition.find("alignment", :evil => true, :bad => true).options[:for].should == [:evil]
+    end
+
     it "raises an error if the match is ambiguous" do
       Turnip::StepDefinition.add "there are :count monsters"
       Turnip::StepDefinition.add "there are 23 monsters"
@@ -29,27 +35,27 @@ describe Turnip::StepDefinition do
 
   describe ".execute" do
     it "executes a step in the given context" do
-      context = stub
+      context = stub(:example => stub(:metadata => {}))
       Turnip::StepDefinition.add("there are :count monsters") { @testing = 123 }
       Turnip::StepDefinition.execute(context, stub(:description => "there are 23 monsters", :extra_arg => nil))
       context.instance_variable_get(:@testing).should == 123
     end
 
     it "tells the context that the step is pending" do
-      context = stub
+      context = stub(:example => stub(:metadata => {}))
       context.should_receive(:pending).with("the step 'there are 23 monsters' is not implemented")
       Turnip::StepDefinition.execute(context, stub(:description => "there are 23 monsters", :extra_arg => nil))
     end
 
     it "sends along arguments" do
-      context = stub
+      context = stub(:example => stub(:metadata => {}))
       Turnip::StepDefinition.add("there are :count monsters") { |count| @testing = count.to_i }
       Turnip::StepDefinition.execute(context, stub(:description => "there are 23 monsters", :extra_arg => nil))
       context.instance_variable_get(:@testing).should == 23
     end
 
     it "sends along extra arguments" do
-      context = stub
+      context = stub(:example => stub(:metadata => {}))
       Turnip::StepDefinition.add("there are :count monsters") { |count, extra| @testing = extra }
       Turnip::StepDefinition.execute(context, stub(:description => "there are 23 monsters", :extra_arg => 'foo'))
       context.instance_variable_get(:@testing).should == 'foo'
