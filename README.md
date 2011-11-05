@@ -139,6 +139,42 @@ end
 These regular expressions must not use anchors, e.g. `^` or `$`. They may not
 contain named capture groups, e.g. `(?<color>blue|green)`.
 
+## Specific steps
+
+Sometimes you might want to limit where steps are matched. Turnip allows you to
+do this, through the `:for` option on your steps:
+
+``` ruby
+step "I do it", :for => :interface do
+  click_link('Do it')
+end
+
+step "I do it", :for => :database do
+  Do.it!
+end
+```
+
+Not you can use tags in your feature files to decide which step is going to get
+run:
+
+``` cucumber
+@interface
+Scenario: do it through the interface
+
+@database
+Scenario: do it through the database
+```
+
+If you have many steps for the same tag, you can use the `steps_for` helper:
+
+``` ruby
+steps_for :interface do
+  step "I do it" do
+    ...
+  end
+end
+```
+
 ## Using with Capybara
 
 Just require `turnip/capybara`, either in your `spec_helper` or by
