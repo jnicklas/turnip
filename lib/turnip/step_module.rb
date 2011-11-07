@@ -3,6 +3,17 @@ require 'pathname'
 module Turnip
   module StepModule
     module DSL
+      def placeholder(name, &block)
+        Turnip::Placeholder.add(name, &block)
+      end
+
+      def step(description, &block)
+        steps << Turnip::StepDefinition.new(description, &block)
+      end
+
+      def steps
+        @steps ||= []
+      end
     end
 
     extend self

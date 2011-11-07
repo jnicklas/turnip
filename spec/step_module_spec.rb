@@ -41,4 +41,28 @@ describe Turnip::StepModule do
       subject.instance_methods.should include(:marker)
     end
   end
+
+  describe Turnip::StepModule::DSL do
+    describe '.step' do
+      it 'registers the step for the module' do
+        mod = Module.new do
+          extend Turnip::StepModule::DSL
+          step('example') { true }
+        end
+        mod.steps.first.expression.should eq('example')
+      end
+    end
+
+    describe '.placeholder' do
+      before { Turnip::Placeholder.send(:placeholders).clear }
+
+      it 'registers the placeholder globally' do
+        mod = Module.new do
+          extend Turnip::StepModule::DSL
+          placeholder('example') { true }
+        end
+        Turnip::Placeholder.send(:placeholders).should have_key('example')
+      end
+    end
+  end
 end
