@@ -30,6 +30,12 @@ module Turnip
       end
     end
 
+    def modules_for(*taggings)
+      taggings.map do |tag|
+        module_registry[tag]
+      end.flatten.uniq
+    end
+
     def module_registry
       @module_registry ||= Hash.new { |hash, key| hash[key] = [] }
     end

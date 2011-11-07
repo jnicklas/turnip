@@ -3,6 +3,14 @@ describe Turnip::StepModule do
     Turnip::StepModule.clear_module_registry
   end
 
+  describe '.modules_for' do
+    it 'returns the unique registered modules' do
+      Turnip::StepModule.steps_for(:first) {}
+      Turnip::StepModule.steps_for(:first, :second) {}
+      Turnip::StepModule.modules_for(:first, :second).size.should eq(2)
+    end
+  end
+
   describe '.steps_for' do
     it 'registers for the given tags' do
       Turnip::StepModule.steps_for(:first, :second) {}
