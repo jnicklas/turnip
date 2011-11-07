@@ -5,11 +5,13 @@ require "turnip/version"
 require "turnip/dsl"
 
 module Turnip
+  autoload :Config, 'turnip/config'
   autoload :Loader, 'turnip/loader'
   autoload :Builder, 'turnip/builder'
   autoload :StepDefinition, 'turnip/step_definition'
   autoload :Placeholder, 'turnip/placeholder'
   autoload :Table, 'turnip/table'
+  autoload :StepModule, 'turnip/step_module'
 
   class << self
     attr_accessor :type
