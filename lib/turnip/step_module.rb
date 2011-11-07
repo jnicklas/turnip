@@ -18,6 +18,16 @@ module Turnip
 
     extend self
 
+    def active_tags(tags)
+      [:global] + tags
+    end
+
+    def all_steps_for(*taggings)
+      modules_for(*taggings).map do |step_module|
+        step_module.steps
+      end.flatten
+    end
+
     def clear_module_registry
       module_registry.clear
     end

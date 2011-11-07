@@ -19,17 +19,27 @@ module Turnip
     def run(content)
       Turnip::Builder.build(content).features.each do |feature|
         describe feature.name, feature.metadata_hash do
+
+          feature_tags = Turnip::StepModule.active_tags(feature.metadata_hash.keys)
+          include *Turnip::StepModule.modules_for(*feature_tags)
+
           feature.backgrounds.each do |background|
             before do
               background.steps.each do |step|
-                Turnip::StepDefinition.execute(self, step)
+                Turnip::StepDefinition.execute(self, Turnip::StepModule.all_steps_for(*feature_tags), step)
               end
             end
           end
           feature.scenarios.each do |scenario|
-            it scenario.name, scenario.metadata_hash do
-              scenario.steps.each do |step|
-                Turnip::StepDefinition.execute(self, step)
+            context scenario.metadata_hash do
+
+              scenario_tags = Turnip::StepModule.active_tags(scenario.metadata_hash.keys + feature.metadata_hash.keys)
+              include *Turnip::StepModule.modules_for(*scenario_tags)
+
+              it scenario.name do
+                scenario.steps.each do |step|
+                  Turnip::StepDefinition.execute(self, Turnip::StepModule.all_steps_for(*scenario_tags), step)
+                end
               end
             end
           end
