@@ -76,10 +76,6 @@ steps_for :global do
     @song.to_s.split("\n").length.should eq(count)
   end
 
-  step "that alignment should be :alignment" do |alignment|
-    @alignment.should eq(alignment)
-  end
-
   placeholder :count do
     match /\d+/ do |count|
       count.to_i
