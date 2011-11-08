@@ -9,6 +9,21 @@ describe Turnip::StepModule do
       Turnip::StepModule.steps_for(:first, :second) {}
       Turnip::StepModule.modules_for(:first, :second).size.should eq(2)
     end
+
+    it 'returns the unique registered modules with use_steps' do
+      Turnip::StepModule.steps_for(:first) {}
+      Turnip::StepModule.steps_for(:second) { use_steps :first }
+      Turnip::StepModule.steps_for(:third) { use_steps :first, :second }
+      Turnip::StepModule.modules_for(:third).size.should eq(3)
+    end
+
+    it 'ignores a circular step dependency' do
+      Turnip::StepModule.steps_for(:first) { use_steps :second }
+      Turnip::StepModule.steps_for(:second) { use_steps :first }
+      expect do
+        Turnip::StepModule.modules_for(:second)
+      end.should_not raise_error
+    end
   end
 
   describe '.steps_for' do
@@ -20,7 +35,7 @@ describe Turnip::StepModule do
 
     it 'registers an anonymous modle for the given tags' do
       Turnip::StepModule.steps_for(:first) {}
-      Turnip::StepModule.module_registry[:first].first.should be_instance_of(Module)
+      Turnip::StepModule.module_registry[:first].first.step_module.should be_instance_of(Module)
     end
 
     it 'registers the same module for multiple tags' do
@@ -70,6 +85,18 @@ describe Turnip::StepModule do
           placeholder('example') { true }
         end
         Turnip::Placeholder.send(:placeholders).should have_key('example')
+      end
+    end
+
+    describe '.use_steps' do
+      it "updates the list of used steps" do
+        mod = Module.new do
+          extend Turnip::StepModule::DSL
+          step('example') { true }
+
+          use_steps :other_steps
+        end
+        mod.uses_steps.should include(:other_steps)
       end
     end
   end
