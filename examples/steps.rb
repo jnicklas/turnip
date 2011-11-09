@@ -32,14 +32,6 @@ step 'it should be called "John"' do
   @monster_name.should == "John"
 end
 
-step "there are :count monkeys with :color hair" do |count, color|
-  @monkeys = Array.new(count) { color }
-end
-
-step "there should be 3 monkeys with blue hair" do
-  @monkeys.should == [:blue, :blue, :blue]
-end
-
 step "there is a monster with :count hitpoints" do |count|
   @monster = count
 end
@@ -73,20 +65,6 @@ end
 
 step "the song should have :count lines" do |count|
   @song.to_s.split("\n").length.should eq(count)
-end
-
-step "the monster has an alignment", :for => :evil do
-  @alignment = 'Evil'
-end
-
-steps_for :neutral do
-  step "the monster has an alignment" do
-    @alignment = 'Neutral'
-  end
-end
-
-step "that alignment should be :alignment" do |alignment|
-  @alignment.should eq(alignment)
 end
 
 placeholder :count do

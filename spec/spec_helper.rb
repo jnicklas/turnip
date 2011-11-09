@@ -1,5 +1,7 @@
 RSpec.configure do |config|
+  Turnip::Config.step_dirs = 'examples'
+  Turnip::StepModule.load_steps
+
   config.before(:each, :turnip => true) do
-    require File.expand_path('../examples/steps', File.dirname(__FILE__))
   end
 end

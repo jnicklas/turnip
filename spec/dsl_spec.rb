@@ -2,53 +2,41 @@ require 'spec_helper'
 
 describe Turnip::DSL do
   before do
-    @context = stub
-    @context.extend(Turnip::DSL)
+    Turnip::StepModule.clear_module_registry
   end
 
-  describe '#step' do
-    it 'adds a step to the list of step definitions' do
-      Turnip::StepDefinition.should_receive(:add).with('this is a :thing test', {})
-      @context.step 'this is a :thing test'
-    end
+  let(:context) { stub.tap { |s| s.extend(Turnip::DSL) }}
 
-    it 'sends through options' do
-      Turnip::StepDefinition.should_receive(:add).with('foo', {:for => [:monkey]})
-      @context.step 'foo', :for => [:monkey]
+  describe '.steps_for' do
+    it 'delegates to StepModule' do
+      Turnip::StepModule.should_receive(:steps_for).with(:example)
+      context.steps_for(:example) {}
     end
   end
 
-  describe '#steps_for' do
-    it 'executes the given block and adds steps with for set' do
-      Turnip::StepDefinition.should_receive(:add).with('foo', {:for => [:gorilla]})
-      @context.steps_for :gorilla do
-        @context.step 'foo'
+  describe '.step' do
+    context 'first step defined globally' do
+      it 'creates a new global entry' do
+        context.step('this is a test') {}
+        Turnip::StepModule.should be_registered(:global)
       end
     end
 
-    it 'combines step for option and block options' do
-      Turnip::StepDefinition.should_receive(:add).with('foo', {:for => [:a, :b, :gorilla]})
-      @context.steps_for :gorilla do
-        @context.step 'foo', :for => [:a, :b]
-      end
-    end
-
-    it 'can be nested' do
-      Turnip::StepDefinition.should_receive(:add).with('foo', {:for => [:c, :b, :a]})
-      @context.steps_for :a do
-        @context.steps_for :b do
-          @context.step 'foo', :for => :c
-        end
+    context 'all other steps defined globally' do
+      it 'adds more steps to the :global step module' do
+        context.step('this is a test') {}
+        context.step('this is another test') {}
+        Turnip::StepModule.module_registry[:global].first.step_module.steps.size.should eq(2)
       end
     end
   end
 
-  describe '#placeholder' do
-    it 'adds a placeholder to the list of placeholders' do
-      @context.placeholder :quox do
-        match(/foo/) { 'bar' }
-      end
-      Turnip::Placeholder.apply(:quox, 'foo').should == 'bar'
+  describe '.placeholder' do
+    before { Turnip::Placeholder.send(:placeholders).clear }
+
+    it 'registers the placeholder globally' do
+      context.placeholder('example') { true }
+      Turnip::Placeholder.send(:placeholders).should have_key('example')
     end
   end
 end
