@@ -30,7 +30,7 @@ module Turnip
           []
         else
           already_visited.concat(for_taggings)
-          [step_module].concat(uses_modules(already_visited))
+          uses_modules(already_visited) << step_module
         end
       end
 

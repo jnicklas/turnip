@@ -24,6 +24,13 @@ describe Turnip::StepModule do
         Turnip::StepModule.modules_for(:second)
       end.should_not raise_error
     end
+
+    it 'orders the step modules from use_steps before the using step module' do
+      Turnip::StepModule.steps_for(:first) {}
+      Turnip::StepModule.steps_for(:second) { use_steps :first }
+      Turnip::StepModule.modules_for(:second).first.should == Turnip::StepModule.module_registry[:first].first.step_module
+      Turnip::StepModule.modules_for(:second).last.should == Turnip::StepModule.module_registry[:second].first.step_module
+    end
   end
 
   describe '.steps_for' do
