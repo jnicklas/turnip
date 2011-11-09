@@ -21,7 +21,6 @@ module Turnip
         describe feature.name, feature.metadata_hash do
 
           feature_tags = Turnip::StepModule.active_tags(feature.metadata_hash.keys)
-          include *Turnip::StepModule.modules_for(*feature_tags)
 
           feature.backgrounds.each do |background|
             before do
@@ -33,8 +32,8 @@ module Turnip
           feature.scenarios.each do |scenario|
             context scenario.metadata_hash do
 
-              scenario_tags = Turnip::StepModule.active_tags(scenario.metadata_hash.keys + feature.metadata_hash.keys)
-              include *Turnip::StepModule.modules_for(*scenario_tags)
+              scenario_tags = Turnip::StepModule.active_tags(feature.metadata_hash.keys + scenario.metadata_hash.keys)
+              Turnip::StepModule.modules_for(*scenario_tags).each { |mod| include mod }
 
               it scenario.name do
                 scenario.steps.each do |step|
