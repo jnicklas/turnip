@@ -122,8 +122,8 @@ module Turnip
 
     def feature(feature)
       @current_feature = Feature.new(feature)
-      # Automatically add a tag based on the name of the feature to the Feature
-      @current_feature.feature_tag = @feature_file.feature_name
+      # Automatically add a tag based on the name of the feature to the Feature if configured to
+      @current_feature.feature_tag = @feature_file.feature_name if Turnip::Config.autotag_features
       @features << @current_feature
     end
 

@@ -1,7 +1,9 @@
 module Turnip
   module Config
     extend self
-        
+    
+    attr_accessor :autotag_features
+    
     def step_dirs
       @step_dirs ||= ['spec']
     end
@@ -12,3 +14,5 @@ module Turnip
     end
   end
 end
+
+Turnip::Config.autotag_features = true

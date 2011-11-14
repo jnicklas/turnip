@@ -48,5 +48,22 @@ describe Turnip::Builder do
         feature.scenarios.first.active_tags.should eq([:scenario_tag])
       end
     end
+    
+    context "autotag features disabled" do
+      before(:each) { Turnip::Config.autotag_features = false }
+      after(:each) { Turnip::Config.autotag_features = true }
+      
+      let(:feature_file) { Turnip::FeatureFile.new(File.expand_path('../examples/autoload_steps.feature', File.dirname(__FILE__))) }
+      let(:builder) { Turnip::Builder.build(feature_file) }
+      let(:feature) { builder.features.first }
+      
+      it 'should automatically include the :global tag for features' do
+        feature.active_tags.should include(:global)
+      end
+      
+      it 'should not automatically include the feature name tag for features' do
+        feature.active_tags.should_not include(:autoload_steps)
+      end
+    end
   end
 end
