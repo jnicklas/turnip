@@ -1,7 +1,7 @@
 module Turnip
   module Config
     extend self
-
+        
     def step_dirs
       @step_dirs ||= ['spec']
     end

@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Turnip::Builder do
   context "with scenario outlines" do
-    let(:gherkin) { File.read(File.expand_path('../examples/scenario_outline.feature', File.dirname(__FILE__))) }
-    let(:builder) { Turnip::Builder.build(gherkin) }
+    let(:feature_file) { Turnip::FeatureFile.new(File.expand_path('../examples/scenario_outline.feature', File.dirname(__FILE__))) }
+    let(:builder) { Turnip::Builder.build(feature_file) }
     let(:feature) { builder.features.first }
 
 
@@ -25,6 +25,28 @@ describe Turnip::Builder do
         "I attack the monster and do 5 points damage",
         "the monster should be alive"
       ])
+    end
+  end
+  
+  describe "taggings" do
+    let(:feature_file) { Turnip::FeatureFile.new(File.expand_path('../examples/autoload_steps.feature', File.dirname(__FILE__))) }
+    let(:builder) { Turnip::Builder.build(feature_file) }
+    let(:feature) { builder.features.first }
+    
+    context "for features" do
+      it 'should automatically include the :global tag for features' do
+        feature.active_tags.should include(:global)
+      end
+      
+      it 'should automatically include the feature name tag for features' do
+        feature.active_tags.should include(:autoload_steps)
+      end
+    end
+    
+    context "for scenarios" do
+      it 'should only include scenario tags' do
+        feature.scenarios.first.active_tags.should eq([:scenario_tag])
+      end
     end
   end
 end

@@ -3,8 +3,7 @@ module Turnip
     def load(*a, &b)
       if a.first.end_with?('.feature')
         require 'spec_helper'
-        content = File.read(a.first)
-        Turnip.run(content)
+        Turnip.run(Turnip::FeatureFile.new(a.first))
       else
         super
       end
