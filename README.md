@@ -162,8 +162,9 @@ with both `@interface` and `@database` at the same time.
 Scoped steps are really just Ruby modules under the covers so you
 can do anything you'd normally want to do including defining
 helper/utility methods and variables.  Check out
-[features/alignment_steps.rb](features/alignment_steps.rb) and
-[features/evil_steps.rb](features/evil_steps.rb) for basic examples.
+[features/alignment_steps.rb](https://github.com/jnicklas/turnip/blob/master/examples/alignment_steps.rb)
+and
+[features/evil_steps.rb](https://github.com/jnicklas/turnip/blob/master/examples/evil_steps.rb) for basic examples.
 
 ### Reusing steps
 When using scoped steps in Turnip, you can tell it to also include steps
