@@ -161,8 +161,9 @@ with both `@interface` and `@database` at the same time.
 
 Scoped steps are really just Ruby modules under the covers so you
 can do anything you'd normally want to do including defining
-helper/utility methods and variables.  Check out `features/alignment_steps.rb`
-and `features/evil_steps.rb` for basic examples.
+helper/utility methods and variables.  Check out
+[features/alignment_steps.rb](features/alignment_steps.rb) and
+[features/evil_steps.rb](features/evil_steps.rb) for basic examples.
 
 ### Reusing steps
 When using scoped steps in Turnip, you can tell it to also include steps
@@ -211,9 +212,9 @@ Notice in this example we are making full use of Ruby's modules including
 using super to call the included module's version of `dragon_attack`.
 
 ### Auto-included steps
-By default, Turnip will automatically make steps available to a
-feature file if it can find some defined in a scope with the same
-name.  For example, given this step file:
+By default, Turnip will automatically make available any steps defined in 
+a `steps_for` block with the same name as the feature file being run.  For
+example, given this step file:
 
 ``` ruby
 # user_signup_steps.rb
@@ -246,6 +247,9 @@ Feature: A user can signup
 Note that the `steps_for :user_signup` did not technically have to
 appear in the user_signup_steps.rb file; it could have been located
 in any `steps.rb` file that was autoloaded by Turnip.
+
+This feature can be turned off using the `Turnip::Config.autotag_features`
+option if desired.
 
 ## Custom step placeholders
 Do you want to be more specific in what to match in your step
