@@ -11,7 +11,7 @@ module Turnip
 
     class << self
       def execute(context, available_steps, step)
-        match = find(available_steps, step.description)
+        match = find(available_steps, step)
         params = match.params
         params << step.extra_arg if step.extra_arg
         context.instance_exec(*params, &match.block)
@@ -19,12 +19,12 @@ module Turnip
         context.pending "the step '#{step.description}' is not implemented"
       end
 
-      def find(available_steps, description)
+      def find(available_steps, feature_step)
         found = available_steps.map do |step|
-          step.match(description)
+          step.match(feature_step)
         end.compact
-        raise Pending, description if found.length == 0
-        raise Ambiguous, description if found.length > 1
+        raise Pending, feature_step.description if found.length == 0
+        raise Ambiguous, feature_step.description if found.length > 1
         found[0]
       end
     end
@@ -38,8 +38,17 @@ module Turnip
       @regexp ||= compile_regexp
     end
 
-    def match(description)
-      result = description.match(regexp)
+    def match(feature_step)
+      variations = [feature_step.description]
+      if feature_step.keywords
+        variations += feature_step.keywords.map{|keyword| keyword + feature_step.description}
+      end
+      
+      result = nil
+      variations.each do |variant|
+        result = variant.match(regexp)
+        break if result
+      end
       if result
         params = result.captures
         result.names.each_with_index do |name, index|
