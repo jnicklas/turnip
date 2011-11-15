@@ -2,7 +2,7 @@ module Turnip
   module Config
     extend self
     
-    attr_accessor :autotag_features
+    attr_accessor :autotag_features, :step_match_mode
     
     def step_dirs
       @step_dirs ||= ['spec']
@@ -16,3 +16,4 @@ module Turnip
 end
 
 Turnip::Config.autotag_features = true
+Turnip::Config.step_match_mode = :flexible # or :exact or :generic
