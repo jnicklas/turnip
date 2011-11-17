@@ -58,17 +58,18 @@ describe Turnip::StepModule do
       end
     end
 
-    it 'creates an anonymous module' do
-      subject.name.should be_nil
-    end
-
     it 'extends the steps DSL' do
       subject.should be_kind_of(Turnip::StepModule::DSL)
     end
 
+    it 'creates an anonymous module' do
+      # Check for empty string to allow for rbx
+      subject.name.should satisfy {|name| name.nil? || name.empty? }
+    end
+
     it 'executes the block in the module' do
-      subject
-      subject.instance_methods.should include(:marker)
+      # Map to sym to allow for rbx
+      subject.instance_methods.map(&:to_sym).should include(:marker)
     end
   end
 
