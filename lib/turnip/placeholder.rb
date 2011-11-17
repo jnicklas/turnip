@@ -27,7 +27,7 @@ module Turnip
 
       def default
         @default ||= new(:default) do
-          match %r((?:"([^"]+)"|([a-zA-Z0-9_-]+))) do |first, second|
+          match %r((?:["']([^["']]+)["']|([a-zA-Z0-9_-]+))) do |first, second|
             first or second
           end
         end
