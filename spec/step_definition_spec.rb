@@ -60,6 +60,12 @@ describe Turnip::StepDefinition do
       step.should match("there are 324 monsters")
       step.should_not match("there are no monsters")
     end
+    
+    it "matches quoted placeholders" do
+      step = Turnip::StepDefinition.new("there is a monster named :name") {}
+      step.should match("there is a monster named 'Scary'")
+      step.should match('there is a monster named "Hairy"')
+    end
 
     it "matches alternative words" do
       step = Turnip::StepDefinition.new("there is/are monsters") {}
