@@ -117,9 +117,7 @@ module Turnip
         Turnip::Builder.new(feature_file).tap do |builder|
           formatter = Gherkin::Formatter::TagCountFormatter.new(builder, {})
           parser = Gherkin::Parser::Parser.new(formatter, true, "root", false)
-          lexer = Gherkin::Lexer::I18nLexer.new(parser, false)
-          lexer.send(:create_delegate, feature_file.content)
-          builder.keyword_finder = Turnip::StepKeywordFinder.new(lexer.i18n_language)
+          builder.parser = parser
           parser.parse(feature_file.content, nil, 0)
         end
       end
@@ -130,7 +128,7 @@ module Turnip
       @features = []
     end
     
-    attr_accessor :keyword_finder
+    attr_writer :parser
     
     def background(background)
       @current_step_context = Background.new(background)
@@ -171,6 +169,16 @@ module Turnip
     end
 
     def eof
-    end    
+    end
+    
+    private
+    
+    # Lazy-initialize the keyword_finder only when needed.  At that point
+    # the Gherkin Parser has already determined the i18n language so we
+    # are free to access it.  If we try to do this during init, the lang
+    # has not yet been parsed.
+    def keyword_finder
+      @keyword_finder ||= Turnip::StepKeywordFinder.new(@parser.i18n_language)
+    end
   end
 end
