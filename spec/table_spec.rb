@@ -30,12 +30,19 @@ describe Turnip::Table do
   end
 
   describe '#hashes' do
-    it 'returns a list of hashe based on the headers' do
+    it 'returns a list of hashes based on the headers' do
       table = Turnip::Table.new([['foo', 'bar'], ['moo', '55'], ['quox', '42']])
       table.hashes.should == [
         {'foo' => 'moo', 'bar' => '55'},
         {'foo' => 'quox', 'bar' => '42'}
       ]
+    end
+  end
+  
+  describe '#rows_hash' do
+    it 'converts this table into a Hash where the first column is used as keys and the second column is used as values' do
+      table = Turnip::Table.new([['foo', 'moo'], ['bar', '55']])
+      table.rows_hash.should == {'foo' => 'moo', 'bar' => '55'}
     end
   end
 
