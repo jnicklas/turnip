@@ -8,6 +8,7 @@ module Turnip
   autoload :Config, 'turnip/config'
   autoload :FeatureFile, 'turnip/feature_file'
   autoload :Loader, 'turnip/loader'
+  autoload :StepKeywordFinder, 'turnip/step_keyword_finder'
   autoload :Builder, 'turnip/builder'
   autoload :StepDefinition, 'turnip/step_definition'
   autoload :Placeholder, 'turnip/placeholder'
