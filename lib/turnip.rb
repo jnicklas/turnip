@@ -26,6 +26,7 @@ module Turnip
           feature.backgrounds.each do |background|
             before do
               background.steps.each do |step|
+                step.active_tags = feature_tags
                 Turnip::StepDefinition.execute(self, Turnip::StepModule.all_steps_for(*feature_tags), step)
               end
             end
@@ -38,6 +39,7 @@ module Turnip
 
               it scenario.name do
                 scenario.steps.each do |step|
+                  step.active_tags = scenario_tags
                   Turnip::StepDefinition.execute(self, Turnip::StepModule.all_steps_for(*scenario_tags), step)
                 end
               end

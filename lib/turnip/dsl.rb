@@ -21,6 +21,7 @@ module Turnip
                                           @steps ||= []
                                         end
                                       end
+                                      anon.send(:include, Turnip::StepModule::StepRunner)
                                       entry = Turnip::StepModule::Entry.new([:global], anon, [])
                                       Turnip::StepModule.module_registry[:global] << entry
                                       entry

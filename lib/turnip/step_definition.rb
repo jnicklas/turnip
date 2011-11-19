@@ -14,6 +14,13 @@ module Turnip
         match = find(available_steps, step.description)
         params = match.params
         params << step.extra_arg if step.extra_arg
+        # Inject the currently active tags into the rspec context so
+        # we have access to them if we call a step from a step.
+        context.instance_eval <<-CODE
+          def self.active_tags
+            #{step.active_tags.inspect}
+          end
+        CODE
         context.instance_exec(*params, &match.block)
       rescue Pending
         context.pending "the step '#{step.description}' is not implemented"
