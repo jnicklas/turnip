@@ -1,11 +1,16 @@
-Feature: Tagged steps for and super
+Feature: Red Dragons are deadly
+
   @dragon
   Scenario:
     Given there is a dragon
-    Then the dragon attacks for 10 hitpoints
+    And there is a knight
+    When the dragon attacks the knight
+    Then the knight is alive
 
   @red_dragon
   Scenario:
     Given there is a dragon
-    And it is a fire breathing red dragon
-    Then the dragon attacks for 20 hitpoints
+    And the dragon breathes fire
+    And there is a knight
+    When the dragon attacks the knight
+    Then the knight is dead

@@ -168,11 +168,13 @@ and
 
 ### Reusing steps
 When using scoped steps in Turnip, you can tell it to also include steps
-defined in another `steps_for` block.  The syntax for that is `uses_steps`:
+defined in another `steps_for` block.  The syntax for that is `use_steps`:
 
 ``` ruby
 # dragon_steps.rb
 steps_for :dragon do
+  use_steps :knight
+
   attr_accessor :dragon
 
   def dragon_attack
@@ -183,8 +185,8 @@ steps_for :dragon do
     self.dragon = 1
   end
 
-  step "the dragon attacks for :count hitpoints" do |count|
-    dragon_attack.should eq(count)
+  step "the dragon attacks the knight" do
+    knight.attacked_for(dragon_attack)
   end
 end
 
@@ -197,23 +199,44 @@ steps_for :red_dragon do
   def dragon_attack
     attack = super
     if red_dragon
-      attack + 10
+      attack + 15
     else
       attack
     end
   end
 
-  step "it is a fire breathing red dragon" do
+  step "the dragon breathes fire" do
     self.red_dragon = 1
   end
 end
 ```
 
-Notice in this example we are making full use of Ruby's modules including
-using super to call the included module's version of `dragon_attack`.
+
+In this example we are making full use of Ruby's modules including using super
+to call the included module's version of `dragon_attack`, for example with the
+following feature file:
+
+``` cucumber
+Feature: Red Dragons are deadly
+
+  @dragon
+  Scenario:
+    Given there is a dragon
+    And there is a knight
+    When the dragon attacks the knight
+    Then the knight is alive
+
+  @red_dragon
+  Scenario:
+    Given there is a dragon
+    And the dragon breathes fire
+    And there is a knight
+    When the dragon attacks the knight
+    Then the knight is dead
+```
 
 ### Auto-included steps
-By default, Turnip will automatically make available any steps defined in 
+By default, Turnip will automatically make available any steps defined in
 a `steps_for` block with the same name as the feature file being run.  For
 example, given this step file:
 
@@ -223,11 +246,11 @@ steps_for :user_signup do
   step "I am on the homepage" do
     ...
   end
-  
+
   step "I signup with valid info" do
     ...
   end
-  
+
   step "I should see a welcome message" do
   end
 end

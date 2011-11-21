@@ -6,14 +6,13 @@ steps_for :red_dragon do
   def dragon_attack
     attack = super
     if red_dragon
-      attack + 10
+      attack + 15
     else
       attack
     end
   end
 
-  step "it is a fire breathing red dragon" do
+  step "the dragon breathes fire" do
     self.red_dragon = 1
   end
 end
-
