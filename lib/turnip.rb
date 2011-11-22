@@ -12,6 +12,7 @@ module Turnip
   autoload :StepDefinition, 'turnip/step_definition'
   autoload :Placeholder, 'turnip/placeholder'
   autoload :Table, 'turnip/table'
+  autoload :StepLoader, 'turnip/step_loader'
   autoload :StepModule, 'turnip/step_module'
 
   class << self
