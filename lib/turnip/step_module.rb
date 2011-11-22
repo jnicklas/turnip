@@ -55,14 +55,6 @@ module Turnip
       module_registry.clear
     end
 
-    def load_steps
-      Turnip::Config.step_dirs.each do |dir|
-        Pathname.glob(Pathname.new(dir) + '**' + "*steps.rb").each do |step_file|
-          load step_file, true
-        end
-      end
-    end
-
     def modules_for(*taggings)
       taggings.map do |tag|
         module_registry[tag].map do |entry|
