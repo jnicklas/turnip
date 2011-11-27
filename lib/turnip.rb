@@ -4,6 +4,8 @@ require "gherkin/formatter/tag_count_formatter"
 require "turnip/version"
 require "turnip/dsl"
 
+require 'rspec'
+
 module Turnip
   autoload :Config, 'turnip/config'
   autoload :FeatureFile, 'turnip/feature_file'
