@@ -20,9 +20,21 @@ module Turnip
     def hashes
       rows.map { |row| Hash[headers.zip(row)] }
     end
+    
+    def rows_hash
+      return @rows_hash if @rows_hash
+      verify_table_width(2)
+      @rows_hash = self.class.new(raw.transpose).hashes[0]
+    end
 
     def each
       @raw.each { |row| yield(row) }
+    end
+    
+    private
+    
+    def verify_table_width(width)
+      raise %{The table must have exactly #{width} columns} unless raw[0].size == width
     end
   end
 end
