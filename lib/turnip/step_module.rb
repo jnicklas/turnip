@@ -45,10 +45,6 @@ module Turnip
 
     extend self
 
-    def active_tags(tags)
-      [:global] + tags
-    end
-
     def all_steps_for(*taggings)
       modules_for(*taggings).map do |step_module|
         step_module.steps
@@ -57,14 +53,6 @@ module Turnip
 
     def clear_module_registry
       module_registry.clear
-    end
-
-    def load_steps
-      Turnip::Config.step_dirs.each do |dir|
-        Pathname.glob(Pathname.new(dir) + '**' + "*steps.rb").each do |step_file|
-          load step_file, true
-        end
-      end
     end
 
     def modules_for(*taggings)
