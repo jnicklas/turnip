@@ -30,6 +30,17 @@ exist), and add the following line:
 -r turnip
 ```
 
+## Development
+
+* Source hosted at [GitHub](http://github.com/jnicklas/turnip).
+* Please direct questions, discussion or problems to the [mailing list](http://groups.google.com/group/ruby-turnip).
+  Please do not open an issue on GitHub if you have a question.
+* If you found a reproducible bug, open a [GitHub Issue](http://github.com/jnicklas/turnip/issues) to submit a bug report.
+* Please do not contact any of the maintainers directly, unless you have found a security related issue.
+
+Pull requests are very welcome (and even better than bug reports)!
+Please create a topic branch for every separate change you make.
+
 ## Compatibility
 
 Turnip does not work on Ruby 1.8.X.
