@@ -96,7 +96,6 @@ module Turnip
     end
 
     class Step < Struct.new(:description, :extra_arg)
-      attr_accessor :active_tags
     end
 
     attr_reader :features

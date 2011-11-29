@@ -26,9 +26,7 @@ module Turnip
     
     module StepRunner      
       def step(description)
-        step = Turnip::Builder::Step.new(description, nil)
-        step.active_tags = active_tags
-        Turnip::StepDefinition.execute(self, Turnip::StepModule.all_steps_for(*active_tags), step)
+        Turnip::StepDefinition.execute(self, Turnip::Builder::Step.new(description, nil))
       end
     end
 
