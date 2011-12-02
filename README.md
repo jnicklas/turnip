@@ -84,7 +84,7 @@ in your `spec_helper` by setting `Turnip::Config.step_dirs`.  For example:
 # spec/spec_helper.rb
 RSpec.configure do |config|
   Turnip::Config.step_dirs = 'examples'
-  Turnip::StepModule.load_steps
+  Turnip::StepLoader.load_steps
 end
 ```
 
