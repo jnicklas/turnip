@@ -8,8 +8,8 @@ module Turnip
       global_step_module_entry.step_module.steps << Turnip::StepDefinition.new(description, &block)
     end
 
-    def steps_for(*taggings, &block)
-      Turnip::StepModule.steps_for(*taggings, &block)
+    def steps_for(tag, &block)
+      Turnip::StepModule.steps_for(tag, &block)
     end
 
     private
