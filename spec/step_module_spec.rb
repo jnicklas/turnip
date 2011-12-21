@@ -6,7 +6,7 @@ describe Turnip::StepModule do
   describe '.modules_for' do
     it 'returns the unique registered modules' do
       Turnip::StepModule.steps_for(:first) {}
-      Turnip::StepModule.steps_for(:first, :second) {}
+      Turnip::StepModule.steps_for(:second) {}
       Turnip::StepModule.modules_for(:first, :second).size.should eq(2)
     end
 
@@ -34,10 +34,9 @@ describe Turnip::StepModule do
   end
 
   describe '.steps_for' do
-    it 'registers for the given tags' do
-      Turnip::StepModule.steps_for(:first, :second) {}
+    it 'registers the given tag' do
+      Turnip::StepModule.steps_for(:first) {}
       Turnip::StepModule.should be_registered(:first)
-      Turnip::StepModule.should be_registered(:second)
     end
 
     it 'registers an anonymous modle for the given tags' do
@@ -45,10 +44,6 @@ describe Turnip::StepModule do
       Turnip::StepModule.module_registry[:first].first.step_module.should be_instance_of(Module)
     end
 
-    it 'registers the same module for multiple tags' do
-      Turnip::StepModule.steps_for(:first, :second) {}
-      Turnip::StepModule.module_registry[:first].first.should eq(Turnip::StepModule.module_registry[:second].first)
-    end
   end
 
   describe '.step_module' do
