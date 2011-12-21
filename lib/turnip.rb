@@ -25,11 +25,12 @@ module Turnip
         describe feature.name, feature.metadata_hash do
 
           feature_tags = feature.active_tags.uniq
-
+          Turnip::StepDefinition.available_steps = Turnip::StepModule.all_steps_for(*feature_tags)
+          
           feature.backgrounds.each do |background|
             before do
               background.steps.each do |step|
-                Turnip::StepDefinition.execute(self, Turnip::StepModule.all_steps_for(*feature_tags), step)
+                Turnip::StepDefinition.execute(self, step)
               end
             end
           end
@@ -40,8 +41,9 @@ module Turnip
               Turnip::StepModule.modules_for(*scenario_tags).each { |mod| include mod }
 
               it scenario.name do
+                Turnip::StepDefinition.available_steps = Turnip::StepModule.all_steps_for(*scenario_tags)
                 scenario.steps.each do |step|
-                  Turnip::StepDefinition.execute(self, Turnip::StepModule.all_steps_for(*scenario_tags), step)
+                  Turnip::StepDefinition.execute(self, step)
                 end
               end
             end

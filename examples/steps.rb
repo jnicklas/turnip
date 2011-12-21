@@ -25,6 +25,7 @@ step "there is a monster called :name" do |name|
 end
 
 step 'it should be called "John Smith"' do
+  step 'there is a monster called "John Smith"'
   @monster_name.should == "John Smith"
 end
 

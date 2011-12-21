@@ -7,6 +7,6 @@ Feature: A simple feature
     Given there is a monster called John
     Then it should be called "John"
 
-  Scenario: Interpolation with customer regexp
+  Scenario: Interpolation with custom regexp
     Given there are 3 monkeys with blue hair
     Then there should be 3 monkeys with blue hair

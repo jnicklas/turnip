@@ -10,8 +10,10 @@ module Turnip
     attr_reader :expression, :block
 
     class << self
-      def execute(context, available_steps, step)
-        match = find(available_steps, step.description)
+      attr_accessor :available_steps
+      
+      def execute(context, step)
+        match = find(available_steps || [], step.description)
         params = match.params
         params << step.extra_arg if step.extra_arg
         context.instance_exec(*params, &match.block)

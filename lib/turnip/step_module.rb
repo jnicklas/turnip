@@ -23,6 +23,12 @@ module Turnip
         @uses_steps ||= []
       end
     end
+    
+    module StepRunner      
+      def step(description)
+        Turnip::StepDefinition.execute(self, Turnip::Builder::Step.new(description, nil))
+      end
+    end
 
     class Entry < Struct.new(:for_tag, :step_module, :uses_steps)
       def all_modules(already_visited = [])
@@ -34,6 +40,8 @@ module Turnip
         end
       end
 
+      private
+      
       def uses_modules(already_visited)
         uses_steps.map do |uses_tag|
           StepModule.module_registry[uses_tag].map do |entry|
@@ -82,6 +90,7 @@ module Turnip
     def step_module(&block)
       anon = Module.new
       anon.extend(Turnip::StepModule::DSL)
+      anon.send(:include, Turnip::StepModule::StepRunner)
       anon.module_eval(&block)
       anon
     end
