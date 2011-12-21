@@ -24,12 +24,12 @@ module Turnip
       end
     end
 
-    class Entry < Struct.new(:for_taggings, :step_module, :uses_steps)
+    class Entry < Struct.new(:for_tag, :step_module, :uses_steps)
       def all_modules(already_visited = [])
-        unless (already_visited & for_taggings).empty?
+        if already_visited.include?(for_tag)
           []
         else
-          already_visited.concat(for_taggings)
+          already_visited << for_tag
           uses_modules(already_visited) << step_module
         end
       end
@@ -71,14 +71,12 @@ module Turnip
       module_registry.has_key? module_name
     end
 
-    def steps_for(*taggings, &block)
+    def steps_for(tag, &block)
       anon = step_module(&block)
 
-      entry = Entry.new(taggings, anon, anon.uses_steps)
+      entry = Entry.new(tag, anon, anon.uses_steps)
 
-      taggings.each do |tag|
-        module_registry[tag] << entry
-      end
+      module_registry[tag] << entry
     end
 
     def step_module(&block)
