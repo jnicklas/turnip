@@ -16,6 +16,7 @@ module Turnip
   autoload :Table, 'turnip/table'
   autoload :StepLoader, 'turnip/step_loader'
   autoload :StepModule, 'turnip/step_module'
+  autoload :ScenarioContext, 'turnip/scenario_context'
 
   class << self
     attr_accessor :type
