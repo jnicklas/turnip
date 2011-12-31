@@ -25,27 +25,9 @@ module Turnip
     def run(feature_file)
       Turnip::Builder.build(feature_file).features.each do |feature|
         describe feature.name, feature.metadata_hash do
-
-          feature_tags = feature.active_tags.uniq
-
-          feature.backgrounds.each do |background|
-            before do
-              background.steps.each do |step|
-                Turnip::StepDefinition.execute(self, Turnip::StepModule.all_steps_for(*feature_tags), step)
-              end
-            end
-          end
           feature.scenarios.each do |scenario|
-            context scenario.metadata_hash do
-
-              scenario_tags = (feature_tags + scenario.active_tags).uniq
-              Turnip::StepModule.modules_for(*scenario_tags).each { |mod| include mod }
-
-              it scenario.name do
-                scenario.steps.each do |step|
-                  Turnip::StepDefinition.execute(self, Turnip::StepModule.all_steps_for(*scenario_tags), step)
-                end
-              end
+            it scenario.name, scenario.metadata_hash do
+              Turnip::ScenarioRunner.new(self).load(Turnip::ScenarioContext.new(feature, scenario)).run
             end
           end
         end
