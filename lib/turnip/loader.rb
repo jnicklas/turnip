@@ -2,7 +2,10 @@ module Turnip
   module Loader
     def load(*a, &b)
       if a.first.end_with?('.feature')
-        require 'spec_helper'
+        begin
+          require 'spec_helper'
+        rescue LoadError
+        end
         Turnip::StepLoader.load_steps
         Turnip.run(Turnip::FeatureFile.new(a.first))
       else
