@@ -10,6 +10,8 @@ module Turnip
 
     def load(context)
       self.context = context
+      world.extend Turnip::RunnerDSL
+      world.turnip_runner = self
       context.modules.each {|mod| world.extend mod }
       self
     end
