@@ -17,6 +17,7 @@ module Turnip
   autoload :StepLoader, 'turnip/step_loader'
   autoload :StepModule, 'turnip/step_module'
   autoload :ScenarioRunner, 'turnip/scenario_runner'
+  autoload :RunnerDSL, 'turnip/runner_dsl'
   autoload :ScenarioContext, 'turnip/scenario_context'
 
   class << self

@@ -25,6 +25,14 @@ describe Turnip::ScenarioRunner do
     it 'loads the given modules into the world' do
       runner.load(context).world.should be_kind_of(some_module)
     end
+
+    it 'loads the DSL module into the world' do
+      runner.load(context).world.should be_kind_of(Turnip::RunnerDSL)
+    end
+
+    it 'adds the runner to the world' do
+      runner.load(context).world.turnip_runner.should eq(runner)
+    end
   end
 
   describe '#run' do
