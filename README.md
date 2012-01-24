@@ -27,7 +27,7 @@ Now edit the `.rspec` file in your project directory (create it if doesn't
 exist), and add the following line:
 
 ```
--r turnip
+-rturnip
 ```
 
 ## Development
