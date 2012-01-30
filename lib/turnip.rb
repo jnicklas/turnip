@@ -25,6 +25,7 @@ module Turnip
 
     def run(feature_file)
       Turnip::Builder.build(feature_file).features.each do |feature|
+        feature.metadata_hash[:file_path] = feature_file.file_name
         describe feature.name, feature.metadata_hash do
           feature.scenarios.each do |scenario|
             it scenario.name, scenario.metadata_hash do
