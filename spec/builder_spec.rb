@@ -29,7 +29,8 @@ describe Turnip::Builder do
   end
   
   describe "taggings" do
-    let(:feature_file) { Turnip::FeatureFile.new(File.expand_path('../examples/autoload_steps.feature', File.dirname(__FILE__))) }
+    let(:feature_path) { File.expand_path('../examples/autoload_steps.feature', File.dirname(__FILE__)) }
+    let(:feature_file) { Turnip::FeatureFile.new(feature_path) }
     let(:builder) { Turnip::Builder.build(feature_file) }
     let(:feature) { builder.features.first }
     
@@ -40,6 +41,10 @@ describe Turnip::Builder do
       
       it 'should automatically include the feature name tag for features' do
         feature.active_tags.should include(:autoload_steps)
+      end
+
+      it 'should automatically set source file name' do
+        feature.metadata_hash[:caller].first.should eq("#{feature_path}:0")
       end
     end
     
