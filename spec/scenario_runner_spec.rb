@@ -20,6 +20,10 @@ describe Turnip::ScenarioRunner do
     it 'creates a scenario context' do
       runner.context.should be_kind_of(Turnip::ScenarioContext)
     end
+
+    it 'adds the context to the world' do
+      runner.world.turnip_context.should eq(runner.context)
+    end
   end
 
   describe '#run' do

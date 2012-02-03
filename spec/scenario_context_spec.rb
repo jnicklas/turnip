@@ -30,6 +30,30 @@ describe Turnip::ScenarioContext do
 
   end
 
+  describe '#disable_tags' do
+
+    let(:tags) { [:tag1, :tag2] }
+
+    before do
+      context.enable_tags(*tags)
+    end
+
+    context 'one tag' do
+      it 'disables the tag' do
+        context.disable_tags(:tag1)
+        context.available_tags.should == [:tag2]
+      end
+    end
+
+    context 'two tags' do
+      it 'disables the tags' do
+        context.disable_tags(:tag1, :tag2)
+        context.available_tags.should == []
+      end
+    end
+
+  end
+
   describe '#available_steps' do
     it 'gathers the steps for the available tags' do
       tags = [stub]

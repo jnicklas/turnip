@@ -20,4 +20,24 @@ describe Turnip::RunnerDSL do
       step.extra_arg.should eq('extra_arg')
     end
   end
+
+  describe '#enable_steps_for' do
+    include Turnip::RunnerDSL
+
+    it 'enables the tag' do
+      self.turnip_context = stub
+      turnip_context.should_receive(:enable_tags).with(:tag)
+      enable_steps_for('tag')
+    end
+  end
+
+  describe '#disable_steps_for' do
+    include Turnip::RunnerDSL
+
+    it 'disables the tag' do
+      self.turnip_context = stub
+      turnip_context.should_receive(:disable_tags).with(:tag)
+      disable_steps_for('tag')
+    end
+  end
 end

@@ -5,9 +5,10 @@ module Turnip
 
     def initialize(world)
       self.world = world
+      self.context = Turnip::ScenarioContext.new(world)
       world.extend Turnip::RunnerDSL
       world.turnip_runner = self
-      self.context = Turnip::ScenarioContext.new(world)
+      world.turnip_context = self.context
     end
 
     def run(feature, scenario)

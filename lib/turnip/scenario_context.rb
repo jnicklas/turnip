@@ -11,6 +11,10 @@ module Turnip
       load_modules(*tags)
     end
 
+    def disable_tags(*tags)
+      tags.each { |t| available_tags.delete(t) }
+    end
+
     def available_steps
       Turnip::StepModule.all_steps_for(*available_tags)
     end
