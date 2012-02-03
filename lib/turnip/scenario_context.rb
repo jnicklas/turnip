@@ -1,41 +1,30 @@
 module Turnip
   class ScenarioContext
-    attr_accessor :feature
-    attr_accessor :scenario
+    attr_accessor :world
 
-    def initialize(feature, scenario)
-      self.feature = feature
-      self.scenario = scenario
+    def initialize(world)
+      self.world = world
     end
 
-    def available_background_steps
-      available_steps_for(*feature_tags)
+    def enable_tags(*tags)
+      available_tags.concat(tags).uniq!
+      load_modules(*tags)
     end
 
-    def available_scenario_steps
-      available_steps_for(*scenario_tags)
+    def available_steps
+      Turnip::StepModule.all_steps_for(*available_tags)
     end
 
-    def backgrounds
-      feature.backgrounds
-    end
-
-    def modules
-      Turnip::StepModule.modules_for(*scenario_tags)
+    def available_tags
+      @tags ||= []
     end
 
     private
 
-    def available_steps_for(*tags)
-      Turnip::StepModule.all_steps_for(*tags)
+    def load_modules(*tags)
+      modules = Turnip::StepModule.modules_for(*tags)
+      modules.each { |mod| world.extend mod }
     end
 
-    def feature_tags
-      @feature_tags ||= feature.active_tags.uniq
-    end
-
-    def scenario_tags
-      @scenario_tags ||= (feature_tags + scenario.active_tags).uniq
-    end
   end
 end

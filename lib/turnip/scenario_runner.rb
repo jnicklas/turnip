@@ -1,35 +1,37 @@
 module Turnip
   class ScenarioRunner
-    attr_accessor :available_steps
     attr_accessor :context
     attr_accessor :world
 
     def initialize(world)
       self.world = world
-    end
-
-    def load(context)
-      self.context = context
       world.extend Turnip::RunnerDSL
       world.turnip_runner = self
-      context.modules.each {|mod| world.extend mod }
-      self
+      self.context = Turnip::ScenarioContext.new(world)
     end
 
-    def run
-      self.available_steps = context.available_background_steps
-      context.backgrounds.each do |background|
+    def run(feature, scenario)
+      run_background_steps(feature)
+      run_scenario_steps(scenario)
+    end
+
+    def run_background_steps(feature)
+      context.enable_tags(*feature.active_tags)
+      feature.backgrounds.each do |background|
         run_steps(background.steps)
       end
+    end
 
-      self.available_steps = context.available_scenario_steps
-      run_steps(context.scenario.steps)
+    def run_scenario_steps(scenario)
+      context.enable_tags(*scenario.active_tags)
+      run_steps(scenario.steps)
     end
 
     def run_steps(steps)
       steps.each do |step|
-        Turnip::StepDefinition.execute(world, available_steps, step)
+        Turnip::StepDefinition.execute(world, context.available_steps, step)
       end
     end
+
   end
 end
