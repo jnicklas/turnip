@@ -340,10 +340,10 @@ Scenario: This is a feature with a table
   Then "Blaaarg" should have 23 hitpoints
   And "Moorg" should have 12 hitpoints
 ```
-The table is a `Turnip::table` object which works in much the same way as Cucumber's
+The table is a `Turnip::Table` object which works in much the same way as Cucumber's
 `Cucumber::Ast::Table` obects.
 
-E.g. converting the `Turnip::table` to an array of hashes:
+E.g. converting the `Turnip::Table` to an array of hashes:
 
 ``` ruby
 step "there are the following monsters:" do |table|
