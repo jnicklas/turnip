@@ -39,10 +39,29 @@ describe Turnip::Table do
     end
   end
 
+  describe '#transpose' do
+    context "when table is 2 columns wide" do
+
+      let(:raw) { [["Name", "Dave"], ["Age", "99"], ["Height", "6ft"]] }
+      it 'transposes the raw table' do
+        table.transpose.hashes.should == [{ "Name" => "Dave", "Age" => "99", "Height" => "6ft" }]
+      end
+    end
+  end
+
   describe '#rows_hash' do
     let(:raw) { [['foo', 'moo'], ['bar', '55']] }
     it 'converts this table into a Hash where the first column is used as keys and the second column is used as values' do
       table.rows_hash.should == {'foo' => 'moo', 'bar' => '55'}
+    end
+
+    context "when table is greater than 2 columns wide" do
+
+      let(:raw) { [["a", "b", "c"], ["1", "2", "3"]] }
+
+      it 'raises an error' do
+        expect { table.rows_hash }.to raise_error
+      end
     end
   end
 
