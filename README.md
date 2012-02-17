@@ -282,6 +282,7 @@ steps_for :user_signup do
   end
 
   step "I should see a welcome message" do
+    ...
   end
 end
 ```
