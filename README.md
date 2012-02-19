@@ -246,6 +246,25 @@ Feature: Red Dragons are deadly
     Then the knight is dead
 ```
 
+### Calling steps from other steps
+You can also call steps from other steps. This is done by just calling `step
+"name_of_the_step"`, so for instance if you have:
+
+``` ruby
+step "a random step" do
+  @value = 1
+end
+
+step "calling a step" do
+  step "a random step"
+  @value += 1
+end
+```
+
+Now if you use the step `calling a step` in any Scenario, then the value of
+`@value` will be 2 afterwards as it first executes the code defined for the step
+`a random step`. You can think of it as a simple method call.
+
 ### Auto-included steps
 By default, Turnip will automatically make available any steps defined in
 a `steps_for` block with the same name as the feature file being run.  For
@@ -263,6 +282,7 @@ steps_for :user_signup do
   end
 
   step "I should see a welcome message" do
+    ...
   end
 end
 ```
@@ -386,3 +406,4 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
