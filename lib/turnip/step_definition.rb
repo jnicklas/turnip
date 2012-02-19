@@ -54,9 +54,13 @@ module Turnip
     OPTIONAL_WORD_REGEXP = /(\\\s)?\\\(([^)]+)\\\)(\\\s)?/
     PLACEHOLDER_REGEXP = /:([\w]+)/
     ALTERNATIVE_WORD_REGEXP = /(\w+)((\/\w+)+)/
+    COMMAND_REGEXP = /`([^`]+)`/
 
     def compile_regexp
       regexp = Regexp.escape(expression)
+      regexp.gsub!(COMMAND_REGEXP) do |_|
+        "(?:[`]([^`]+)[`])"
+      end
       regexp.gsub!(OPTIONAL_WORD_REGEXP) do |_|
         [$1, $2, $3].compact.map { |m| "(#{m})?" }.join
       end
