@@ -28,7 +28,7 @@ module Turnip
         describe feature.name, feature.metadata_hash do
           feature.scenarios.each do |scenario|
             it scenario.name, scenario.metadata_hash do
-              Turnip::ScenarioRunner.new(self).load(Turnip::ScenarioContext.new(feature, scenario)).run
+              Turnip::ScenarioRunner.new(self).run(feature, scenario)
             end
           end
         end
