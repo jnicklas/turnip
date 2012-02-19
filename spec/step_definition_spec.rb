@@ -67,6 +67,12 @@ describe Turnip::StepDefinition do
       step.should match('there is a monster named "Hairy"')
     end
 
+    it "matches backticked placeholders" do
+      step = Turnip::StepDefinition.new("I run `:cmd`") {}
+      step.should match("I run `echo foo`")
+      step.should match(%q{I run `echo "foo 'bar' baz"`})
+    end
+
     it "matches alternative words" do
       step = Turnip::StepDefinition.new("there is/are monsters") {}
       step.should match("there are monsters")
