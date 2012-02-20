@@ -60,7 +60,7 @@ describe Turnip::Table do
       let(:raw) { [["a", "b", "c"], ["1", "2", "3"]] }
 
       it 'raises an error' do
-        expect { table.rows_hash }.to raise_error
+        expect { table.rows_hash }.to raise_error Turnip::Table::WidthMismatch
       end
     end
   end

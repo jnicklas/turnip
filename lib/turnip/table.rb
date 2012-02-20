@@ -22,7 +22,7 @@ module Turnip
     end
 
     def rows_hash
-      raise %{The table must have exactly #{width} columns} unless width == 2
+      raise WidthMismatch.new(2, width) unless width == 2
       transpose.hashes.first
     end
 
@@ -38,6 +38,12 @@ module Turnip
 
     def width
       raw[0].size
+    end
+
+    class WidthMismatch < StandardError
+      def initialize(expected, actual)
+        super("Expected the table to be #{expected} columns wide, got #{actual}")
+      end
     end
   end
 end
