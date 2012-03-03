@@ -3,6 +3,11 @@ Feature: A simple feature
     Given there is a monster called "John Smith"
     Then it should be called "John Smith"
 
+  Scenario: Interpolation with empty quotes
+    Given there is a monster called "John Smith"
+    When I change its name to ""
+    Then it should be nameless
+
   Scenario: Interpolation without quotes
     Given there is a monster called John
     Then it should be called "John"
