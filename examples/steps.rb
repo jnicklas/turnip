@@ -32,6 +32,14 @@ step 'it should be called "John"' do
   @monster_name.should == "John"
 end
 
+step "I change its name to :empty_string" do |empty_string|
+  @monster_name = empty_string
+end
+
+step "it should be nameless" do
+  @monster_name.should == ""
+end
+
 step "there is a monster with :count hitpoints" do |count|
   @monster = count
 end
