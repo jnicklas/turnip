@@ -32,6 +32,10 @@ step 'it should be called "John"' do
   @monster_name.should == "John"
 end
 
+step 'it should be called "O\'Flannahan"' do
+  @monster_name.should == "O'Flannahan"
+end
+
 step "I change its name to :empty_string" do |empty_string|
   @monster_name = empty_string
 end
