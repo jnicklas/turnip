@@ -31,8 +31,9 @@ module Turnip
       attr_reader :scenarios, :backgrounds
       attr_accessor :feature_tag
 
-      def initialize(raw)
+      def initialize(raw, feature_file)
         @raw = raw
+        @feature_file = feature_file
         @scenarios = []
         @backgrounds = []
       end
@@ -46,7 +47,8 @@ module Turnip
       end
 
       def metadata_hash
-        super.merge(:type => Turnip.type, :turnip => true)
+        loc = "#{@feature_file.file_name}:0"
+        super.merge(:type => Turnip.type, :turnip => true, :caller => [loc])
       end
     end
 
@@ -121,7 +123,8 @@ module Turnip
     end
 
     def feature(feature)
-      @current_feature = Feature.new(feature)
+      @current_feature = Feature.new(feature, @feature_file)
+
       # Automatically add a tag based on the name of the feature to the Feature if configured to
       @current_feature.feature_tag = @feature_file.feature_name if Turnip::Config.autotag_features
       @features << @current_feature
