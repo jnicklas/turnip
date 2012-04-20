@@ -5,7 +5,7 @@ module Turnip
     end
 
     def step(description, &block)
-      global_step_module_entry.step_module.steps << Turnip::StepDefinition.new(description, &block)
+      Turnip::Steps.step(description, &block)
     end
 
     def steps_for(tag, &block)

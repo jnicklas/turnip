@@ -79,6 +79,10 @@ step "the song should have :count lines" do |count|
   @song.to_s.split("\n").length.should eq(count)
 end
 
+step "raise error" do
+  raise "foobar"
+end
+
 placeholder :count do
   match /\d+/ do |count|
     count.to_i
