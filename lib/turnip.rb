@@ -56,6 +56,10 @@ module Turnip
   # The global step module
   module Steps
     extend StepDSL
+
+    def step(description)
+      turnip_step(description)
+    end
   end
 
   class << self
