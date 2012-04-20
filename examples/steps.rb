@@ -17,7 +17,7 @@ end
 step "this is ambiguous" do
 end
 
-step "this is ambiguous" do
+step "this is :ambiguous" do
 end
 
 step "there is a monster called :name" do |name|

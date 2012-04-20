@@ -1,3 +1,4 @@
+@step_calling
 Feature: Step-calling steps
 
   @wip

@@ -4,10 +4,6 @@ module Turnip
       def tags
         @raw.tags.map { |tag| tag.name.sub(/^@/, '') }
       end
-      
-      def active_tags
-        tags.map(&:to_sym)
-      end
 
       def tags_hash
         Hash[tags.map { |t| [t.to_sym, true] }]
@@ -35,14 +31,6 @@ module Turnip
         @raw = raw
         @scenarios = []
         @backgrounds = []
-      end
-      
-      # Feature's active_tags automatically prepends the :global tag
-      # as well as its feature_tag if defined
-      def active_tags
-        active_tags = [:global]
-        active_tags << feature_tag.to_sym if feature_tag
-        active_tags + super
       end
 
       def metadata_hash
@@ -102,7 +90,7 @@ module Turnip
 
     class << self
       def build(feature_file)
-        Turnip::Builder.new(feature_file).tap do |builder|
+        Turnip::Builder.new.tap do |builder|
           formatter = Gherkin::Formatter::TagCountFormatter.new(builder, {})
           parser = Gherkin::Parser::Parser.new(formatter, true, "root", false)
           parser.parse(feature_file.content, nil, 0)
@@ -110,8 +98,7 @@ module Turnip
       end
     end
 
-    def initialize(feature_file)
-      @feature_file = feature_file
+    def initialize
       @features = []
     end
 
@@ -122,8 +109,6 @@ module Turnip
 
     def feature(feature)
       @current_feature = Feature.new(feature)
-      # Automatically add a tag based on the name of the feature to the Feature if configured to
-      @current_feature.feature_tag = @feature_file.feature_name if Turnip::Config.autotag_features
       @features << @current_feature
     end
 

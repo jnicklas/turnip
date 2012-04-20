@@ -32,7 +32,7 @@ module Turnip
       module_registry[tag] << anon
 
       RSpec.configure do |config|
-        config.include anon #, tag => true
+        config.include anon, tag => true
       end
     end
 

@@ -28,8 +28,9 @@ module Turnip
       object.send(:define_method, "execute: #{step.expression}", &block)
     end
 
-    def self.execute(object, description)
+    def self.execute(object, description, extra_arg=nil)
       match = find_step(object, description)
+      match.params.push(extra_arg) if extra_arg
       object.send("execute: #{match.expression}", *match.params)
     end
 
@@ -57,8 +58,8 @@ module Turnip
   module Steps
     extend StepDSL
 
-    def step(description)
-      turnip_step(description)
+    def step(description, extra_arg=nil)
+      turnip_step(description, extra_arg)
     end
   end
 
@@ -68,13 +69,20 @@ module Turnip
     def run(feature_file)
       Turnip::Builder.build(feature_file).features.each do |feature|
         describe feature.name, feature.metadata_hash do
+          before do
+            feature.backgrounds.map(&:steps).flatten.each do |step|
+              turnip_step step.description
+            end
+          end
           feature.scenarios.each do |scenario|
-            it scenario.name, scenario.metadata_hash do
-              scenario.steps.each do |step|
-                begin
-                  turnip_step(step.description)
-                rescue Turnip::Pending
-                  pending("No such step: '#{step.description}'")
+            describe scenario.name, scenario.metadata_hash do
+              it scenario.steps.map(&:description).join(' -> ') do
+                scenario.steps.each do |step|
+                  begin
+                    turnip_step(step.description, step.extra_arg)
+                  rescue Turnip::Pending
+                    pending("No such step: '#{step.description}'")
+                  end
                 end
               end
             end
@@ -95,8 +103,8 @@ RSpec.configure do |config|
 end
 
 class Object
-  def turnip_step(description)
-    Turnip::Step.execute(self, description)
+  def turnip_step(description, extra_arg=nil)
+    Turnip::Step.execute(self, description, extra_arg)
   end
 end
 

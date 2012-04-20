@@ -1,3 +1,5 @@
+require_relative "knight_steps"
+
 steps_for :red_dragon do
   use_steps :dragon
 
