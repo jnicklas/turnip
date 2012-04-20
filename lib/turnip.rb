@@ -44,11 +44,14 @@ module Turnip
     extend Define
     include Execute
 
-    def step(description, extra_arg=nil)
+    def run_step(feature_file, step)
       begin
-        super
+        step(step.description, step.extra_arg)
       rescue Turnip::Pending
-        pending("No such step: '#{description}'")
+        pending("No such step: '#{step.description}'")
+      rescue StandardError => e
+        e.backtrace.unshift "#{feature_file}:#{step.line}:in `#{step.description}'"
+        raise e
       end
     end
   end
@@ -60,15 +63,18 @@ module Turnip
       Turnip::Builder.build(feature_file).features.each do |feature|
         describe feature.name, feature.metadata_hash do
           before do
+            # This is kind of a hack, but it will make RSpec throw way nicer exceptions
+            example.metadata[:file_path] = feature_file
+
             feature.backgrounds.map(&:steps).flatten.each do |step|
-              step(step.description, step.extra_arg)
+              run_step(feature_file, step)
             end
           end
           feature.scenarios.each do |scenario|
             describe scenario.name, scenario.metadata_hash do
               it scenario.steps.map(&:description).join(' -> ') do
                 scenario.steps.each do |step|
-                  step(step.description, step.extra_arg)
+                  run_step(feature_file, step)
                 end
               end
             end

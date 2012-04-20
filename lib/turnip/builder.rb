@@ -33,6 +33,10 @@ module Turnip
         @backgrounds = []
       end
 
+      def line
+        @raw.line
+      end
+
       def metadata_hash
         super.merge(:type => Turnip.type, :turnip => true)
       end
@@ -76,14 +80,17 @@ module Turnip
           Scenario.new(@raw).tap do |scenario|
             scenario.steps = steps.map do |step|
               new_description = step.description.gsub(/<([^>]*)>/) { |_| Hash[headers.zip(row)][$1] }
-              Step.new(new_description, step.extra_arg)
+              Step.new(new_description, step.extra_arg, step.line)
             end
           end
         end
       end
     end
 
-    class Step < Struct.new(:description, :extra_arg)
+    class Step < Struct.new(:description, :extra_arg, :line)
+      def to_s
+        description
+      end
     end
 
     attr_reader :features
@@ -131,7 +138,7 @@ module Turnip
       elsif step.rows
         extra_arg = Turnip::Table.new(step.rows.map { |row| row.cells(&:value) })
       end
-      @current_step_context.steps << Step.new(step.name, extra_arg)
+      @current_step_context.steps << Step.new(step.name, extra_arg, step.line)
     end
 
     def eof
