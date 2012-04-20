@@ -18,40 +18,38 @@ module Turnip
   autoload :Table, 'turnip/table'
   autoload :StepLoader, 'turnip/step_loader'
   autoload :StepModule, 'turnip/step_module'
-  autoload :ScenarioRunner, 'turnip/scenario_runner'
   autoload :RunnerDSL, 'turnip/runner_dsl'
   autoload :ScenarioContext, 'turnip/scenario_context'
 
   module Step
-    def self.define(object, text, &block)
-      step = Turnip::StepDefinition.new(text, &block)
+    def self.define(object, expression, &block)
+      step = Turnip::StepDefinition.new(expression, &block)
       object.send(:define_method, "step: #{step.expression}") { step }
       object.send(:define_method, "execute: #{step.expression}", &block)
     end
 
-    def self.execute(object, text)
-      match = find_step(object, text)
-      if match
-        object.send("execute: #{match.expression}", *match.params)
-      else
-        raise Turnip::Pending, text
-      end
+    def self.execute(object, description)
+      match = find_step(object, description)
+      object.send("execute: #{match.expression}", *match.params)
     end
 
-    def self.find_step(object, text)
-      object.methods.each do |method|
+    def self.find_step(object, description)
+      matches = object.methods.inject([]) do |agg, method|
         method = method.to_s
-        next unless method.start_with?("step:")
-        match = object.send(method).match(text)
-        return match if match
-      end
-      nil
+        if method.start_with?("step:")
+          agg << object.send(method).match(description)
+        end
+        agg
+      end.compact
+      raise Pending, description if matches.length == 0
+      raise Ambiguous, description if matches.length > 1
+      matches.first
     end
   end
 
   module StepDSL
-    def step(text, &block)
-      Step.define(self, text, &block)
+    def step(expression, &block)
+      Step.define(self, expression, &block)
     end
   end
 
@@ -93,8 +91,8 @@ RSpec.configure do |config|
 end
 
 class Object
-  def turnip_step(text)
-    Turnip::Step.execute(self, text)
+  def turnip_step(description)
+    Turnip::Step.execute(self, description)
   end
 end
 

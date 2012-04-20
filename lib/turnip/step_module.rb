@@ -77,6 +77,10 @@ module Turnip
       entry = Entry.new(tag, anon, anon.uses_steps)
 
       module_registry[tag] << entry
+
+      RSpec.configure do |config|
+        config.include anon, tag => true
+      end
     end
 
     def step_module(&block)
