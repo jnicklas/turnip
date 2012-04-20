@@ -22,8 +22,8 @@ module Turnip
   module Execute
     def step(description, extra_arg=nil)
       matches = methods.map do |method|
-        next unless method.to_s.start_with?("step:")
-        send(method.to_s).match(description)
+        next unless method.to_s.start_with?("match: ")
+        send(method.to_s, description)
       end.compact
       raise Turnip::Pending, description if matches.length == 0
       raise Turnip::Ambiguous, description if matches.length > 1
@@ -34,7 +34,7 @@ module Turnip
   module Define
     def step(expression, &block)
       step = Turnip::StepDefinition.new(expression, &block)
-      send(:define_method, "step: #{expression}") { step }
+      send(:define_method, "match: #{expression}") { |description| step.match(description) }
       send(:define_method, "execute: #{expression}", &block)
     end
   end
