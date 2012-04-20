@@ -4,30 +4,7 @@ module Turnip
       def expression; step_definition.expression; end
     end
 
-    class Pending < StandardError; end
-    class Ambiguous < StandardError; end
-
     attr_reader :expression, :block
-
-    class << self
-      def execute(context, available_steps, step)
-        match = find(available_steps, step.description)
-        params = match.params
-        params << step.extra_arg if step.extra_arg
-        context.instance_exec(*params, &match.block)
-      rescue Pending
-        context.pending "the step '#{step.description}' is not implemented"
-      end
-
-      def find(available_steps, description)
-        found = available_steps.map do |step|
-          step.match(description)
-        end.compact
-        raise Pending, description if found.length == 0
-        raise Ambiguous, description if found.length > 1
-        found[0]
-      end
-    end
 
     def initialize(expression, &block)
       @expression = expression

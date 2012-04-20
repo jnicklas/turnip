@@ -38,7 +38,7 @@ module Turnip
 
     def step_module(&block)
       anon = Module.new
-      anon.extend(Turnip::StepDSL)
+      anon.extend(Turnip::Define)
       anon.extend(Turnip::StepModule::DSL)
       anon.module_eval(&block)
       anon

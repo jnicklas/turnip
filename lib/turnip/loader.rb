@@ -7,7 +7,7 @@ module Turnip
         rescue LoadError
         end
         Turnip::StepLoader.load_steps
-        Turnip.run(Turnip::FeatureFile.new(a.first))
+        Turnip.run(a.first)
       else
         super
       end
