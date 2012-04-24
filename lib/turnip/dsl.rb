@@ -13,10 +13,12 @@ module Turnip
         warn "[Turnip] using steps_for(:global) is deprecated, add steps to Turnip::Steps instead"
         Turnip::Steps.module_eval(&block)
       else
-        mod = Module.new
-        mod.extend Turnip::Define
-        mod.module_eval(&block)
-        ::RSpec.configure { |c| c.include mod, tag => true }
+        Module.new do
+          singleton_class.send(:define_method, :tag) { tag }
+          extend Turnip::Define
+          module_eval(&block)
+          ::RSpec.configure { |c| c.include self, tag => true }
+        end
       end
     end
   end
