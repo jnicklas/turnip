@@ -250,6 +250,7 @@ monster = Monster.new
 monster.step("sing a song")
 monster.step("eat 1 villager")
 monster.step("eat 5 villagers")
+```
 
 Note that in this case `step` from `Turnip::Execute` is an *instance* method,
 whereas `step` used to define the step is a *class* method, they are *not* the
