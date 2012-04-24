@@ -18,6 +18,10 @@ module Turnip
   autoload :Table, 'turnip/table'
   autoload :StepLoader, 'turnip/step_loader'
 
+  class << self
+    attr_accessor :step_dirs
+  end
+
   module Execute
     def step(description, extra_arg=nil)
       matches = methods.map do |method|
@@ -85,6 +89,7 @@ module Turnip
 end
 
 Turnip.type = :turnip
+Turnip.step_dirs = ['spec']
 
 RSpec::Core::Configuration.send(:include, Turnip::Loader)
 

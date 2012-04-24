@@ -17,7 +17,7 @@ module Turnip
     private
 
     def load_step_files
-      Turnip::Config.step_dirs.each do |dir|
+      Turnip.step_dirs.each do |dir|
         Pathname.glob(Pathname.new(dir) + '**' + "*steps.rb").each do |step_file|
           load step_file, true
         end
