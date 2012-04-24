@@ -1,6 +1,4 @@
 module KnightSteps
-  extend Turnip::Define
-
   attr_accessor :knight
 
   class Knight

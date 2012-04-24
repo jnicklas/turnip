@@ -1,7 +1,7 @@
 require "spec_helper"
 
-describe Turnip::Define do
-  let(:mod) { Module.new { extend Turnip::Define } }
+describe Turnip::Execute do
+  let(:mod) { Module.new }
   let(:obj) { Object.new.tap { |o| o.extend Turnip::Execute; o.extend mod } }
 
   it "defines a step method and makes it callable" do

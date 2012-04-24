@@ -1,8 +1,6 @@
 require_relative "knight_steps"
 
 module DragonSteps
-  extend Turnip::Define
-
   include KnightSteps
 
   attr_accessor :dragon
@@ -21,8 +19,6 @@ module DragonSteps
 end
 
 module RedDragonSteps
-  extend Turnip::Define
-
   include DragonSteps
 
   attr_accessor :red_dragon

@@ -1,6 +1,4 @@
 module Alignment
-  extend Turnip::Define
-
   attr_accessor :alignment
 
   step "that alignment should be :alignment" do |expected_alignment|

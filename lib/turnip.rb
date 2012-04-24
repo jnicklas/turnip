@@ -17,7 +17,6 @@ module Turnip
   # your tests.
   #
   module Steps
-    extend Define
   end
 
   class << self
@@ -35,6 +34,8 @@ end
 
 Turnip.type = :turnip
 Turnip.step_dirs = ['spec']
+
+Module.send(:include, Turnip::Define)
 
 self.extend Turnip::DSL
 
