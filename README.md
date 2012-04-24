@@ -27,7 +27,7 @@ Now edit the `.rspec` file in your project directory (create it if doesn't
 exist), and add the following line:
 
 ```
--r turnip
+-r turnip/rspec
 ```
 
 ## Development
@@ -73,39 +73,39 @@ Yes, that's really it.
 
 ## Defining steps
 
-You might want to define some steps.  Just as in cucumber, your step files
-should be named `[something]_steps.rb`.  All files ending in `*steps.rb`
-will be automatically required if they are under the Turnip step directory.
-
-The default step directory for Turnip is `spec/`.  You can override this
-in your `spec_helper` by setting `Turnip::Config.step_dirs`.  For example:
+You can define steps on any module:
 
 ``` ruby
-# spec/spec_helper.rb
-RSpec.configure do |config|
-  Turnip::Config.step_dirs = 'examples'
-  Turnip::StepLoader.load_steps
+module MonsterSteps
+  step "there is a monster" do
+    @monster = Monster.new
+  end
 end
 ```
 
-This would set the Turnip step dirs to `examples/` and automatically load
-all `*steps.rb` files anywhere under that directory.
+You can now include this module in RSpec:
 
-The steps you define in your step files can be global or they can be scoped
-to certain features (or scenarios)...
+``` ruby
+RSpec.configure { |c| c.include MonsterSteps }
+```
+
+Steps are implemented as regular Ruby methods under the hood, so you can
+use Ruby's normal inheritance chain to mix and match steps.
 
 ### Global steps
-Global steps can be used by any feature/scenario you write since they are
-unscoped.  The names must be unique across all step files in the global
-namespace.
 
-Define them in your step file like this:
+Turnip has a special module called `Turnip::Steps`, which is automatically
+included in RSpec. If you add steps to this module, they are available in all
+your features. As a convenience, there is a shortcut to doing this, just call
+`step` in the global namespace like this:
 
 ``` ruby
 step "there is a monster" do
   @monster = Monster.new
 end
 ```
+
+### Placeholders
 
 Note that unlike Cucumber, Turnip does not support regexps in step definitions.
 You can however use placeholders in your step definitions, like this:
@@ -133,31 +133,40 @@ end
 
 That will match both "there is X monster" or "there are X monsters".
 
-You can also define custom step placeholders.  More on that later.
+You can also define custom step placeholders. More on that later.
 
 ### Scoped steps
-Scoped steps help you to organize steps that are specific to
-certain features or scenarios.  They only need to be unique within
-the scopes being used by the running scenario.
 
-To define scoped steps use `steps_for`:
+Since steps are defined on modules, you can pick and choose which of them are
+available in which feature. This can be extremely useful if you have a large
+number of steps, and do not want them to potentially conflict.
+
+If you had some scenarios which talk to the database directly, and some which
+go through a user interface, you could implement it as follows:
 
 ``` ruby
-steps_for :interface do
+module InterfaceSteps
   step "I do it" do
     ...
   end
 end
 
-steps_for :database do
+module DatabaseSteps
   step "I do it" do
     ...
   end
+end
+
+RSpec.configure do |config|
+  config.include InterfaceSteps, :interface => true
+  config.include DatabaseSteps, :database => true
 end
 ```
 
-Even though the step is named the same, you can now use it in
-your feature files like so:
+Turnip turns tags into RSpec metadata, so you can use RSpec's conditional
+include feature to include these steps only for those scenarios tagged the
+appropriate way. So even though the step is named the same, you can now use it
+in your feature files like so:
 
 ``` cucumber
 @interface
@@ -167,86 +176,42 @@ Scenario: do it through the interface
 Scenario: do it through the database
 ```
 
-Note that this would still cause an error if you tagged a Scenario
-with both `@interface` and `@database` at the same time.
+Be careful though not to tag a feature with both `@interface` and `@database`
+in this example. Since steps use the Ruby inheritance chain, the step which is
+included last will "win", just like any other Ruby method. This might not be
+what you expect.
 
-Scoped steps are really just Ruby modules under the covers so you
-can do anything you'd normally want to do including defining
-helper/utility methods and variables.  Check out
-[features/alignment_steps.rb](https://github.com/jnicklas/turnip/blob/master/examples/alignment_steps.rb)
-and
-[features/evil_steps.rb](https://github.com/jnicklas/turnip/blob/master/examples/evil_steps.rb) for basic examples.
-
-### Reusing steps
-When using scoped steps in Turnip, you can tell it to also include steps
-defined in another `steps_for` block.  The syntax for that is `use_steps`:
+Since this pattern of creating a module and including it for a specific tag
+is very common, we have created a handy shortcut for it:
 
 ``` ruby
-# dragon_steps.rb
-steps_for :dragon do
-  use_steps :knight
-
-  attr_accessor :dragon
-
-  def dragon_attack
-    dragon * 10
-  end
-
-  step "there is a dragon" do
-    self.dragon = 1
-  end
-
-  step "the dragon attacks the knight" do
-    knight.attacked_for(dragon_attack)
-  end
-end
-
-# red_dragon_steps.rb
-steps_for :red_dragon do
-  use_steps :dragon
-
-  attr_accessor :red_dragon
-
-  def dragon_attack
-    attack = super
-    if red_dragon
-      attack + 15
-    else
-      attack
-    end
-  end
-
-  step "the dragon breathes fire" do
-    self.red_dragon = 1
+steps_for :interface do
+  step "I do it" do
+    ...
   end
 end
 ```
 
+Check out [features/alignment_steps.rb](https://github.com/jnicklas/turnip/blob/master/examples/alignment_steps.rb)
+for an example.
 
-In this example we are making full use of Ruby's modules including using super
-to call the included module's version of `dragon_attack`, for example with the
-following feature file:
+### Where to place steps
 
-``` cucumber
-Feature: Red Dragons are deadly
+All files ending in `*steps.rb` will be automatically required if they are
+under the Turnip step directory. The default step directory for Turnip is
+`spec/`. You can override this in your `spec_helper` by setting
+`Turnip.step_dirs`. For example:
 
-  @dragon
-  Scenario:
-    Given there is a dragon
-    And there is a knight
-    When the dragon attacks the knight
-    Then the knight is alive
-
-  @red_dragon
-  Scenario:
-    Given there is a dragon
-    And the dragon breathes fire
-    And there is a knight
-    When the dragon attacks the knight
-    Then the knight is dead
+``` ruby
+# spec/spec_helper.rb
+Turnip.step_dirs = ['examples']
 ```
+
+This would set the Turnip step dirs to `examples/` and automatically load
+all `*steps.rb` files anywhere under that directory.
 
 ### Calling steps from other steps
+
 You can also call steps from other steps. This is done by just calling `step
 "name_of_the_step"`, so for instance if you have:
 
@@ -265,51 +230,36 @@ Now if you use the step `calling a step` in any Scenario, then the value of
 `@value` will be 2 afterwards as it first executes the code defined for the step
 `a random step`. You can think of it as a simple method call.
 
-### Auto-included steps
-By default, Turnip will automatically make available any steps defined in
-a `steps_for` block with the same name as the feature file being run.  For
-example, given this step file:
+### Calling steps manually
+
+This is a more esoteric feature of Turnip, of use mostly to people who want to
+do crazy stuff. The `Turnip::Execute` module has a method called `step`, this
+method executes a step, given a string as it might appear in a feature file.
+
+For example:
 
 ``` ruby
-# user_signup_steps.rb
-steps_for :user_signup do
-  step "I am on the homepage" do
-    ...
-  end
+class Monster
+  include Turnip::Execute
 
-  step "I signup with valid info" do
-    ...
-  end
-
-  step "I should see a welcome message" do
-    ...
-  end
+  step("sing a song") { "Arrrghghggh" }
+  step("eat :count villager(s)") { Villager.eat(count) }
 end
-```
 
-Then the following feature file would run just fine even though we
-did not explicitly tag it with `@user_signup`.
+monster = Monster.new
+monster.step("sing a song")
+monster.step("eat 1 villager")
+monster.step("eat 5 villagers")
 
-``` cucumber
-# user_signup.feature
-Feature: A user can signup
-  Scenario: with email address
-    Given I am on the homepage
-    When I signup with valid info
-    Then I should see a welcome message
-```
-
-Note that the `steps_for :user_signup` did not technically have to
-appear in the user_signup_steps.rb file; it could have been located
-in any `steps.rb` file that was autoloaded by Turnip.
-
-This feature can be turned off using the `Turnip::Config.autotag_features`
-option if desired.
+Note that in this case `step` from `Turnip::Execute` is an *instance* method,
+whereas `step` used to define the step is a *class* method, they are *not* the
+same method.
 
 ## Custom step placeholders
-Do you want to be more specific in what to match in your step
-placeholders?  Do you find it bothersome to have to constantly cast them to the
-correct type?  Turnip supports custom placeholders to solve both problems, like this:
+
+Do you want to be more specific in what to match in your step placeholders? Do
+you find it bothersome to have to constantly cast them to the correct type?
+Turnip supports custom placeholders to solve both problems, like this:
 
 ``` ruby
 step "there are :count monsters" do |count|
@@ -349,6 +299,7 @@ These regular expressions must not use anchors, e.g. `^` or `$`. They may not
 contain named capture groups, e.g. `(?<color>blue|green)`.
 
 ## Table Steps
+
 Turnip also supports steps that take a table as a parameter similar to Cucumber:
 
 ``` cucumber
@@ -361,7 +312,7 @@ Scenario: This is a feature with a table
   And "Moorg" should have 12 hitpoints
 ```
 The table is a `Turnip::Table` object which works in much the same way as Cucumber's
-`Cucumber::Ast::Table` obects.
+`Cucumber::Ast::Table` objects.
 
 E.g. converting the `Turnip::Table` to an array of hashes:
 
@@ -376,34 +327,32 @@ end
 
 ## Using with Capybara
 
-Just require `turnip/capybara` in your `spec_helper`. You can now use the
-same tags you'd use in Cucumber to switch between drivers e.g.
-`@javascript` or `@selenium`. Your Turnip features will also be run
-with the `:type => :request` metadata, so that Capybara is included and
-also any other extensions you might want to add.
+Just require `turnip/capybara` in your `spec_helper`. You can now use the same
+tags you'd use in Cucumber to switch between drivers e.g.  `@javascript` or
+`@selenium`. Your Turnip features will also be run with the `:type => :request`
+metadata, so that Capybara is included and also any other extensions you might
+want to add.
 
 ## License
 
 (The MIT License)
 
-Copyright (c) 2011 Jonas Nicklas
+Copyright (c) 2011-2012 Jonas Nicklas
 
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the 'Software'), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
