@@ -36,7 +36,7 @@ module Turnip
         begin
           step(step)
         rescue Turnip::Pending
-          pending("No such step: '#{step.description}'")
+          pending("No such step: '#{step}'")
         rescue StandardError => e
           e.backtrace.unshift "#{feature_file}:#{step.line}:in `#{step.description}'"
           raise e
