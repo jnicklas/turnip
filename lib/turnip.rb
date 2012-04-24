@@ -11,7 +11,11 @@ module Turnip
   class Pending < StandardError; end
   class Ambiguous < StandardError; end
 
-  # The global step module
+  ##
+  #
+  # The global step module, adding steps here will make them available in all
+  # your tests.
+  #
   module Steps
     extend Define
   end
