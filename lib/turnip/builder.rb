@@ -1,5 +1,4 @@
 require "gherkin"
-require "gherkin/formatter/tag_count_formatter"
 
 module Turnip
   class Builder
@@ -101,8 +100,7 @@ module Turnip
     class << self
       def build(feature_file)
         Turnip::Builder.new.tap do |builder|
-          formatter = Gherkin::Formatter::TagCountFormatter.new(builder, {})
-          parser = Gherkin::Parser::Parser.new(formatter, true, "root", false)
+          parser = Gherkin::Parser::Parser.new(builder, true)
           parser.parse(File.read(feature_file), nil, 0)
         end
       end
@@ -142,6 +140,9 @@ module Turnip
         extra_arg = Turnip::Table.new(step.rows.map { |row| row.cells(&:value) })
       end
       @current_step_context.steps << Step.new(step.name, extra_arg, step.line)
+    end
+
+    def uri(*)
     end
 
     def eof
