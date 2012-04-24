@@ -15,6 +15,9 @@ module Turnip
         params = match.params
         params << step.extra_arg if step.extra_arg
         context.instance_exec(*params, &match.block)
+      rescue RSpec::Expectations::ExpectationNotMetError => e
+        e.backtrace << "#{step.file_name}:#{step.line}"
+        raise e
       rescue Pending
         context.pending "the step '#{step.description}' is not implemented"
       end
