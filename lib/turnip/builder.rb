@@ -96,6 +96,7 @@ module Turnip
     end
 
     class Step < Struct.new(:description, :extra_arg)
+      attr_accessor :file_name, :line
     end
 
     attr_reader :features
@@ -146,7 +147,10 @@ module Turnip
       elsif step.rows
         extra_arg = Turnip::Table.new(step.rows.map { |row| row.cells(&:value) })
       end
-      @current_step_context.steps << Step.new(step.name, extra_arg)
+      @current_step_context.steps << Step.new(step.name, extra_arg).tap do |s|
+        s.file_name = @feature_file.file_name
+        s.line = step.line
+      end
     end
 
     def eof

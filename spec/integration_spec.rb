@@ -11,6 +11,10 @@ describe 'The CLI', :type => :integration do
   end
 
   it "prints out failures and successes" do
-    @result.should include('26 examples, 1 failure, 2 pending')
+    @result.should include('27 examples, 2 failures, 2 pending')
+  end
+  
+  it "prints out the file name and line number" do
+    @result.should include("./examples/failing.feature:4")
   end
 end
