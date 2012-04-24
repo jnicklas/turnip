@@ -17,7 +17,6 @@ module Turnip
   autoload :Placeholder, 'turnip/placeholder'
   autoload :Table, 'turnip/table'
   autoload :StepLoader, 'turnip/step_loader'
-  autoload :StepModule, 'turnip/step_module'
 
   module Execute
     def step(description, extra_arg=nil)

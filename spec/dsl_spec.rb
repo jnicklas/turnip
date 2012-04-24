@@ -1,16 +1,10 @@
 require 'spec_helper'
 
 describe Turnip::DSL do
-  before do
-    Turnip::StepModule.clear_module_registry
-  end
-
   let(:context) { stub.tap { |s| s.extend(Turnip::DSL) }}
 
   describe '.steps_for' do
-    it 'delegates to StepModule' do
-      Turnip::StepModule.should_receive(:steps_for).with(:example)
-      context.steps_for(:example) {}
+    pending 'adds the module to RSpec' do
     end
   end
 
