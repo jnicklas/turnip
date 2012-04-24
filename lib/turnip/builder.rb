@@ -82,14 +82,14 @@ module Turnip
           Scenario.new(@raw).tap do |scenario|
             scenario.steps = steps.map do |step|
               new_description = step.description.gsub(/<([^>]*)>/) { |_| Hash[headers.zip(row)][$1] }
-              Step.new(new_description, step.extra_arg, step.line)
+              Step.new(new_description, step.extra_args, step.line)
             end
           end
         end
       end
     end
 
-    class Step < Struct.new(:description, :extra_arg, :line)
+    class Step < Struct.new(:description, :extra_args, :line)
       def to_s
         description
       end
@@ -134,12 +134,13 @@ module Turnip
     end
 
     def step(step)
+      extra_args = []
       if step.doc_string
-        extra_arg = step.doc_string.value
+        extra_args.push step.doc_string.value
       elsif step.rows
-        extra_arg = Turnip::Table.new(step.rows.map { |row| row.cells(&:value) })
+        extra_args.push Turnip::Table.new(step.rows.map { |row| row.cells(&:value) })
       end
-      @current_step_context.steps << Step.new(step.name, extra_arg, step.line)
+      @current_step_context.steps << Step.new(step.name, extra_args, step.line)
     end
 
     def uri(*)

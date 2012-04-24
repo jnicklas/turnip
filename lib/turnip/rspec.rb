@@ -34,7 +34,7 @@ module Turnip
 
       def run_step(feature_file, step)
         begin
-          step(step.description, step.extra_arg)
+          step(step)
         rescue Turnip::Pending
           pending("No such step: '#{step.description}'")
         rescue StandardError => e
