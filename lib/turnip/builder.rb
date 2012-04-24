@@ -1,3 +1,6 @@
+require "gherkin"
+require "gherkin/formatter/tag_count_formatter"
+
 module Turnip
   class Builder
     module Tags

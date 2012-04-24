@@ -16,7 +16,7 @@ module Turnip
         mod = Module.new
         mod.extend Turnip::Define
         mod.module_eval(&block)
-        RSpec.configure { |c| c.include mod, tag => true }
+        ::RSpec.configure { |c| c.include mod, tag => true }
       end
     end
   end
