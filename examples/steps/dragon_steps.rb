@@ -1,7 +1,9 @@
 require_relative "knight_steps"
 
-steps_for :dragon do
-  use_steps :knight
+module DragonSteps
+  extend Turnip::Define
+
+  include KnightSteps
 
   attr_accessor :dragon
 
@@ -17,3 +19,27 @@ steps_for :dragon do
     knight.attacked_for(dragon_attack)
   end
 end
+
+module RedDragonSteps
+  extend Turnip::Define
+
+  include DragonSteps
+
+  attr_accessor :red_dragon
+
+  def dragon_attack
+    attack = super
+    if red_dragon
+      attack + 15
+    else
+      attack
+    end
+  end
+
+  step "the dragon breathes fire" do
+    self.red_dragon = 1
+  end
+end
+
+RSpec.configure { |c| c.include DragonSteps, :dragon => true }
+RSpec.configure { |c| c.include RedDragonSteps, :red_dragon => true }
