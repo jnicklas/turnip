@@ -35,17 +35,17 @@ module Turnip
 
     def compile_regexp
       regexp = Regexp.escape(expression)
+      regexp.gsub!(PLACEHOLDER_REGEXP) do |_|
+        "(?<#{$1}>#{Placeholder.resolve($1.to_sym)})"
+      end
       regexp.gsub!(COMMAND_REGEXP) do |_|
         "(?:[`]([^`]+)[`])"
       end
       regexp.gsub!(OPTIONAL_WORD_REGEXP) do |_|
-        [$1, $2, $3].compact.map { |m| "(#{m})?" }.join
+        [$1, $2, $3].compact.map { |m| "(?:#{m})?" }.join
       end
       regexp.gsub!(ALTERNATIVE_WORD_REGEXP) do |_|
-        "(#{$1}#{$2.tr('/', '|')})"
-      end
-      regexp.gsub!(PLACEHOLDER_REGEXP) do |_|
-        "(?<#{$1}>#{Placeholder.resolve($1.to_sym)})"
+        "(?:#{$1}#{$2.tr('/', '|')})"
       end
       Regexp.new("^#{regexp}$")
     end

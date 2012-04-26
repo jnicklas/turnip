@@ -79,6 +79,26 @@ step "the song should have :count lines" do |count|
   @song.to_s.split("\n").length.should eq(count)
 end
 
+step "it should be strong/tough" do
+  @monster.should >= 2
+end
+
+step "it should be (a) badass" do
+  @monster.should >= 2
+end
+
+step "it should be (a) badass" do
+  @monster.should >= 2
+end
+
+step "it should be terrible(st)" do
+  @monster.should >= 2
+end
+
+step "it (should) have/has :count (terrifying) hitpoint(s)" do |count|
+  @monster.should == count
+end
+
 step "raise error" do
   raise "foobar"
 end
