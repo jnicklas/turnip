@@ -192,7 +192,8 @@ steps_for :interface do
 end
 ```
 
-Check out [features/alignment_steps.rb](https://github.com/jnicklas/turnip/blob/master/examples/alignment_steps.rb)
+Check out [features/alignment_steps.rb](https://github.com/jnicklas/turnip/blob/master/examples/steps/alignment_steps.rb)
+                                        
 for an example.
 
 ### Where to place steps
