@@ -27,7 +27,7 @@ Now edit the `.rspec` file in your project directory (create it if doesn't
 exist), and add the following line:
 
 ```
--r turnip/rspec
+-r turnip
 ```
 
 ## Development
@@ -201,15 +201,16 @@ for an example.
 All files ending in `*steps.rb` will be automatically required if they are
 under the Turnip step directory. The default step directory for Turnip is
 `spec/`. You can override this in your `spec_helper` by setting
-`Turnip.step_dirs`. For example:
+`Turnip::Config.step_dirs`. For example:
 
 ``` ruby
 # spec/spec_helper.rb
-Turnip.step_dirs = ['examples']
+Turnip.step_dirs = ['spec/examples']
 ```
 
-This would set the Turnip step dirs to `examples/` and automatically load
-all `*steps.rb` files anywhere under that directory.
+This would set the Turnip step dirs to `spec/examples/`. This is relative to the APP_ROOT, *not* the `spec/` directory itself.
+( e.g this means the directory checked is #{APP_ROOT}/spec/examples/ ) 
+All `*steps.rb` files anywhere under the `spec/examples/` directory would then be autoloaded.
 
 ### Calling steps from other steps
 
