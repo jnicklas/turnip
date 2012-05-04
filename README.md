@@ -205,10 +205,11 @@ under the Turnip step directory. The default step directory for Turnip is
 
 ``` ruby
 # spec/spec_helper.rb
-Turnip.step_dirs = ['examples']
+Turnip.step_dirs = ['spec/examples']
 ```
 
-This would set the Turnip step dirs to `examples/`. This is relative to the `spec/` directory.
+This would set the Turnip step dirs to `spec/examples/`. This is relative to the APP_ROOT, *not* the `spec/` directory itself.
+( e.g this means the directory checked is #{APP_ROOT}/spec/examples/ ) 
 All `*steps.rb` files anywhere under the `spec/examples/` directory would then be autoloaded.
 
 ### Calling steps from other steps
