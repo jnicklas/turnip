@@ -193,7 +193,7 @@ end
 ```
 
 Check out [features/alignment_steps.rb](https://github.com/jnicklas/turnip/blob/master/examples/steps/alignment_steps.rb)
-                                        
+
 for an example.
 
 ### Where to place steps
@@ -213,29 +213,44 @@ all `*steps.rb` files anywhere under that directory.
 
 ### Calling steps from other steps
 
-You can also call steps from other steps. This is done by just calling `step
-"name_of_the_step"`, so for instance if you have:
+Since steps are Ruby methods you can call them like other Ruby methods.
+However, since the step description likely contains spaces and other special
+characters, you will probably have to use `send` to call the step:
 
 ``` ruby
-step "a random step" do
-  @value = 1
+step "the value is :num" do |num|
+  @value = num
 end
 
-step "calling a step" do
-  step "a random step"
-  @value += 1
+step "the value is twice as much as :num" do |num|
+  send "the value is :num", num * 2
 end
 ```
 
-Now if you use the step `calling a step` in any Scenario, then the value of
-`@value` will be 2 afterwards as it first executes the code defined for the step
-`a random step`. You can think of it as a simple method call.
+If you use the second step, it will call into the first step, sending in the
+doubled value.
+
+Sometimes you will want to call the step just like you would from your feature
+file, in that case you can use the `step` method:
+
+``` ruby
+step "the value is :num" do |num|
+  @value = num
+end
+
+step "the value is the magic number"
+  step "the value is 3"
+end
+```
 
 ### Calling steps manually
 
 This is a more esoteric feature of Turnip, of use mostly to people who want to
-do crazy stuff. The `Turnip::Execute` module has a method called `step`, this
-method executes a step, given a string as it might appear in a feature file.
+do crazy stuff. You can use `send` to call any Turnip step, no matter where it
+is defined or included. Additionally, the `Turnip::Execute` module has a method
+called `step`, this method executes a step, given a string as it might appear
+in a feature file. This is the same `step` method you used above to call steps
+from within other steps.
 
 For example:
 
@@ -251,6 +266,7 @@ monster = Monster.new
 monster.step("sing a song")
 monster.step("eat 1 villager")
 monster.step("eat 5 villagers")
+monster.send("eat :count villager(s)", 5)
 ```
 
 Note that in this case `step` from `Turnip::Execute` is an *instance* method,

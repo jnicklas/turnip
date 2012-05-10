@@ -14,6 +14,11 @@ describe Turnip::Execute do
     obj.step("a cool step").should == "COOL"
   end
 
+  it "allows step to be called as a method via `send`" do
+    mod.step("a :test step") { |test| test.upcase }
+    obj.send("a :test step", "cool").should == "COOL"
+  end
+
   it "sends in extra arg from a builder step" do
     mod.step("a :test step") { |test, foo| test.upcase + foo }
     obj.step("a cool step", "foo").should == "COOLfoo"
