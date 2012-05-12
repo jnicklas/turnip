@@ -19,7 +19,7 @@ module Turnip
       result = description.match(regexp)
       if result
         params = result.captures
-        result.names.each_with_index do |name, index|
+        @placeholder_names.each_with_index do |name, index|
           params[index] = Turnip::Placeholder.apply(name.to_sym, params[index])
         end
         Match.new(self, params, block)
@@ -33,8 +33,10 @@ module Turnip
     ALTERNATIVE_WORD_REGEXP = /(\w+)((\/\w+)+)/
 
     def compile_regexp
+      @placeholder_names = []
       regexp = Regexp.escape(expression)
       regexp.gsub!(PLACEHOLDER_REGEXP) do |_|
+        @placeholder_names << "#{$1}"
         "(?<#{$1}>#{Placeholder.resolve($1.to_sym)})"
       end
       regexp.gsub!(OPTIONAL_WORD_REGEXP) do |_|
