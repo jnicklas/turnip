@@ -22,8 +22,8 @@ module Turnip
   class << self
     attr_accessor :type, :step_dirs
 
-    def load_steps
-      return if @steps_loaded
+    def load_steps(options = { :force => false })
+      return if @steps_loaded && !options[:force]
       Turnip.step_dirs.each do |dir|
         Dir.glob(File.join(dir, '**', "*steps.rb")).each { |file| load file, true }
       end
