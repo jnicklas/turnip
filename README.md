@@ -198,18 +198,13 @@ for an example.
 
 ### Where to place steps
 
-All files ending in `*steps.rb` will be automatically required if they are
-under the Turnip step directory. The default step directory for Turnip is
-`spec/`. You can override this in your `spec_helper` by setting
-`Turnip.step_dirs`. For example:
+Turnip automatically loads your `spec_helper` file. From there you can place
+your steps wherever you want, and load them however you like. For example, if
+you were to put your steps in `spec/steps`, you could load them like this:
 
 ``` ruby
-# spec/spec_helper.rb
-Turnip.step_dirs = ['examples']
+Dir.glob("spec/steps/**/*steps.rb") { |f| load f, true }
 ```
-
-This would set the Turnip step dirs to `examples/` and automatically load
-all `*steps.rb` files anywhere under that directory.
 
 ### Calling steps from other steps
 

@@ -16,7 +16,6 @@ module Turnip
             require 'spec_helper'
           rescue LoadError
           end
-          Turnip.load_steps
           Turnip::RSpec.run(a.first)
         else
           super

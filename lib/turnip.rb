@@ -20,20 +20,11 @@ module Turnip
   end
 
   class << self
-    attr_accessor :type, :step_dirs
-
-    def load_steps
-      return if @steps_loaded
-      Turnip.step_dirs.each do |dir|
-        Dir.glob(File.join(dir, '**', "*steps.rb")).each { |file| load file, true }
-      end
-      @steps_loaded = true
-    end
+    attr_accessor :type
   end
 end
 
 Turnip.type = :turnip
-Turnip.step_dirs = ['spec']
 
 Module.send(:include, Turnip::Define)
 

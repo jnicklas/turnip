@@ -1,3 +1,1 @@
-RSpec.configure do |config|
-  Turnip.step_dirs = ['examples']
-end
+Dir.glob("examples/**/*steps.rb") { |f| load f, true }
