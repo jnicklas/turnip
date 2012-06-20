@@ -4,6 +4,12 @@ require "rspec"
 module Turnip
   module RSpec
 
+    class << self
+      attr_accessor :spec_helper
+    end
+
+    self.spec_helper = 'spec_helper'
+
     ##
     #
     # This module hooks Turnip into RSpec by duck punching the load Kernel
@@ -13,7 +19,7 @@ module Turnip
       def load(*a, &b)
         if a.first.end_with?('.feature')
           begin
-            require 'spec_helper'
+            require Turnip::RSpec.spec_helper
           rescue LoadError
           end
           Turnip::RSpec.run(a.first)
