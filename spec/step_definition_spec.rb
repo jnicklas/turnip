@@ -1,3 +1,5 @@
+require "spec_helper"
+
 describe Turnip::StepDefinition do
   let(:all_steps) { [] }
 
@@ -31,9 +33,11 @@ describe Turnip::StepDefinition do
 
     it "can reuse the same custom placeholder multiple times" do
       Turnip::Placeholder.stub(:resolve).with(:count).and_return(/\d+/)
+      Turnip::Placeholder.stub(:apply).with(:count, "3").and_return(3)
+      Turnip::Placeholder.stub(:apply).with(:count, "2").and_return(2)
       step = Turnip::StepDefinition.new(":count monsters and :count knights") {}
       match = step.match("3 monsters and 2 knights")
-      match.params.should eq(["3", "2"])
+      match.params.should eq([3, 2])
     end
 
     it "does search for the same custom placeholder several times" do
