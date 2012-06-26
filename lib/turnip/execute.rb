@@ -8,7 +8,14 @@ module Turnip
         send(method.to_s, description.to_s)
       end.compact
       raise Turnip::Pending, description if matches.length == 0
-      raise Turnip::Ambiguous, description if matches.length > 1
+      if matches.length > 1
+        msg = "Ambiguous step definitions:\r\n"
+        matches.each_with_index do |match, index|
+          # prepare an error message with some information on the ambiguous steps
+          msg += "  #{index+1}. \"#{match.expression}\" (#{match.block.source_location.join(':')})\r\n"
+        end
+        raise Turnip::Ambiguous, msg
+      end
       send(matches.first.expression, *(matches.first.params + extra_args))
     end
   end
