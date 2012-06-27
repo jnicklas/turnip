@@ -35,4 +35,20 @@ describe Turnip::Execute do
     mod.step("a :test step") { |test, foo| test.upcase + foo }
     obj.step(builder_step).should == "COOLfoo"
   end
+
+  it "defines ambiguous steps and run a matching step" do
+    mod.step("an ambiguous step") {}
+    mod.step("an :ambiguous step") {}
+    expect {
+      obj.step("an ambiguous step")
+    }.to raise_error(Turnip::Ambiguous)
+  end
+
+  it "shows useful information on the ambiguous steps" do
+    mod.step("an ambiguous step") {}
+    mod.step("an :ambiguous step") {}
+    expect {
+      obj.step("an ambiguous step")
+    }.to raise_error(Turnip::Ambiguous, %r{(ambiguous).*(define_and_execute_spec.rb)})
+  end
 end
