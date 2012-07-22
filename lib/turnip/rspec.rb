@@ -12,10 +12,8 @@ module Turnip
     module Loader
       def load(*a, &b)
         if a.first.end_with?('.feature')
-          begin
-            require 'spec_helper'
-          rescue LoadError
-          end
+          begin; require 'turnip_helper'; rescue LoadError; end
+          begin; require 'spec_helper'; rescue LoadError; end
           Turnip::RSpec.run(a.first)
         else
           super

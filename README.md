@@ -206,6 +206,11 @@ you were to put your steps in `spec/steps`, you could load them like this:
 Dir.glob("spec/steps/**/*steps.rb") { |f| load f, true }
 ```
 
+Before loading your `spec_helper`, Turnip also tries to load a file called
+`turnip_helper` where you can setup anything specific to your turnip examples.
+You might find it beneficial to load your steps from this file so that they
+don't have to be loaded when you run your other tests.
+
 ### Calling steps from other steps
 
 Since steps are Ruby methods you can call them like other Ruby methods.
