@@ -43,8 +43,9 @@ module Turnip
 
     class << self
       def run(feature_file)
-        Turnip::Builder.build(feature_file).features.each do |feature|
-          describe feature.name, feature.metadata_hash do
+        builder = Turnip::Builder.build(feature_file)
+        builder.features.each do |feature|
+          describe(builder.describe_class || feature.name, feature.metadata_hash.merge(builder.describe_options || {})) do
             before do
               # This is kind of a hack, but it will make RSpec throw way nicer exceptions
               example.metadata[:file_path] = feature_file
