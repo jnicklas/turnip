@@ -101,12 +101,25 @@ module Turnip
     end
 
     attr_reader :features
+    attr_reader :describe_class
+    attr_reader :describe_options
 
     class << self
       def build(feature_file)
         Turnip::Builder.new.tap do |builder|
           parser = Gherkin::Parser::Parser.new(builder, true)
-          parser.parse(File.read(feature_file), feature_file, 0)
+          feature_arr = File.read(feature_file).split("\n")
+          if feature_arr.size > 0 && (feature_arr[0] =~ /\A@describe /)
+            describe_line = feature_arr.shift.gsub(/\A@describe /, '')
+            args = describe_line.split(',').map(&:strip).map {|s| eval s}
+            args.each do |a|
+              builder.instance_variable_set(:@describe_class, a) if a.instance_of?(Class)
+              builder.instance_variable_set(:@describe_options, a) if a.instance_of?(Hash)
+            end
+            feature_arr = [""] + feature_arr
+          end
+          feature_content = feature_arr.join("\n")
+          parser.parse(feature_content, feature_file, 0)
         end
       end
     end
