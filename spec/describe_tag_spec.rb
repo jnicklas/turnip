@@ -22,7 +22,7 @@ describe Turnip::Builder do
       end
 
       it "succeeds to run" do
-        @result.should include('34 examples, 3 failures, 4 pending')
+        @result.should include('1 example, 0 failures')
       end
     end
   end
