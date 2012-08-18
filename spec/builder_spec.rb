@@ -40,9 +40,9 @@ describe Turnip::Builder do
         "the monster should be dead"
       ])
       table = feature.scenarios[0].steps[0].extra_args.find {|a| a.instance_of?(Turnip::Table)}
-      table.raw[0][1].should == '10'
+      table.hashes[0]['hit_points'].should == '10'
       table = feature.scenarios[1].steps[0].extra_args.find {|a| a.instance_of?(Turnip::Table)}
-      table.raw[0][1].should == '8'
+      table.hashes[0]['hit_points'].should == '8'
     end
 
   end
