@@ -98,13 +98,13 @@ module Turnip
       def substitute_extra_args(step, headers, row)
         return step.extra_args unless index = step.extra_args.find_index { |a| a.instance_of?(Turnip::Table) }
         extra_args = step.extra_args.dup
-        table = extra_args[index].dup
-        table.raw.each_index do |i|
-          table.raw[i].each_index do |j|
-            table.raw[i][j] = substitute(table.raw[i][j], headers, row)
+        extra_args[index] = extra_args[index].dup.tap do |t|
+          t.raw.each_index do |i|
+            t.raw[i].each_index do |j|
+              t.raw[i][j] = substitute(t.raw[i][j], headers, row)
+            end
           end
         end
-        extra_args[index] = table
         extra_args
       end
     end
