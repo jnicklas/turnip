@@ -77,17 +77,4 @@ describe Turnip::Table do
     end
   end
 
-  describe '#dup and #clone' do
-    it "makes a deep copy when calling #dup" do
-      new_table = table.dup
-      new_table.raw[0][0] = 'blegga'
-      table.raw[0][0].should == 'foo'
-    end
-
-    it "makes a deep copy when calling #clone" do
-      new_table = table.dup
-      new_table.raw[0][0] = 'blegga'
-      table.raw[0][0].should == 'foo'
-    end
-  end
 end

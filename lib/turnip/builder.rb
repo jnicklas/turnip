@@ -82,7 +82,10 @@ module Turnip
           Scenario.new(@raw).tap do |scenario|
             scenario.steps = steps.map do |step|
               new_description = substitute(step.description, headers, row)
-              new_extra_args = substitute_extra_args(step, headers, row)
+              new_extra_args = step.extra_args.map do |ea|
+                next ea unless ea.instance_of?(Turnip::Table)
+                Turnip::Table.new(ea.map {|t_row| t_row.map {|t_col| substitute(t_col, headers, row) } })
+              end
               Step.new(new_description, new_extra_args, step.line)
             end
           end
@@ -95,11 +98,7 @@ module Turnip
         text.gsub(/<([^>]*)>/) { |_| Hash[headers.zip(row)][$1] }
       end
 
-      def substitute_extra_args(step, headers, row)
-        return step.extra_args unless index = step.extra_args.find_index { |a| a.instance_of?(Turnip::Table) }
-        step.extra_args.dup.tap do |ea|
-          ea[index] = ea[index].dup.tap {|t| t.raw.map! {|t_row| t_row.map! {|t_col| substitute(t_col, headers, row) } } }
-        end
+      def substitute_table(step, headers, row)
       end
     end
 
