@@ -82,9 +82,9 @@ module Turnip
           Scenario.new(@raw).tap do |scenario|
             scenario.steps = steps.map do |step|
               new_description = step.description.gsub(/<([^>]*)>/) { |_| Hash[headers.zip(row)][$1] }
-              new_extra_args = Marshal.load( Marshal.dump(step.extra_args) )
+              new_extra_args = step.extra_args.dup
               if index = new_extra_args.find_index { |a| a.instance_of?(Turnip::Table) }
-                table = new_extra_args[index]
+                table = new_extra_args[index].dup
                 table.raw.each_index do |i|
                   table.raw[i].each_index do |j|
                     table.raw[i][j].gsub!(/<([^>]*)>/) { |_| Hash[headers.zip(row)][$1] }
