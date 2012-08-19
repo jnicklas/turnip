@@ -9,6 +9,11 @@ module Turnip
       @raw = raw
     end
 
+    def initialize_copy(other)
+      super
+      @raw = Marshal.load(Marshal.dump(other.raw))
+    end
+
     def headers
       raw.first
     end
