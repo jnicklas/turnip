@@ -97,9 +97,6 @@ module Turnip
       def substitute(text, headers, row)
         text.gsub(/<([^>]*)>/) { |_| Hash[headers.zip(row)][$1] }
       end
-
-      def substitute_table(step, headers, row)
-      end
     end
 
     class Step < Struct.new(:description, :extra_args, :line)
