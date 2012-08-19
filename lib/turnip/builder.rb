@@ -81,21 +81,31 @@ module Turnip
         rows.map do |row|
           Scenario.new(@raw).tap do |scenario|
             scenario.steps = steps.map do |step|
-              new_description = step.description.gsub(/<([^>]*)>/) { |_| Hash[headers.zip(row)][$1] }
-              new_extra_args = step.extra_args.dup
-              if index = new_extra_args.find_index { |a| a.instance_of?(Turnip::Table) }
-                table = new_extra_args[index].dup
-                table.raw.each_index do |i|
-                  table.raw[i].each_index do |j|
-                    table.raw[i][j].gsub!(/<([^>]*)>/) { |_| Hash[headers.zip(row)][$1] }
-                  end
-                end
-                new_extra_args[index] = table
-              end
+              new_description = substitute(step.description, headers, row)
+              new_extra_args = substitute_extra_args(step, headers, row)
               Step.new(new_description, new_extra_args, step.line)
             end
           end
         end
+      end
+
+      private
+
+      def substitute(text, headers, row)
+        text.gsub(/<([^>]*)>/) { |_| Hash[headers.zip(row)][$1] }
+      end
+
+      def substitute_extra_args(step, headers, row)
+        return step.extra_args unless index = step.extra_args.find_index { |a| a.instance_of?(Turnip::Table) }
+        extra_args = step.extra_args.dup
+        table = extra_args[index].dup
+        table.raw.each_index do |i|
+          table.raw[i].each_index do |j|
+            table.raw[i][j] = substitute(table.raw[i][j], headers, row)
+          end
+        end
+        extra_args[index] = table
+        extra_args
       end
     end
 
