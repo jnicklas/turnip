@@ -9,7 +9,7 @@ describe Turnip::Table do
       table.raw.should == [['foo', 'bar'], ['quox', '42']]
     end
 
-    it 'allows reflects changes in the raw table' do
+    it 'reflects changes in the raw table' do
       table.raw[1][1] = '55'
       table.raw.should == [['foo', 'bar'], ['quox', '55']]
     end
