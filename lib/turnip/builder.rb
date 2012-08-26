@@ -81,11 +81,21 @@ module Turnip
         rows.map do |row|
           Scenario.new(@raw).tap do |scenario|
             scenario.steps = steps.map do |step|
-              new_description = step.description.gsub(/<([^>]*)>/) { |_| Hash[headers.zip(row)][$1] }
-              Step.new(new_description, step.extra_args, step.line)
+              new_description = substitute(step.description, headers, row)
+              new_extra_args = step.extra_args.map do |ea|
+                next ea unless ea.instance_of?(Turnip::Table)
+                Turnip::Table.new(ea.map {|t_row| t_row.map {|t_col| substitute(t_col, headers, row) } })
+              end
+              Step.new(new_description, new_extra_args, step.line)
             end
           end
         end
+      end
+
+      private
+
+      def substitute(text, headers, row)
+        text.gsub(/<([^>]*)>/) { |_| Hash[headers.zip(row)][$1] }
       end
     end
 
