@@ -2,6 +2,7 @@
 
 [![Build Status](https://secure.travis-ci.org/jnicklas/turnip.png)](http://travis-ci.org/jnicklas/turnip)
 [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/jnicklas/turnip)
+[![Dependency Status](https://gemnasium.com/jnicklas/turnip.png)](https://gemnasium.com/jnicklas/turnip.png)
 
 Turnip is a [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin)
 extension for RSpec. It allows you to write tests in Gherkin and run them
