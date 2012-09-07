@@ -2,12 +2,20 @@ module Turnip
   class StepDefinition
     class Match < Struct.new(:step_definition, :params, :block)
       def expression; step_definition.expression; end
+      def method_name; step_definition.method_name; end
+      def called_from; step_definition.called_from; end
+
+      def trace
+        trace = %{  - "#{expression}" (#{called_from})}
+      end
     end
 
-    attr_reader :expression, :block
+    attr_reader :expression, :block, :method_name, :called_from
 
-    def initialize(expression, &block)
+    def initialize(expression, method_name=nil, called_from=nil, &block)
       @expression = expression
+      @method_name = method_name || expression
+      @called_from = called_from
       @block = block
     end
 

@@ -244,6 +244,20 @@ step "the value is the magic number"
 end
 ```
 
+### Methods as steps
+
+You can mark an existing method as a step. This will make it available in your
+Turnip features. For example:
+
+``` ruby
+module MonsterSteps
+  def create_monster(name)
+    @monster = Monster.new(:name => name)
+  end
+  step :create_monster, "there is a monster called :name"
+end
+```
+
 ## Custom step placeholders
 
 Do you want to be more specific in what to match in your step placeholders? Do

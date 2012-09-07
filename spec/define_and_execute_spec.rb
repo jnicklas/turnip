@@ -19,6 +19,22 @@ describe Turnip::Execute do
     obj.send("a :test step", "cool").should == "COOL"
   end
 
+  it "can use an existing method as a step" do
+    mod.module_eval do
+      def a_test_step(test)
+        test.upcase
+      end
+    end
+    mod.step(:a_test_step, "a :test step")
+    obj.step("a cool step").should == "COOL"
+  end
+
+  it "raises an argument error when both method name and block given" do
+    expect do
+      mod.step(:a_test_step, "a :test step") { "foo" }
+    end.to raise_error(ArgumentError)
+  end
+
   it "sends in extra arg from a builder step" do
     mod.step("a :test step") { |test, foo| test.upcase + foo }
     obj.step("a cool step", "foo").should == "COOLfoo"
