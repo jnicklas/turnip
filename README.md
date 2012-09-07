@@ -244,36 +244,6 @@ step "the value is the magic number"
 end
 ```
 
-### Calling steps manually
-
-This is a more esoteric feature of Turnip, of use mostly to people who want to
-do crazy stuff. You can use `send` to call any Turnip step, no matter where it
-is defined or included. Additionally, the `Turnip::Execute` module has a method
-called `step`, this method executes a step, given a string as it might appear
-in a feature file. This is the same `step` method you used above to call steps
-from within other steps.
-
-For example:
-
-``` ruby
-class Monster
-  include Turnip::Execute
-
-  step("sing a song") { "Arrrghghggh" }
-  step("eat :count villager(s)") { Villager.eat(count) }
-end
-
-monster = Monster.new
-monster.step("sing a song")
-monster.step("eat 1 villager")
-monster.step("eat 5 villagers")
-monster.send("eat :count villager(s)", 5)
-```
-
-Note that in this case `step` from `Turnip::Execute` is an *instance* method,
-whereas `step` used to define the step is a *class* method, they are *not* the
-same method.
-
 ## Custom step placeholders
 
 Do you want to be more specific in what to match in your step placeholders? Do
