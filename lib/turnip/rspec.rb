@@ -72,7 +72,7 @@ end
 ::RSpec::Core::Configuration.send(:include, Turnip::RSpec::Loader)
 
 ::RSpec.configure do |config|
-  config.include Turnip::RSpec::Execute
-  config.include Turnip::Steps
+  config.include Turnip::RSpec::Execute, turnip: true
+  config.include Turnip::Steps, turnip: true
   config.pattern << ",**/*.feature"
 end
