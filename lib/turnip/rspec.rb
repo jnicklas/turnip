@@ -12,12 +12,22 @@ module Turnip
     module Loader
       def load(*a, &b)
         if a.first.end_with?('.feature')
-          begin; require 'turnip_helper'; rescue LoadError; end
-          begin; require 'spec_helper'; rescue LoadError; end
+          require_if_exists 'turnip_helper'
+          require_if_exists 'spec_helper'
+
           Turnip::RSpec.run(a.first)
         else
           super
         end
+      end
+
+      private
+
+      def require_if_exists(filename)
+        require filename
+      rescue LoadError => e
+        # Don't hide LoadErrors raised in the spec helper.
+        raise unless e.message.include?(filename)
       end
     end
 
