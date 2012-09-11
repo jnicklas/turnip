@@ -1,6 +1,5 @@
 require "turnip"
 require "rspec"
-# require_relative 'monkey_rspec_example_group'
 
 module Turnip
   module RSpec
