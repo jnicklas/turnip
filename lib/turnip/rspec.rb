@@ -1,6 +1,6 @@
 require "turnip"
 require "rspec"
-require_relative 'monkey_rspec_example_group'
+# require_relative 'monkey_rspec_example_group'
 
 module Turnip
   module RSpec
@@ -52,6 +52,31 @@ module Turnip
       end
     end
 
+    module DescribeExecute
+      def prepare_feature(feature, feature_file)
+        before do
+          # This is kind of a hack, but it will make RSpec throw way nicer exceptions
+          example.metadata[:file_path] = feature_file
+
+          feature.backgrounds.map(&:steps).flatten.each do |step|
+            run_step(feature_file, step)
+          end
+        end
+      end
+
+      def run_scenarios(feature, feature_file)
+        feature.scenarios.each do |scenario|
+          describe scenario.name, scenario.metadata_hash do
+            it scenario.steps.map(&:description).join(' -> ') do
+              scenario.steps.each do |step|
+                run_step(feature_file, step)
+              end
+            end
+          end
+        end
+      end
+    end
+
     class << self
       def run(feature_file)
         Turnip::Builder.build(feature_file).features.each do |feature|
@@ -70,6 +95,7 @@ end
 
 ::RSpec.configure do |config|
   config.include Turnip::RSpec::Execute, turnip: true
+  config.extend Turnip::RSpec::DescribeExecute, turnip: true
   config.include Turnip::Steps, turnip: true
   config.pattern << ",**/*.feature"
 end
