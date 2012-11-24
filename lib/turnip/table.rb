@@ -10,7 +10,7 @@ module Turnip
     end
 
     def headers
-      raw.first
+      raw.first.map {|s| s = s.to_sym}
     end
 
     def rows

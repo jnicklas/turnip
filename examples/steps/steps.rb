@@ -63,12 +63,12 @@ end
 step "there are the following monsters:" do |table|
   @monsters = {}
   table.hashes.each do |hash|
-    @monsters[hash['Name']] = hash['Hitpoints'].to_i
+    @monsters[hash[:Name].to_sym] = hash[:Hitpoints].to_i
   end
 end
 
 step ":name should have :count hitpoints" do |name, count|
-  @monsters[name].should eq(count.to_i)
+  @monsters[name.to_sym].should eq(count.to_i)
 end
 
 step "the monster sings the following song" do |song|
