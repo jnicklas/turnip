@@ -23,7 +23,7 @@ describe Turnip::Table do
 
   describe '#headers' do
     it 'returns the first row' do
-      table.headers.should == ['foo', 'bar']
+      table.headers.should == [:foo, :bar]
     end
   end
 
@@ -38,8 +38,8 @@ describe Turnip::Table do
     let(:raw) { [['foo', 'bar'], ['moo', '55'], ['quox', '42']] }
     it 'returns a list of hashes based on the headers' do
       table.hashes.should == [
-        {'foo' => 'moo', 'bar' => '55'},
-        {'foo' => 'quox', 'bar' => '42'}
+        {:foo => 'moo', :bar => '55'},
+        {:foo => 'quox', :bar => '42'}
       ]
     end
   end
@@ -49,7 +49,7 @@ describe Turnip::Table do
 
       let(:raw) { [["Name", "Dave"], ["Age", "99"], ["Height", "6ft"]] }
       it 'transposes the raw table' do
-        table.transpose.hashes.should == [{ "Name" => "Dave", "Age" => "99", "Height" => "6ft" }]
+        table.transpose.hashes.should == [{ :Name => "Dave", :Age => "99", :Height => "6ft" }]
       end
     end
   end
@@ -57,7 +57,7 @@ describe Turnip::Table do
   describe '#rows_hash' do
     let(:raw) { [['foo', 'moo'], ['bar', '55']] }
     it 'converts this table into a Hash where the first column is used as keys and the second column is used as values' do
-      table.rows_hash.should == {'foo' => 'moo', 'bar' => '55'}
+      table.rows_hash.should == {:foo => 'moo', :bar => '55'}
     end
 
     context "when table is greater than 2 columns wide" do
