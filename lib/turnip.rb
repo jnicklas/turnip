@@ -24,7 +24,7 @@ module Turnip
   end
 end
 
-Turnip.type = :turnip
+Turnip.type = :feature
 
 Module.send(:include, Turnip::Define)
 
