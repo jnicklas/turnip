@@ -1,5 +1,7 @@
 require 'capybara/rspec'
 
+Turnip.type = :request
+
 RSpec.configure do |config|
   config.before do
     if self.class.include?(Capybara::DSL) and example.metadata[:turnip]

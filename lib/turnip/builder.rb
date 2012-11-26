@@ -40,7 +40,7 @@ module Turnip
       end
 
       def metadata_hash
-        super.merge(:type => :feature, :turnip => true)
+        super.merge(:type => Turnip.type, :turnip => true)
       end
     end
 

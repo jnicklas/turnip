@@ -18,7 +18,13 @@ module Turnip
   #
   module Steps
   end
+
+  class << self
+    attr_accessor :type
+  end
 end
+
+Turnip.type = :turnip
 
 Module.send(:include, Turnip::Define)
 
