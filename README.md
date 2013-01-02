@@ -332,7 +332,7 @@ end
 
 Just require `turnip/capybara` in your `spec_helper`. You can now use the same
 tags you'd use in Cucumber to switch between drivers e.g.  `@javascript` or
-`@selenium`. Your Turnip features will also be run with the `:type => :request`
+`@selenium`. Your Turnip features will also be run with the `:type => :feature`
 metadata, so that Capybara is included and also any other extensions you might
 want to add.
 
