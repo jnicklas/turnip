@@ -11,6 +11,13 @@ describe Turnip::StepDefinition do
       step.should_not match("there are people")
     end
 
+    it "matches a step with an email address" do
+      step  = Turnip::StepDefinition.new("a monster reachable at :email") {}
+      step.should match("a monster reachable at scary@monster.com")
+      match = step.match("a monster reachable at scary@monster.com")
+      match.params.should eq(["scary@monster.com"])
+    end
+
     it "matches placeholders" do
       Turnip::Placeholder.stub(:resolve).with(:count).and_return(/\d+/)
       step = Turnip::StepDefinition.new("there are :count monsters") {}
