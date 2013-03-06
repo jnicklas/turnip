@@ -11,6 +11,25 @@ describe Turnip::StepDefinition do
       step.should_not match("there are people")
     end
 
+    it "matches a step with an email address" do
+      step  = Turnip::StepDefinition.new("a monster reachable at :email") {}
+      step.should match("a monster reachable at scary@monster.com")
+      match = step.match("a monster reachable at scary@monster.com")
+      match.params.should eq(["scary@monster.com"])
+    end
+
+    it "matches a step with a forward slash" do
+      step  = Turnip::StepDefinition.new("a monster born on :birthdate") {}
+      match = step.match("a monster born on 1/1/2000")
+      match.params.should eq(["1/1/2000"])
+    end
+
+    it "matches a step with a backslash" do
+      step  = Turnip::StepDefinition.new("why a :backslash you may ask?") {}
+      match = step.match('why a foo\bar you may ask?')
+      match.params.should eq(['foo\bar'])
+    end
+
     it "matches placeholders" do
       Turnip::Placeholder.stub(:resolve).with(:count).and_return(/\d+/)
       step = Turnip::StepDefinition.new("there are :count monsters") {}
