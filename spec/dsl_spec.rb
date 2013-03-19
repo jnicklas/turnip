@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'pry'
 
 describe Turnip::DSL do
   let(:context) { Module.new.tap { |s| s.extend(Turnip::DSL) }}
