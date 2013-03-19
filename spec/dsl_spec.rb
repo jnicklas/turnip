@@ -1,8 +1,32 @@
 require 'spec_helper'
+require 'pry'
 
 describe Turnip::DSL do
-  let(:context) { stub.tap { |s| s.extend(Turnip::DSL) }}
+  let(:context) { Module.new.tap { |s| s.extend(Turnip::DSL) }}
   let(:an_object) { Object.new.tap { |o| o.extend(Turnip::Execute) }}
+
+  describe '.steps_for before dsl' do
+    it "executes a feature file where steps includs before and after" do
+      result = %x(rspec -fs examples/before_steps.feature)
+      result.should include <<-OUTPUT
+before all
+  can stick some before / after stuff in the steps file
+before each
+a step
+b step
+after each
+    a step -> b step
+  can run a before step before each scenario
+before each
+a step
+b step
+after each
+    a step -> b step
+after all
+      OUTPUT
+    end
+  end
+  
   describe '.steps_for' do
     before do
       ::RSpec.stub(:configure)
