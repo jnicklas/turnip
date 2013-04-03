@@ -239,7 +239,7 @@ step "the value is :num" do |num|
   @value = num
 end
 
-step "the value is the magic number"
+step "the value is the magic number" do
   step "the value is 3"
 end
 ```
