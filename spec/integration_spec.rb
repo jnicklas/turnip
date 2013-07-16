@@ -17,4 +17,17 @@ describe 'The CLI', :type => :integration do
   it "includes features in backtraces" do
     @result.should include('examples/errors.feature:5:in `raise error')
   end
+
+  it 'prints line numbers of pending/failure scenario' do
+    @result.should include('./examples/pending.feature:2')
+    @result.should include('./examples/errors.feature:4')
+  end
+
+  it 'conforms to line-number option' do
+    @result.should include('rspec ./examples/errors.feature:4')
+    @result.should include('rspec ./examples/errors.feature:6')
+    result_with_line_number = %x(rspec -fs ./examples/errors.feature:4)
+    result_with_line_number.should include('rspec ./examples/errors.feature:4')
+    result_with_line_number.should_not include('rspec ./examples/errors.feature:6')
+  end
 end
