@@ -42,8 +42,8 @@ module Turnip
       def run_step(feature_file, step)
         begin
           step(step)
-        rescue Turnip::Pending
-          pending("No such step: '#{step}'")
+        rescue Turnip::Pending => e
+          pending("No such step: '#{e}'")
         rescue StandardError => e
           e.backtrace.push "#{feature_file}:#{step.line}:in `#{step.description}'"
           raise e
