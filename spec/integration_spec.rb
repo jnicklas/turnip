@@ -17,4 +17,8 @@ describe 'The CLI', :type => :integration do
   it "includes features in backtraces" do
     @result.should include('examples/errors.feature:5:in `raise error')
   end
+
+  it "includes the right step name when steps call steps" do
+    @result.should include("No such step: 'this is an unimplemented step'")
+  end
 end
