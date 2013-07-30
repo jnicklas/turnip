@@ -153,11 +153,14 @@ module Turnip
       if step.doc_string
         extra_args.push step.doc_string.value
       elsif step.rows
-        if step.rows.class.to_s == "Java::JavaUtil::ArrayList"
-          extra_args.push Turnip::Table.new(step.rows.map { |row| row.cells.to_a })
-        else
-          extra_args.push Turnip::Table.new(step.rows.map { |row| row.cells(&:value) })
-        end
+        extra_args.push(Turnip::Table.new(step.rows.map do |row|
+            if step.rows.class.to_s == "Java::JavaUtil::ArrayList"
+              row.cells.to_a
+            else
+              row.cells(&:value)
+            end
+          end
+        ))
       end
       @current_step_context.steps << Step.new(step.name, extra_args, step.line)
     end
