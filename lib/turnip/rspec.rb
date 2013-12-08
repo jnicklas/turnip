@@ -43,6 +43,8 @@ module Turnip
         begin
           step(step)
         rescue Turnip::Pending => e
+          # This is kind of a hack, but it will make RSpec throw way nicer exceptions
+          example.metadata[:line_number] = step.line
           pending("No such step: '#{e}'")
         rescue StandardError => e
           e.backtrace.push "#{feature_file}:#{step.line}:in `#{step.description}'"
