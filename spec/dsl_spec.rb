@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Turnip::DSL do
-  let(:context) { stub.tap { |s| s.extend(Turnip::DSL) }}
+  let(:context) { double.tap { |s| s.extend(Turnip::DSL) }}
   let(:an_object) { Object.new.tap { |o| o.extend(Turnip::Execute) }}
   describe '.steps_for' do
     before do
@@ -22,7 +22,7 @@ describe Turnip::DSL do
     end
 
     it 'tells RSpec to include the module' do
-      config = stub
+      config = double
       RSpec.should_receive(:configure).and_yield(config)
       config.should_receive(:include)
 
