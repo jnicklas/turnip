@@ -39,7 +39,7 @@ module Turnip
     module Execute
       include Turnip::Execute
 
-      def run_step(feature_file, step)
+      def run_step(feature_file, step, example)
         begin
           step(step)
         rescue Turnip::Pending => e
@@ -57,19 +57,19 @@ module Turnip
       def run(feature_file)
         Turnip::Builder.build(feature_file).features.each do |feature|
           describe feature.name, feature.metadata_hash do
-            before do
+            before do |example|
               # This is kind of a hack, but it will make RSpec throw way nicer exceptions
               example.metadata[:file_path] = feature_file
 
               feature.backgrounds.map(&:steps).flatten.each do |step|
-                run_step(feature_file, step)
+                run_step(feature_file, step, example)
               end
             end
             feature.scenarios.each do |scenario|
-              describe scenario.name, scenario.metadata_hash do
+              describe scenario.name, scenario.metadata_hash do |example|
                 it scenario.steps.map(&:description).join(' -> ') do
                   scenario.steps.each do |step|
-                    run_step(feature_file, step)
+                    run_step(feature_file, step, example)
                   end
                 end
               end
