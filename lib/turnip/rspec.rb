@@ -39,7 +39,7 @@ module Turnip
     module Execute
       include Turnip::Execute
 
-      def run_step(feature_file, step)
+      def run_step(feature_file, step, example)
         begin
           step(step)
         rescue Turnip::Pending => e
@@ -56,20 +56,32 @@ module Turnip
     class << self
       def run(feature_file)
         Turnip::Builder.build(feature_file).features.each do |feature|
+          # A work-around to support accessing the current example that works in both
+          # RSpec 2 and RSpec 3.
+          fetch_current_example = if ::RSpec.respond_to?(:current_example)
+                                    proc { ::RSpec.current_example }
+                                  else
+                                    proc { |context| context.example }
+                                  end
+
           describe feature.name, feature.metadata_hash do
             before do
+              example = fetch_current_example.call(self)
               # This is kind of a hack, but it will make RSpec throw way nicer exceptions
               example.metadata[:file_path] = feature_file
 
               feature.backgrounds.map(&:steps).flatten.each do |step|
-                run_step(feature_file, step)
+                example = fetch_current_example.call(self)
+                run_step(feature_file, step, example)
               end
             end
             feature.scenarios.each do |scenario|
               describe scenario.name, scenario.metadata_hash do
+
                 it scenario.steps.map(&:description).join(' -> ') do
+                  example = fetch_current_example.call(self)
                   scenario.steps.each do |step|
-                    run_step(feature_file, step)
+                    run_step(feature_file, step, example)
                   end
                 end
               end
