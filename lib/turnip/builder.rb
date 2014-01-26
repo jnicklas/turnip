@@ -22,9 +22,16 @@ module Turnip
       end
     end
 
+    module Line
+      def line
+        @raw.line
+      end
+    end
+
     class Feature
       include Tags
       include Name
+      include Line
 
       attr_reader :scenarios, :backgrounds
       attr_accessor :feature_tag
@@ -33,10 +40,6 @@ module Turnip
         @raw = raw
         @scenarios = []
         @backgrounds = []
-      end
-
-      def line
-        @raw.line
       end
 
       def metadata_hash
@@ -55,6 +58,7 @@ module Turnip
     class Scenario
       include Tags
       include Name
+      include Line
 
       attr_accessor :steps
 
