@@ -1,1 +1,1 @@
-Dir.glob("examples/**/*steps.rb") { |f| load f, true }
+Dir.glob(File.expand_path("../examples/**/*steps.rb", File.dirname(__FILE__))) { |f| require f }
