@@ -34,6 +34,15 @@ module Turnip
       raw.each { |row| yield(row) }
     end
 
+    def map_column!(name, strict = true)
+      index = headers.index(name.to_s)
+      if index.nil?
+        raise ColumnNotExist.new(name) if strict
+      else
+        rows.each { |row| row[index] = yield(row[index]) }
+      end
+    end
+
     private
 
     def width
@@ -43,6 +52,12 @@ module Turnip
     class WidthMismatch < StandardError
       def initialize(expected, actual)
         super("Expected the table to be #{expected} columns wide, got #{actual}")
+      end
+    end
+
+    class ColumnNotExist < StandardError
+      def initialize(column_name)
+        super("The column named \"#{column_name}\" does not exist")
       end
     end
   end

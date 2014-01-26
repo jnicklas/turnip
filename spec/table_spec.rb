@@ -77,4 +77,22 @@ describe Turnip::Table do
     end
   end
 
+  describe '#map_column!' do
+    let(:raw) { [['name', 'age'], ['Dave', '31'], ['John', '45']] }
+    it 'iterates through the column value and assigns it the value returned by the block' do
+      table.map_column!(:age) { |age| age.to_i }
+      table.rows.should == [['Dave', 31], ['John', 45]]
+    end
+
+    context 'with undefined column' do
+
+      it 'raies an error' do
+        expect { table.map_column!(:undefined){} }.to raise_error Turnip::Table::ColumnNotExist
+      end
+      it 'not raises an error when the strict param is false' do
+        expect { table.map_column!(:undefined, false){} }.to_not raise_error
+      end
+    end
+  end
+
 end
