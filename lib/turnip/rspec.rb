@@ -44,6 +44,7 @@ module Turnip
           step(step)
         rescue Turnip::Pending => e
           # This is kind of a hack, but it will make RSpec throw way nicer exceptions
+          example = Turnip::RSpec.fetch_current_example(self)
           example.metadata[:line_number] = step.line
           pending("No such step: '#{e}'")
         rescue StandardError => e
@@ -54,10 +55,19 @@ module Turnip
     end
 
     class << self
+      def fetch_current_example(context)
+        if ::RSpec.respond_to?(:current_example)
+          ::RSpec.current_example
+        else
+          context.example
+        end
+      end
+
       def run(feature_file)
         Turnip::Builder.build(feature_file).features.each do |feature|
           describe feature.name, feature.metadata_hash do
             before do
+              example = Turnip::RSpec.fetch_current_example(self)
               # This is kind of a hack, but it will make RSpec throw way nicer exceptions
               example.metadata[:file_path] = feature_file
 
