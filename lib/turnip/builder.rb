@@ -157,7 +157,8 @@ module Turnip
       if step.doc_string
         extra_args.push step.doc_string.value
       elsif step.rows
-        extra_args.push Turnip::Table.new(step.rows.map { |row| row.cells(&:value) })
+        table = Turnip::Table.new(step.rows.map(&:cells).map(&:to_a))
+        extra_args.push(table)
       end
       @current_step_context.steps << Step.new(step.name, extra_args, step.line)
     end
