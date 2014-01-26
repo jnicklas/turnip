@@ -1,5 +1,17 @@
 module Turnip
   class Table
+    class WidthMismatch < StandardError
+      def initialize(expected, actual)
+        super("Expected the table to be #{expected} columns wide, got #{actual}")
+      end
+    end
+
+    class ColumnNotExist < StandardError
+      def initialize(column_name)
+        super("The column named \"#{column_name}\" does not exist")
+      end
+    end
+
     attr_reader :raw
     alias_method :to_a, :raw
 
@@ -47,18 +59,6 @@ module Turnip
 
     def width
       raw[0].size
-    end
-
-    class WidthMismatch < StandardError
-      def initialize(expected, actual)
-        super("Expected the table to be #{expected} columns wide, got #{actual}")
-      end
-    end
-
-    class ColumnNotExist < StandardError
-      def initialize(column_name)
-        super("The column named \"#{column_name}\" does not exist")
-      end
     end
   end
 end
