@@ -38,7 +38,7 @@ module Turnip
 
     OPTIONAL_WORD_REGEXP = /(\\\s)?\\\(([^)]+)\\\)(\\\s)?/
     PLACEHOLDER_REGEXP = /:([\w]+)/
-    ALTERNATIVE_WORD_REGEXP = /(\w+)((\/\w+)+)/
+    ALTERNATIVE_WORD_REGEXP = /([[:alpha:]]+)((\/[[:alpha:]]+)+)/
 
     def compile_regexp
       @placeholder_names = []
