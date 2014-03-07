@@ -2,9 +2,12 @@ require 'capybara/rspec'
 
 RSpec.configure do |config|
   config.before do
-    if self.class.include?(Capybara::DSL) and example.metadata[:turnip]
-      Capybara.current_driver = Capybara.javascript_driver if example.metadata.has_key?(:javascript)
-      example.metadata.each do |tag, value|
+    current_example = example if respond_to?(:example)
+    current_example ||= RSpec.current_example
+
+    if self.class.include?(Capybara::DSL) and current_example.metadata[:turnip]
+      Capybara.current_driver = Capybara.javascript_driver if current_example.metadata.has_key?(:javascript)
+      current_example.metadata.each do |tag, value|
         if Capybara.drivers.has_key?(tag)
           Capybara.current_driver = tag
         end
