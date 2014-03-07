@@ -65,7 +65,7 @@ module Turnip
 
       def run(feature_file)
         Turnip::Builder.build(feature_file).features.each do |feature|
-          describe feature.name, feature.metadata_hash do
+          ::RSpec.describe feature.name, feature.metadata_hash do
             before do
               example = Turnip::RSpec.fetch_current_example(self)
               # This is kind of a hack, but it will make RSpec throw way nicer exceptions
