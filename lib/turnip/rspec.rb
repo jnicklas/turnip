@@ -71,6 +71,17 @@ module Turnip
               # This is kind of a hack, but it will make RSpec throw way nicer exceptions
               example.metadata[:file_path] = feature_file
 
+              path = Pathname.new(feature_file)
+              default_steps_file = File.join(path.dirname, 'steps', path.basename.to_s.sub('.feature', '_steps.rb'))
+              default_steps_module = [path.basename.to_s.sub('.feature', '').split('_').collect(&:capitalize), 'Steps'].join
+
+              if File.exists?(default_steps_file)
+                require default_steps_file
+                if Module.const_defined?(default_steps_module)
+                  extend Module.const_get(default_steps_module)
+                end
+              end
+
               feature.backgrounds.map(&:steps).flatten.each do |step|
                 run_step(feature_file, step)
               end
