@@ -98,6 +98,30 @@ RSpec.configure { |c| c.include MonsterSteps }
 Steps are implemented as regular Ruby methods under the hood, so you can
 use Ruby's normal inheritance chain to mix and match steps.
 
+### Before/After Hooks
+
+Since Turnip runs atop RSpec, it can utilize RSpec's built-in before and after
+hooks. To run a hook for all features, specify a global hook with `type` set
+to `:feature`:
+
+```ruby
+config.before(:type => :feature) do
+  do_something
+end
+config.after(:type => :feature) do
+  do_something_else
+end
+```
+
+You can also limit this to a tag by specifying the tag in the argument to
+`before` or `after`:
+
+```ruby
+config.before(:some_tag => true) do
+  do_something
+end
+```
+
 ### Global steps
 
 Turnip has a special module called `Turnip::Steps`, which is automatically
