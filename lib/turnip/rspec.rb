@@ -46,6 +46,7 @@ module Turnip
           # This is kind of a hack, but it will make RSpec throw way nicer exceptions
           example = Turnip::RSpec.fetch_current_example(self)
           example.metadata[:line_number] = step.line
+          example.metadata[:location] = "#{example.metadata[:file_path]}:#{step.line}"
 
           if ::RSpec::Version::STRING >= '2.99.0'
             skip("No such step: '#{e}'")
