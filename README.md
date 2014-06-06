@@ -241,6 +241,14 @@ Before loading your `spec_helper`, Turnip also tries to load a file called
 You might find it beneficial to load your steps from this file so that they
 don't have to be loaded when you run your other tests.
 
+If you use Turnip with [rspec-rails](https://github.com/rspec/rspec-rails) v3.x, most configuration written to `rails_helper.rb` but not `spec_helper.rb`. So you should write to `turnip_helper` like this:
+
+```ruby
+require 'rails_helper'
+```
+
+Then you can write configuration to `rails_helper` to load your steps.
+
 ### Calling steps from other steps
 
 Since steps are Ruby methods you can call them like other Ruby methods.
