@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'The CLI', :type => :integration do
   before do
-    @result = %x(rspec -fs examples/*.feature)
+    @result = %x(rspec -fd examples/*.feature)
   end
 
   it "shows the correct description" do
@@ -30,7 +30,7 @@ describe 'The CLI', :type => :integration do
   it 'conforms to line-number option' do
     @result.should include('rspec ./examples/errors.feature:4')
     @result.should include('rspec ./examples/errors.feature:6')
-    result_with_line_number = %x(rspec -fs ./examples/errors.feature:4)
+    result_with_line_number = %x(rspec -fd ./examples/errors.feature:4)
     result_with_line_number.should include('rspec ./examples/errors.feature:4')
     result_with_line_number.should_not include('rspec ./examples/errors.feature:6')
   end
