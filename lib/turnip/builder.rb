@@ -90,7 +90,7 @@ module Turnip
                 next ea unless ea.instance_of?(Turnip::Table)
                 Turnip::Table.new(ea.map {|t_row| t_row.map {|t_col| substitute(t_col, headers, row) } })
               end
-              Step.new(new_description, new_extra_args, step.line)
+              Step.new(new_description, new_extra_args, step.line, step.keyword)
             end
           end
         end
@@ -103,7 +103,7 @@ module Turnip
       end
     end
 
-    class Step < Struct.new(:description, :extra_args, :line)
+    class Step < Struct.new(:description, :extra_args, :line, :keyword)
       # 1.9.2 support hack
       def split(*args)
         self.to_s.split(*args)
@@ -160,7 +160,7 @@ module Turnip
         table = Turnip::Table.new(step.rows.map(&:cells).map(&:to_a))
         extra_args.push(table)
       end
-      @current_step_context.steps << Step.new(step.name, extra_args, step.line)
+      @current_step_context.steps << Step.new(step.name, extra_args, step.line, step.keyword)
     end
 
     def uri(*)

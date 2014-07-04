@@ -19,6 +19,10 @@ describe Turnip::Builder do
     it 'extracts step line' do
       steps.map(&:line).should eq([3, 4, 5])
     end
+
+    it 'extracts step keyword' do
+      steps.map(&:keyword).should eq(['Given ', 'When ', 'Then '])
+    end
   end
 
   context "with scenario outlines" do
