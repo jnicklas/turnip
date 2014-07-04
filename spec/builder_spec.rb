@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 describe Turnip::Builder do
+  let(:builder) { Turnip::Builder.build(feature_file) }
+  let(:feature) { builder.features.first }
+
   context "with scenario outlines" do
     let(:feature_file) { File.expand_path('../examples/scenario_outline.feature', File.dirname(__FILE__)) }
-    let(:builder) { Turnip::Builder.build(feature_file) }
-    let(:feature) { builder.features.first }
-
 
     it "extracts scenarios" do
       feature.scenarios.map(&:name).should eq([
@@ -30,8 +30,6 @@ describe Turnip::Builder do
 
   context "with example tables in scenario outlines" do
     let(:feature_file) { File.expand_path('../examples/scenario_outline_table_substitution.feature', File.dirname(__FILE__)) }
-    let(:builder) { Turnip::Builder.build(feature_file) }
-    let(:feature) { builder.features.first }
 
     it "replaces placeholders in tables in steps" do
       feature.scenarios[0].steps.map(&:description).should eq([
