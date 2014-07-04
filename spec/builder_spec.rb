@@ -4,6 +4,23 @@ describe Turnip::Builder do
   let(:builder) { Turnip::Builder.build(feature_file) }
   let(:feature) { builder.features.first }
 
+  context 'simple scenarios' do
+    let(:feature_file) { File.expand_path('../examples/simple_feature.feature', File.dirname(__FILE__)) }
+    let(:steps) { feature.scenarios.first.steps }
+
+    it 'extracts step description' do
+      steps.map(&:description).should eq([
+        'there is a monster',
+        'I attack it',
+        'it should die'
+      ])
+    end
+
+    it 'extracts step line' do
+      steps.map(&:line).should eq([3, 4, 5])
+    end
+  end
+
   context "with scenario outlines" do
     let(:feature_file) { File.expand_path('../examples/scenario_outline.feature', File.dirname(__FILE__)) }
 
