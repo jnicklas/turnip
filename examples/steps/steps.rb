@@ -44,6 +44,10 @@ step "it should be nameless" do
   @monster_name.should == ""
 end
 
+step "the monster introduced himself:" do |self_introduction|
+  self_introduction.should include @monster_name
+end
+
 step "there is a monster with :count hitpoints" do |count|
   @monster = count
 end

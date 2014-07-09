@@ -87,8 +87,14 @@ module Turnip
             scenario.steps = steps.map do |step|
               new_description = substitute(step.description, headers, row)
               new_extra_args = step.extra_args.map do |ea|
-                next ea unless ea.instance_of?(Turnip::Table)
-                Turnip::Table.new(ea.map {|t_row| t_row.map {|t_col| substitute(t_col, headers, row) } })
+                case ea
+                when String
+                  substitute(ea, headers, row)
+                when Turnip::Table
+                  Turnip::Table.new(ea.map {|t_row| t_row.map {|t_col| substitute(t_col, headers, row) } })
+                else
+                  ea
+                end
               end
               Step.new(new_description, new_extra_args, step.line, step.keyword)
             end
