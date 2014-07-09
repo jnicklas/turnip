@@ -63,6 +63,20 @@ describe Turnip::Builder do
       table = feature.scenarios[1].steps[0].extra_args.find {|a| a.instance_of?(Turnip::Table)}
       table.hashes[0]['hit_points'].should == '8'
     end
+  end
 
+  context 'with example multiline in scenario outlines' do
+    let(:feature_file) { File.expand_path('../examples/scenario_outline_multiline_string_substitution.feature', File.dirname(__FILE__)) }
+    let(:steps) { feature.scenarios[1].steps }
+
+    it 'replaces placeholders in multiline in steps' do
+      steps.map(&:description).should eq([
+        'there is a monster called "John Smith"',
+        'the monster introduced himself:'
+      ])
+
+      multiline = steps[1].extra_args.first
+      multiline.should eq %q(Ahhhhhhh! i'm "John Smith"!)
+    end
   end
 end
