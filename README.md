@@ -365,6 +365,26 @@ step "there are the following monsters:" do |table|
 end
 ```
 
+## Substitution in Scenario Outlines
+
+You would be able to use substitution that can be used to DocString and Table arguments in Scenario Outline like [Cucumber](http://cukes.info/step-definitions.html#substitution_in_scenario_outlines):
+
+```cucumber
+Scenario Outline: Email confirmation
+  Given I have a user account with my name "Jojo Binks"
+  When an Admin grants me <Role> rights
+  Then I should receive an email with the body:
+    """
+    Dear Jojo Binks,
+    You have been granted <Role> rights.  You are <details>. Please be responsible.
+    -The Admins
+    """
+  Examples:
+    |  Role     | details                                         |
+    |  Manager  | now able to manage your employee accounts       |
+    |  Admin    | able to manage any user account on the system   |
+```
+
 ## Using with Capybara
 
 Just require `turnip/capybara` in your `spec_helper`. You can now use the same
