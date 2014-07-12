@@ -8,11 +8,6 @@ extension for RSpec. It allows you to write tests in Gherkin and run them
 through your RSpec environment. Basically you can write cucumber features in
 RSpec.
 
-## Maintainer wanted!
-
-Are you interested in maintaining Turnip's code base? Please get in touch with
-[me](http://github.com/jnicklas). 
-
 ## Installation
 
 Install the gem
