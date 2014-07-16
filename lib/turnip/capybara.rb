@@ -2,8 +2,8 @@ require 'capybara/rspec'
 
 RSpec.configure do |config|
   config.before do
-    current_example = example if respond_to?(:example)
-    current_example ||= RSpec.current_example
+    current_example = RSpec.current_example if RSpec.respond_to?(:current_example)
+    current_example ||= example
 
     if self.class.include?(Capybara::DSL) and current_example.metadata[:turnip]
       Capybara.current_driver = Capybara.javascript_driver if current_example.metadata.has_key?(:javascript)
