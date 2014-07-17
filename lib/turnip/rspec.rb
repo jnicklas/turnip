@@ -48,6 +48,11 @@ module Turnip
           example.metadata[:line_number] = step.line
           example.metadata[:location] = "#{example.metadata[:file_path]}:#{step.line}"
 
+          if ::RSpec.configuration.raise_error_for_unimplemented_steps
+            e.backtrace.push "#{feature_file}:#{step.line}:in `#{step.description}'"
+            raise
+          end
+
           if ::RSpec::Version::STRING >= '2.99.0'
             skip("No such step: '#{e}'")
           else
@@ -75,7 +80,7 @@ module Turnip
             before do
               example = Turnip::RSpec.fetch_current_example(self)
               # This is kind of a hack, but it will make RSpec throw way nicer exceptions
-              example.metadata[:file_path] = feature_file
+              example.metadata[:file_path] ||= feature_file
 
               feature.backgrounds.map(&:steps).flatten.each do |step|
                 run_step(feature_file, step)
@@ -104,4 +109,5 @@ end
   config.include Turnip::RSpec::Execute, turnip: true
   config.include Turnip::Steps, turnip: true
   config.pattern << ",**/*.feature"
+  config.add_setting :raise_error_for_unimplemented_steps, :default => false
 end

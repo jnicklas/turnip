@@ -360,6 +360,18 @@ step "there are the following monsters:" do |table|
 end
 ```
 
+## Unimplemented steps
+Turnip mark a scenario as pending when steps in the scenario is not implemented.
+If you sets `raise_error_for_unimplemented_steps` as `true`, turnip will mark a scenario as fail.
+
+It defaults to `false`, you can change it by following configuration:
+
+```ruby
+RSpec.configure do |config|
+  config.raise_error_for_unimplemented_steps = true
+end
+```
+
 ## Substitution in Scenario Outlines
 
 You would be able to use substitution that can be used to DocString and Table arguments in Scenario Outline like [Cucumber](http://cukes.info/step-definitions.html#substitution_in_scenario_outlines):
