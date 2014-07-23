@@ -29,5 +29,3 @@ Turnip.type = :feature
 Module.send(:include, Turnip::Define)
 
 self.extend Turnip::DSL
-
-require "turnip/rspec"
