@@ -58,7 +58,7 @@ module Turnip
           else
             pending("No such step: '#{e}'")
           end
-        rescue StandardError => e
+        rescue StandardError, ::RSpec::Expectations::ExpectationNotMetError => e
           e.backtrace.push "#{feature_file}:#{step.line}:in `#{step.description}'"
           raise e
         end
