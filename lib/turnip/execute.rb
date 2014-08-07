@@ -1,11 +1,16 @@
 module Turnip
   module Execute
-    def step(description, *extra_args)
-      extra_args.concat(description.extra_args) if description.respond_to?(:extra_args)
+    def step(step_or_description, *extra_args)
+      if step_or_description.respond_to?(:extra_args)
+        description = step_or_description.description
+        extra_args.concat(step_or_description.extra_args)
+      else
+        description = step_or_description
+      end
 
       matches = methods.map do |method|
         next unless method.to_s.start_with?("match: ")
-        send(method.to_s, description.to_s)
+        send(method.to_s, description)
       end.compact
 
       if matches.length == 0

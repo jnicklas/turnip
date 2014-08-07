@@ -88,7 +88,7 @@ module Turnip
             end
             feature.scenarios.each do |scenario|
               instance_eval <<-EOS, feature_file, scenario.line
-                describe scenario.name, scenario.metadata_hash do it(scenario.steps.map(&:description).join(' -> ')) do
+                describe scenario.name, scenario.metadata_hash do it(scenario.steps.map(&:to_s).join(' -> ')) do
                     scenario.steps.each do |step|
                       run_step(feature_file, step)
                     end
