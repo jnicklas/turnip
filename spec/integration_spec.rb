@@ -7,7 +7,8 @@ describe 'The CLI', :type => :integration do
 
   it "shows the correct description" do
     @result.should include('A simple feature')
-    @result.should include('is a simple feature')
+    @result.should include('This is a simple feature')
+    @result.should include('Given there is a monster -> When I attack it -> Then it should die')
   end
 
   it "prints out failures and successes" do

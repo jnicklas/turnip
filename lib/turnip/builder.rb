@@ -116,7 +116,7 @@ module Turnip
       end
 
       def to_s
-        description
+        "#{keyword}#{description}"
       end
     end
 

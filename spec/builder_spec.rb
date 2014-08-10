@@ -23,6 +23,14 @@ describe Turnip::Builder do
     it 'extracts step keyword' do
       steps.map(&:keyword).should eq(['Given ', 'When ', 'Then '])
     end
+
+    it 'extracts full description' do
+      steps.map(&:to_s).should eq([
+        'Given there is a monster',
+        'When I attack it',
+        'Then it should die'
+      ])
+    end
   end
 
   context "with scenario outlines" do
