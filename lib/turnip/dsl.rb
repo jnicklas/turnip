@@ -1,7 +1,9 @@
 module Turnip
   module DSL
-    def placeholder(name, &block)
-      Turnip::Placeholder.add(name, &block)
+    def placeholder(*name, &block)
+      name.each do |n|
+        Turnip::Placeholder.add(n, &block)
+      end
     end
 
     def step(description, &block)
