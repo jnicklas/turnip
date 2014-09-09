@@ -55,5 +55,11 @@ describe Turnip::DSL do
       context.placeholder('example') { true }
       Turnip::Placeholder.send(:placeholders).should have_key('example')
     end
+
+    it 'registers the multi placeholder globally' do
+      context.placeholder('example_1', 'example_2') { true }
+      Turnip::Placeholder.send(:placeholders).should have_key('example_1')
+      Turnip::Placeholder.send(:placeholders).should have_key('example_2')
+    end
   end
 end
