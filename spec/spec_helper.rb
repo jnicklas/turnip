@@ -5,6 +5,10 @@ RSpec.configure do |config|
     c.syntax = [:should, :expect]
   end
 
+  config.mock_with :rspec do |c|
+    c.syntax = [:should, :expect]
+  end
+
   config.before(raise_error_for_unimplemented_steps: true) do
     config.stub(:raise_error_for_unimplemented_steps) { true }
   end
