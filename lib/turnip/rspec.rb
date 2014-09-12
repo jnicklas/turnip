@@ -41,7 +41,9 @@ module Turnip
 
       def run_step(feature_file, step)
         begin
-          step(step)
+          instance_eval <<-EOS, feature_file, step.line
+            step(step)
+          EOS
         rescue Turnip::Pending => e
           # This is kind of a hack, but it will make RSpec throw way nicer exceptions
           example = Turnip::RSpec.fetch_current_example(self)
@@ -49,7 +51,7 @@ module Turnip
           example.metadata[:location] = "#{example.metadata[:file_path]}:#{step.line}"
 
           if ::RSpec.configuration.raise_error_for_unimplemented_steps
-            e.backtrace.unshift "#{feature_file}:#{step.line}:in `#{step.description}'"
+            e.backtrace.push "#{feature_file}:#{step.line}:in `#{step.description}'"
             raise
           end
 
@@ -59,7 +61,7 @@ module Turnip
             pending("No such step: '#{e}'")
           end
         rescue StandardError, ::RSpec::Expectations::ExpectationNotMetError => e
-          e.backtrace.unshift "#{feature_file}:#{step.line}:in `#{step.description}'"
+          e.backtrace.push "#{feature_file}:#{step.line}:in `#{step.description}'"
           raise e
         end
       end
