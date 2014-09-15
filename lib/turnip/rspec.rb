@@ -110,6 +110,6 @@ end
 ::RSpec.configure do |config|
   config.include Turnip::RSpec::Execute, turnip: true
   config.include Turnip::Steps, turnip: true
-  config.pattern << ",**/*.feature"
+  config.pattern += ',**/*.feature'
   config.add_setting :raise_error_for_unimplemented_steps, :default => false
 end
