@@ -6,7 +6,7 @@ module Turnip
       def called_from; step_definition.called_from; end
 
       def trace
-        trace = %{  - "#{expression}" (#{called_from})}
+        %{  - "#{expression}" (#{called_from})}
       end
     end
 
