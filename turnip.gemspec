@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency "rspec", [">=2.14.0", "<4.0"]
   s.add_runtime_dependency "gherkin", ">= 2.5"
+  s.add_runtime_dependency "erubis"
   s.add_development_dependency "rake"
   s.add_development_dependency "pry"
 end
