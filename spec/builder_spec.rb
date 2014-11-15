@@ -89,7 +89,7 @@ describe Turnip::Builder do
   end
 
   context 'use erb' do
-    let(:feature_file) { File.expand_path('../examples/simple_erb_feature.feature', File.dirname(__FILE__)) }
+    let(:feature_file) { File.expand_path('../examples/simple_feature.feature.erb', File.dirname(__FILE__)) }
     let(:steps) { feature.scenarios.first.steps }
 
     it 'extracts step description' do
