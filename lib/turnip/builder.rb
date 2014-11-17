@@ -1,4 +1,5 @@
 require "gherkin"
+require "erubis"
 
 module Turnip
   class Builder
@@ -126,7 +127,7 @@ module Turnip
       def build(feature_file)
         Turnip::Builder.new.tap do |builder|
           parser = Gherkin::Parser::Parser.new(builder, true)
-          parser.parse(File.read(feature_file), feature_file, 0)
+          parser.parse(Erubis::FastEruby.new(File.read(feature_file)).result, feature_file, 0)
         end
       end
     end

@@ -87,4 +87,33 @@ describe Turnip::Builder do
       multiline.should eq %q(Ahhhhhhh! i'm "John Smith"!)
     end
   end
+
+  context 'use erb' do
+    let(:feature_file) { File.expand_path('../examples/simple_feature.feature.erb', File.dirname(__FILE__)) }
+    let(:steps) { feature.scenarios.first.steps }
+
+    it 'extracts step description' do
+      steps.map(&:description).should eq([
+        'there is a monster',
+        'I attack it',
+        'it should die'
+      ])
+    end
+
+    it 'extracts step line' do
+      steps.map(&:line).should eq([3, 4, 5])
+    end
+
+    it 'extracts step keyword' do
+      steps.map(&:keyword).should eq(['Given ', 'When ', 'Then '])
+    end
+
+    it 'extracts full description' do
+      steps.map(&:to_s).should eq([
+        'Given there is a monster',
+        'When I attack it',
+        'Then it should die'
+      ])
+    end
+  end
 end
