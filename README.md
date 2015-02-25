@@ -42,9 +42,10 @@ exist), and add the following line:
 Pull requests are very welcome (and even better than bug reports)!
 Please create a topic branch for every separate change you make.
 
-## Compatibility
+## Compatibility and support
 
-Turnip does not work on Ruby 1.8.X.
+- Does not work on Ruby 1.8.X.
+- Does not support Ruby 1.9.X.
 
 ## Usage
 
