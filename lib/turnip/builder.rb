@@ -110,11 +110,6 @@ module Turnip
     end
 
     class Step < Struct.new(:description, :extra_args, :line, :keyword)
-      # 1.9.2 support hack
-      def split(*args)
-        self.to_s.split(*args)
-      end
-
       def to_s
         "#{keyword}#{description}"
       end
