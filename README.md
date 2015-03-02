@@ -334,6 +334,39 @@ end
 These regular expressions must not use anchors, e.g. `^` or `$`. They may not
 contain named capture groups, e.g. `(?<color>blue|green)`.
 
+Note that placeholders can capture several words separated by spaces and without surrounding quotes, i.e. in the 
+step `Given there is green furry monster in the loft` 
+defined with `step 'there is :monster in the loft`, 
+the placeholer `:monster` will capture `'green furry moster'`.
+
+This feature is great for defining the common should/should not steps without the unnecessary duplication, i.e.
+steps: 
+
+`I should see 'Danger! Monsters ahead!'` and 
+`I should not see 'Game over!'` 
+
+can be defined by one step definition:
+
+``` ruby
+step 'I :should_not see :text' do |positive, text|
+  expectation = postitive ? :to : :not_to
+  expect(page.body).send expectation, eq(text)
+end
+```
+and a placeholder:
+
+``` ruby
+placeholder :should_not do
+  match /should/ do |m|
+    true
+  end
+  
+  match /should not/ do |m|                                                                 
+    false
+  end
+end
+```
+
 ## Table Steps
 
 Turnip also supports steps that take a table as a parameter similar to Cucumber:
