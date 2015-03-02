@@ -334,37 +334,40 @@ end
 These regular expressions must not use anchors, e.g. `^` or `$`. They may not
 contain named capture groups, e.g. `(?<color>blue|green)`.
 
-Note that placeholders can capture several words separated by spaces and without surrounding quotes, i.e. in the 
-step `Given there is green furry monster in the loft` 
-defined with `step 'there is :monster in the loft`, 
-the placeholer `:monster` will capture `'green furry moster'`.
+Note that custom placeholders can capture several words separated by spaces and without surrounding quotes, e.g.:
 
-This feature is great for defining the common should/should not steps without the unnecessary duplication, i.e.
-steps: 
+```ruby
 
-`I should see 'Danger! Monsters ahead!'` and 
-`I should not see 'Game over!'` 
-
-can be defined by one step definition:
-
-``` ruby
-step 'I :should_not see :text' do |positive, text|
-  expectation = postitive ? :to : :not_to
-  expect(page.body).send expectation, eq(text)
+step 'there is :monster in the loft' do |monster|
+  # call 'Given there is green furry monster in the loft',
+  # :monster will capture 'green furry moster'
 end
 ```
-and a placeholder:
 
-``` ruby
-placeholder :should_not do
-  match /should/ do |m|
-    true
-  end
-  
-  match /should not/ do |m|                                                                 
+E.g. Common `should` / `should not` steps:
+
+```ruby
+step 'I :whether_to see :text' do |positive, text|
+  expectation = positive ? :to : :not_to
+  expect(page.body).send expectation, eq(text)
+end
+
+placeholder :whether_to do
+  match /should not/ do
     false
   end
+
+  match /should/ do
+    true
+  end
 end
+```
+
+Then, it is possible to call the following steps:
+
+```feature
+Then I should see 'Danger! Monsters ahead!'
+ And I should not see 'Game over!'
 ```
 
 ## Table Steps
