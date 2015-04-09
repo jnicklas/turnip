@@ -1,5 +1,7 @@
 # Turnip
 
+[![Join the chat at https://gitter.im/jnicklas/turnip](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jnicklas/turnip?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://secure.travis-ci.org/jnicklas/turnip.png)](http://travis-ci.org/jnicklas/turnip)
 [![Code Climate](https://codeclimate.com/github/jnicklas/turnip.png)](https://codeclimate.com/github/jnicklas/turnip)
 
