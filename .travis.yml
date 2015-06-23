@@ -3,6 +3,10 @@ language: ruby
 sudo: false
 cache: bundler
 
+branches:
+  only:
+    - master
+
 matrix:
   allow_failures:
     - gemfile: Gemfile
@@ -20,3 +24,4 @@ gemfile:
 - gemfiles/Gemfile-rspec-3.0.x
 - gemfiles/Gemfile-rspec-3.1.x
 - gemfiles/Gemfile-rspec-3.2.x
+- gemfiles/Gemfile-rspec-3.3.x
