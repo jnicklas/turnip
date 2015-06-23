@@ -78,27 +78,31 @@ module Turnip
 
       def run(feature_file)
         Turnip::Builder.build(feature_file).features.each do |feature|
-          ::RSpec.describe feature.name, feature.metadata_hash do
-            before do
-              example = Turnip::RSpec.fetch_current_example(self)
-              # This is kind of a hack, but it will make RSpec throw way nicer exceptions
-              example.metadata[:file_path] ||= feature_file
+          instance_eval <<-EOS, feature_file, feature.line
+            describe = ::RSpec.describe feature.name, feature.metadata_hash
+            run_feature(describe, feature, feature_file)
+          EOS
+        end
+      end
 
-              feature.backgrounds.map(&:steps).flatten.each do |step|
-                run_step(feature_file, step)
+      private
+
+      def run_feature(describe, feature, filename)
+        describe.before do
+          feature.backgrounds.map(&:steps).flatten.each do |step|
+            run_step(filename, step)
+          end
+        end
+
+        feature.scenarios.each do |scenario|
+          instance_eval <<-EOS, filename, scenario.line
+            describe.describe scenario.name, scenario.metadata_hash do it(scenario.steps.map(&:to_s).join(' -> ')) do
+                scenario.steps.each do |step|
+                  run_step(filename, step)
+                end
               end
             end
-            feature.scenarios.each do |scenario|
-              instance_eval <<-EOS, feature_file, scenario.line
-                describe scenario.name, scenario.metadata_hash do it(scenario.steps.map(&:to_s).join(' -> ')) do
-                    scenario.steps.each do |step|
-                      run_step(feature_file, step)
-                    end
-                  end
-                end
-              EOS
-            end
-          end
+          EOS
         end
       end
     end
