@@ -19,9 +19,5 @@ rvm:
  - jruby-19mode
 gemfile:
 - Gemfile
-- gemfiles/Gemfile-rspec-2.14.x
-- gemfiles/Gemfile-rspec-2.99.x
-- gemfiles/Gemfile-rspec-3.0.x
-- gemfiles/Gemfile-rspec-3.1.x
 - gemfiles/Gemfile-rspec-3.2.x
 - gemfiles/Gemfile-rspec-3.3.x
