@@ -45,10 +45,9 @@ module Turnip
             step(step)
           EOS
         rescue Turnip::Pending => e
-          ::RSpec.current_example.tap do |ex|
-            ex.metadata[:line_number] = step.line
-            ex.metadata[:location]    = "#{example.metadata[:file_path]}:#{step.line}"
-          end
+          example = ::RSpec.current_example
+          example.metadata[:line_number] = step.line
+          example.metadata[:location] = "#{example.metadata[:file_path]}:#{step.line}"
 
           if ::RSpec.configuration.raise_error_for_unimplemented_steps
             e.backtrace.push "#{feature_file}:#{step.line}:in `#{step.description}'"
