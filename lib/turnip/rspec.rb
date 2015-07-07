@@ -55,11 +55,7 @@ module Turnip
             raise
           end
 
-          if ::RSpec::Version::STRING >= '2.99.0'
-            skip("No such step: '#{e}'")
-          else
-            pending("No such step: '#{e}'")
-          end
+          skip("No such step: '#{e}'")
         rescue StandardError, ::RSpec::Expectations::ExpectationNotMetError => e
           e.backtrace.push "#{feature_file}:#{step.line}:in `#{step.description}'"
           raise e
