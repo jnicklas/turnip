@@ -6,6 +6,7 @@ cache: bundler
 branches:
   only:
     - master
+    - 2_0_0_rc1
 
 matrix:
   allow_failures:
