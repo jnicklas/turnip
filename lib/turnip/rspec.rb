@@ -45,10 +45,10 @@ module Turnip
             step(step)
           EOS
         rescue Turnip::Pending => e
-          # This is kind of a hack, but it will make RSpec throw way nicer exceptions
-          example = Turnip::RSpec.fetch_current_example(self)
-          example.metadata[:line_number] = step.line
-          example.metadata[:location] = "#{example.metadata[:file_path]}:#{step.line}"
+          ::RSpec.current_example.tap do |ex|
+            ex.metadata[:line_number] = step.line
+            ex.metadata[:location]    = "#{example.metadata[:file_path]}:#{step.line}"
+          end
 
           if ::RSpec.configuration.raise_error_for_unimplemented_steps
             e.backtrace.push "#{feature_file}:#{step.line}:in `#{step.description}'"
@@ -68,14 +68,6 @@ module Turnip
     end
 
     class << self
-      def fetch_current_example(context)
-        if ::RSpec.respond_to?(:current_example)
-          ::RSpec.current_example
-        else
-          context.example
-        end
-      end
-
       def run(feature_file)
         Turnip::Builder.build(feature_file).features.each do |feature|
           instance_eval <<-EOS, feature_file, feature.line
