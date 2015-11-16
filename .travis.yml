@@ -12,13 +12,15 @@ matrix:
   allow_failures:
     - gemfile: Gemfile
     - rvm: ruby-head
+
 rvm:
- - 2.0.0
- - 2.1
- - 2.2
- - ruby-head
- - jruby-19mode
+  - 2.0.0
+  - 2.1
+  - 2.2
+  - ruby-head
+  - jruby-19mode
+
 gemfile:
-- Gemfile
-- gemfiles/Gemfile-rspec-3.2.x
-- gemfiles/Gemfile-rspec-3.3.x
+  - Gemfile
+  - gemfiles/Gemfile-rspec-3.2.x
+  - gemfiles/Gemfile-rspec-3.3.x
