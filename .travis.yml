@@ -11,6 +11,7 @@ branches:
 matrix:
   allow_failures:
     - gemfile: Gemfile
+    - gemfile: gemfiles/Gemfile-rspec-3.2.x
     - rvm: ruby-head
 
 rvm:
@@ -24,3 +25,4 @@ gemfile:
   - Gemfile
   - gemfiles/Gemfile-rspec-3.2.x
   - gemfiles/Gemfile-rspec-3.3.x
+  - gemfiles/Gemfile-rspec-3.4.x
