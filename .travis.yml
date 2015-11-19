@@ -6,22 +6,23 @@ cache: bundler
 branches:
   only:
     - master
+    - 2_0_0_rc1
 
 matrix:
   allow_failures:
     - gemfile: Gemfile
+    - gemfile: gemfiles/Gemfile-rspec-3.2.x
     - rvm: ruby-head
+
 rvm:
- - 2.0.0
- - 2.1
- - 2.2
- - ruby-head
- - jruby-19mode
+  - 2.0.0
+  - 2.1
+  - 2.2
+  - ruby-head
+  - jruby-19mode
+
 gemfile:
-- Gemfile
-- gemfiles/Gemfile-rspec-2.14.x
-- gemfiles/Gemfile-rspec-2.99.x
-- gemfiles/Gemfile-rspec-3.0.x
-- gemfiles/Gemfile-rspec-3.1.x
-- gemfiles/Gemfile-rspec-3.2.x
-- gemfiles/Gemfile-rspec-3.3.x
+  - Gemfile
+  - gemfiles/Gemfile-rspec-3.2.x
+  - gemfiles/Gemfile-rspec-3.3.x
+  - gemfiles/Gemfile-rspec-3.4.x
