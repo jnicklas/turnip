@@ -44,10 +44,30 @@ exist), and add the following line:
 Pull requests are very welcome (and even better than bug reports)!
 Please create a topic branch for every separate change you make.
 
-## Compatibility and support
+## Compatibility and support policy
 
-- Does not work on Ruby 1.8.X.
-- Does not support Ruby 1.9.X.
+### 1. Ruby
+
+- Support Ruby 2.x
+- Does not support Ruby 1.9.X
+- Does not work on Ruby 1.8.X
+
+### 2. RSpec
+
+In accordance with the RSpec support policy https://github.com/jnicklas/turnip/issues/158#issuecomment-119049054
+
+- Support RSpec 3.x **the latest or one version before**
+- Does not support **two version before the latest or earlier**
+- Does not work on **RSpec 2 or earlier**
+
+Example `If the latest version is 3.4.x`:
+
+- Support `3.4.x`
+- Support `3.3.x`
+- Does not support `3.2.x`
+- Does not support `3.1.x`
+- Does not support `2.x.y`
+
 
 ## Usage
 
