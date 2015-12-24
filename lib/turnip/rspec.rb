@@ -87,14 +87,15 @@ module Turnip
           step_names = (background_steps + scenario.steps).map(&:to_s)
           description = step_names.join(' -> ')
 
-          instance_eval <<-EOS, filename, scenario.line
-            context.describe scenario.name, scenario.metadata_hash do it(description) do
+          context.describe scenario.name, scenario.metadata_hash do
+            instance_eval <<-EOS, filename, scenario.line
+              it description do
                 scenario.steps.each do |step|
                   run_step(filename, step)
                 end
               end
-            end
-          EOS
+            EOS
+          end
         end
       end
     end
