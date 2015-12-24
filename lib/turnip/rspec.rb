@@ -75,15 +75,20 @@ module Turnip
       private
 
       def run_feature(context, feature, filename)
+        background_steps = feature.backgrounds.map(&:steps).flatten
+
         context.before do
-          feature.backgrounds.map(&:steps).flatten.each do |step|
+          background_steps.each do |step|
             run_step(filename, step)
           end
         end
 
         feature.scenarios.each do |scenario|
+          step_names = (background_steps + scenario.steps).map(&:to_s)
+          description = step_names.join(' -> ')
+
           instance_eval <<-EOS, filename, scenario.line
-            context.describe scenario.name, scenario.metadata_hash do it(scenario.steps.map(&:to_s).join(' -> ')) do
+            context.describe scenario.name, scenario.metadata_hash do it(description) do
                 scenario.steps.each do |step|
                   run_step(filename, step)
                 end
