@@ -66,30 +66,36 @@ module Turnip
       def run(feature_file)
         Turnip::Builder.build(feature_file).features.each do |feature|
           instance_eval <<-EOS, feature_file, feature.line
-            describe = ::RSpec.describe feature.name, feature.metadata_hash
-            run_feature(describe, feature, feature_file)
+            context = ::RSpec.describe feature.name, feature.metadata_hash
+            run_feature(context, feature, feature_file)
           EOS
         end
       end
 
       private
 
-      def run_feature(describe, feature, filename)
-        describe.before do
-          feature.backgrounds.map(&:steps).flatten.each do |step|
+      def run_feature(context, feature, filename)
+        background_steps = feature.backgrounds.map(&:steps).flatten
+
+        context.before do
+          background_steps.each do |step|
             run_step(filename, step)
           end
         end
 
         feature.scenarios.each do |scenario|
-          instance_eval <<-EOS, filename, scenario.line
-            describe.describe scenario.name, scenario.metadata_hash do it(scenario.steps.map(&:to_s).join(' -> ')) do
+          step_names = (background_steps + scenario.steps).map(&:to_s)
+          description = step_names.join(' -> ')
+
+          context.describe scenario.name, scenario.metadata_hash do
+            instance_eval <<-EOS, filename, scenario.line
+              it description do
                 scenario.steps.each do |step|
                   run_step(filename, step)
                 end
               end
-            end
-          EOS
+            EOS
+          end
         end
       end
     end
