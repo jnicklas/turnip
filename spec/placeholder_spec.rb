@@ -22,23 +22,47 @@ describe Turnip::Placeholder do
     end
   end
 
-  describe ".apply" do
-    it "returns a regexp for the given placeholder" do
-      placeholder = Turnip::Placeholder.add(:test) do
+  describe '.apply' do
+    it 'recognize multiple placeholders and return block value' do
+      described_class.add :test1 do
         match(/foo/) { :foo_bar }
         match(/\d/) { |num| num.to_i }
       end
-      Turnip::Placeholder.apply(:test, "foo").should eq(:foo_bar)
-      Turnip::Placeholder.apply(:test, "5").should eq(5)
-      Turnip::Placeholder.apply(:test, "bar").should eq("bar")
+
+      described_class.add :test2 do
+        match(/bar/) { :bar_foo }
+        match(/\d/) { |num| num.to_i * 2 }
+      end
+
+      expect(described_class.apply(:test1, 'foo')).to eq(:foo_bar)
+      expect(described_class.apply(:test1, 'bar')).to eq('bar')
+      expect(described_class.apply(:test1, '5')).to eq(5)
+
+      expect(described_class.apply(:test2, 'foo')).to eq('foo')
+      expect(described_class.apply(:test2, 'bar')).to eq(:bar_foo)
+      expect(described_class.apply(:test2, '5')).to eq(10)
+    end
+  end
+
+  describe '#apply' do
+    it 'extracts a captured expression and passes to the block' do
+      placeholder = described_class.new(:test) do
+        match(/foo/) { :foo_bar }
+        match(/\d/) { |num| num.to_i }
+      end
+
+      expect(placeholder.apply('foo')).to eq :foo_bar
+      expect(placeholder.apply('bar')).to eq 'bar'
+      expect(placeholder.apply('5')).to eq 5
     end
 
-    it "extracts any captured expressions and passes them to the block" do
-      placeholder = Turnip::Placeholder.add(:test) do
+    it 'extracts any captured expressions and passes to the block' do
+      placeholder = described_class.new(:test) do
         match(/mo(nk)(ey)/) { |nk, ey| nk.to_s.reverse + '|' + ey.to_s.upcase }
       end
-      Turnip::Placeholder.apply(:test, "monkey").should eq('kn|EY')
-      Turnip::Placeholder.apply(:test, "bar").should eq("bar")
+
+      expect(placeholder.apply('monkey')).to eq('kn|EY')
+      expect(placeholder.apply('bar')).to eq('bar')
     end
   end
 
@@ -52,6 +76,7 @@ describe Turnip::Placeholder do
 
       it 'should match a given fragment' do
         expect('foo').to match(placeholder.regexp)
+        expect('the fool').to match(placeholder.regexp)
       end
 
       it 'should not match an incorrect fragment' do
@@ -70,6 +95,9 @@ describe Turnip::Placeholder do
       it 'should match multiple fragments' do
         expect('foo').to match(placeholder.regexp)
         expect('5').to match(placeholder.regexp)
+
+        expect('the fool').to match(placeholder.regexp)
+        expect('12345678').to match(placeholder.regexp)
       end
 
       it 'should not multiple incorrect fragments' do
