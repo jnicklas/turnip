@@ -42,26 +42,39 @@ describe Turnip::Placeholder do
     end
   end
 
-  describe "#regexp" do
-    it "should match a given fragment" do
-      placeholder = Turnip::Placeholder.new(:test) { match(/foo/) }
-      "foo".should =~ placeholder.regexp
+  describe '#regexp' do
+    context 'placeholder has a matcher' do
+      let :placeholder do
+        described_class.new(:test) do
+          match(/foo/)
+        end
+      end
+
+      it 'should match a given fragment' do
+        expect('foo').to match(placeholder.regexp)
+      end
+
+      it 'should not match an incorrect fragment' do
+        expect('bar').not_to match(placeholder.regexp)
+      end
     end
 
-    it "should match multiple fragments" do
-      placeholder = Turnip::Placeholder.new(:test) { match(/foo/); match(/\d/) }
-      "foo".should =~ placeholder.regexp
-      "5".should =~ placeholder.regexp
-    end
+    context 'placeholder has multiple matchers' do
+      let :placeholder do
+        described_class.new(:test) do
+          match(/foo/)
+          match(/\d/)
+        end
+      end
 
-    it "should not match an incorrect fragment" do
-      placeholder = Turnip::Placeholder.new(:test) { match(/foo/) }
-      "bar".should_not =~ placeholder.regexp
-    end
+      it 'should match multiple fragments' do
+        expect('foo').to match(placeholder.regexp)
+        expect('5').to match(placeholder.regexp)
+      end
 
-    it "should not multiple incorrect fragments" do
-      placeholder = Turnip::Placeholder.new(:test) { match(/foo/); match(/\d/) }
-      "bar".should_not =~ placeholder.regexp
+      it 'should not multiple incorrect fragments' do
+        expect('bar').not_to match(placeholder.regexp)
+      end
     end
   end
 end
