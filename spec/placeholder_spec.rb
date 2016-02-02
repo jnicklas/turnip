@@ -1,24 +1,48 @@
 require 'turnip/placeholder'
 
 describe Turnip::Placeholder do
-  def anchor(exp)
-    Regexp.new("^#{exp}$")
-  end
-
-  describe ".resolve" do
-    it "returns a regexp for the given placeholder" do
-      placeholder = Turnip::Placeholder.add(:test) { match(/foo/); match(/\d/) }
-      resolved = Turnip::Placeholder.resolve(:test)
-      "foo".should =~ anchor(resolved)
-      "5".should =~ anchor(resolved)
-      "bar".should_not =~ anchor(resolved)
+  describe '.resolve' do
+    before do
+      described_class.add(:test) do
+        match(/foo/)
+        match(/\d/)
+      end
     end
 
-    it "fall through to using the standard placeholder regexp" do
-      resolved = Turnip::Placeholder.resolve(:does_not_exist)
-      "foo".should =~ anchor(resolved)
-      '"this is a test"'.should =~ anchor(resolved)
-      "foo bar".should_not =~ anchor(resolved)
+    it 'returns a regexp for the given placeholder' do
+      resolved = described_class.resolve(:test)
+
+      expect('foo').to match(resolved)
+      expect('bar').not_to match(resolved)
+      expect('5').to match(resolved)
+    end
+
+    it 'fall through to using the standard placeholder regexp' do
+      resolved = described_class.resolve(:does_not_exist)
+
+      match_standard_regexp_strings = [
+        [ %q(non_space_string),      'non_space_string'    ],
+        [ %q('around single quote'), 'around single quote' ],
+        [ %q("around double quote"), 'around double quote' ],
+      ]
+
+      match_standard_regexp_strings.each do |step, expect_str|
+        actual_str = resolved.match(step).captures.find { |m| !m.nil? }
+        expect(expect_str).to eq(actual_str)
+      end
+
+      mismatch_standard_regexp_strings = [
+        [ %q(with space string),  'with space string' ],
+        [ %q('single to double"), 'single to double'  ],
+        [ %q("double to single'), 'double to single'  ],
+        [ %q("double to none),    'double to none'  ],
+        [ %q(none to single'),    'none to single'  ],
+      ]
+
+      mismatch_standard_regexp_strings.each do |step, expect_str|
+        actual_str = resolved.match(step).captures.find { |m| !m.nil? }
+        expect(expect_str).not_to eq(actual_str)
+      end
     end
   end
 
