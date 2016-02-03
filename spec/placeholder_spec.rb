@@ -73,10 +73,13 @@ describe Turnip::Placeholder do
       placeholder = described_class.new(:test) do
         match(/foo/) { :foo_bar }
         match(/\d/) { |num| num.to_i }
+        match { |value| value.gsub(' ', '').to_sym }
       end
 
       expect(placeholder.apply('foo')).to eq :foo_bar
-      expect(placeholder.apply('bar')).to eq 'bar'
+      expect(placeholder.apply('bar')).to eq :bar
+      expect(placeholder.apply('"fizz buzz"')).to eq :fizzbuzz
+      expect(placeholder.apply("'fizz buzz'")).to eq :fizzbuzz
       expect(placeholder.apply('5')).to eq 5
     end
 
