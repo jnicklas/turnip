@@ -65,14 +65,14 @@ step "the monster should be dead" do
 end
 
 step "there are the following monsters:" do |table|
-  @monsters = {}
+  $monsters = {}
   table.hashes.each do |hash|
-    @monsters[hash['Name']] = hash['Hitpoints'].to_i
+    $monsters[hash['Name']] = hash['Hitpoints'].to_i
   end
 end
 
-step ":name should have :count hitpoints" do |name, count|
-  @monsters[name].should eq(count.to_i)
+step ":monster should have :count hitpoints" do |monster, count|
+  monster.should eq(count.to_i)
 end
 
 step "the monster sings the following song" do |song|
@@ -116,5 +116,11 @@ end
 placeholder :color do
   match /blue|green|red/ do |color|
     color.to_sym
+  end
+end
+
+placeholder :monster do
+  match do |name|
+    $monsters[name]
   end
 end

@@ -27,8 +27,8 @@ module Turnip
 
       def default
         @default ||= new(:default) do
-          match %r((?:"([^"]*)"|'([^']*)'|([[:alnum:]_-]+))) do |first, second, third|
-            first or second or third
+          match do |value|
+            value
           end
         end
       end
@@ -45,7 +45,7 @@ module Turnip
       if match and match.block then match.block.call(*params) else value end
     end
 
-    def match(regexp, &block)
+    def match(regexp = %r{['"]?((?:(?<=")[^"]*)(?=")|(?:(?<=')[^']*(?='))|(?<!['"])[[:alnum:]_-]+(?!['"]))['"]?}, &block)
       @matches << Match.new(regexp, block)
     end
 

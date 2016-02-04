@@ -392,6 +392,16 @@ Then I should see 'Danger! Monsters ahead!'
  And I should not see 'Game over!'
 ```
 
+You can also define custom placeholder without specific regexp, that matches the same value of the default placeholder like this:
+
+```ruby
+placeholder :monster_name do
+  match do |name|
+    Monster.find_by!(name: name)
+  end
+end
+```
+
 ## Table Steps
 
 Turnip also supports steps that take a table as a parameter similar to Cucumber:
