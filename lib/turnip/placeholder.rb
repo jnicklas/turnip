@@ -27,7 +27,7 @@ module Turnip
 
       def default
         @default ||= new(:default) do
-          match do |value|
+          default do |value|
             value
           end
         end
@@ -37,6 +37,7 @@ module Turnip
     def initialize(name, &block)
       @name = name
       @matches = []
+      @default = nil
       instance_eval(&block)
     end
 
@@ -45,22 +46,35 @@ module Turnip
       if match and match.block then match.block.call(*params) else value end
     end
 
-    def match(regexp = %r{['"]?((?:(?<=")[^"]*)(?=")|(?:(?<=')[^']*(?='))|(?<!['"])[[:alnum:]_-]+(?!['"]))['"]?}, &block)
+    def match(regexp, &block)
       @matches << Match.new(regexp, block)
     end
 
+    def default(&block)
+      @default ||= Match.new(
+        %r{['"]?((?:(?<=")[^"]*)(?=")|(?:(?<=')[^']*(?='))|(?<!['"])[[:alnum:]_-]+(?!['"]))['"]?},
+        block
+      )
+    end
+
     def regexp
-      Regexp.new(@matches.map(&:regexp).join('|'))
+      Regexp.new(placeholder_matches.map(&:regexp).join('|'))
     end
 
   private
 
     def find_match(value)
-      @matches.each do |m|
+      placeholder_matches.each do |m|
         result = value.scan(m.regexp)
         return m, result.flatten unless result.empty?
       end
       nil
+    end
+
+    def placeholder_matches
+      matches = @matches
+      matches += [@default] if @default
+      matches
     end
   end
 end

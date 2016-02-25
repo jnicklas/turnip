@@ -120,7 +120,7 @@ placeholder :color do
 end
 
 placeholder :monster do
-  match do |name|
+  default do |name|
     $monsters[name]
   end
 end
