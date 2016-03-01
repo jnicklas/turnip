@@ -71,9 +71,12 @@ describe Turnip::Placeholder do
   describe '#apply' do
     it 'extracts a captured expression and passes to the block' do
       placeholder = described_class.new(:test) do
+        default { |value| value.gsub(' ', '').to_sym }
         match(/foo/) { :foo_bar }
         match(/\d/) { |num| num.to_i }
-        match { |value| value.gsub(' ', '').to_sym }
+
+        # It will be ignored (does not override first `default`)
+        default { |value| value.gsub(' ', '-').to_sym }
       end
 
       expect(placeholder.apply('foo')).to eq :foo_bar

@@ -396,7 +396,7 @@ You can also define custom placeholder without specific regexp, that matches the
 
 ```ruby
 placeholder :monster_name do
-  match do |name|
+  default do |name|
     Monster.find_by!(name: name)
   end
 end
