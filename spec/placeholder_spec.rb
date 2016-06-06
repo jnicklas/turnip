@@ -94,6 +94,18 @@ describe Turnip::Placeholder do
       expect(placeholder.apply('monkey')).to eq('kn|EY')
       expect(placeholder.apply('bar')).to eq('bar')
     end
+
+    it 'extracts captures by default placeholder and passes to the block' do
+      placeholder = described_class.new(:test) do
+        default do |v|
+          v
+        end
+      end
+
+      expect(placeholder.apply('John Doe')).to eq('John Doe')
+      expect(placeholder.apply('"John Doe"')).to eq('John Doe')
+      expect(placeholder.apply('\'John Doe\'')).to eq('John Doe')
+    end
   end
 
   describe '#regexp' do
