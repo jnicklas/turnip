@@ -64,11 +64,20 @@ module Turnip
   private
 
     def find_match(value)
-      placeholder_matches.each do |m|
+      @matches.each do |m|
         result = value.scan(m.regexp)
         return m, result.flatten unless result.empty?
       end
-      nil
+
+      #
+      # value is one of the following:
+      #
+      #  %{Jhon Doe}
+      #  %{"Jhon Doe"}
+      #  %{'Jhon Doe'}
+      #
+      # In any case, it passed to the step block in the state without quotes
+      return @default, value.sub(/^(["'])(.*)\1$/, '\2')
     end
 
     def placeholder_matches
