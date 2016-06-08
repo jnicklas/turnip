@@ -77,7 +77,7 @@ module Turnip
       #  %{'Jhon Doe'}
       #
       # In any case, it passed to the step block in the state without quotes
-      return @default, value.sub(/^(["'])(.*)\1$/, '\2')
+      return @default, value.sub(/^(["'])([^\1]*)\1$/, '\2')
     end
 
     def placeholder_matches

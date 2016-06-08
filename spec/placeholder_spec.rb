@@ -105,6 +105,9 @@ describe Turnip::Placeholder do
       expect(placeholder.apply('John Doe')).to eq('John Doe')
       expect(placeholder.apply('"John Doe"')).to eq('John Doe')
       expect(placeholder.apply('\'John Doe\'')).to eq('John Doe')
+
+      expect(placeholder.apply('John \n Doe')).to eq('John \n Doe')
+      expect(placeholder.apply('"John \n Doe"')).to eq('John \n Doe')
     end
   end
 
