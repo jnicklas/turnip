@@ -140,9 +140,7 @@ module Turnip
       def build(feature_file)
         Turnip::Builder.new.tap do |builder|
           parser = Gherkin::Parser.new
-          scanner = Gherkin::TokenScanner.new(File.read(feature_file))
-
-          result = parser.parse(scanner)
+          result = parser.parse(File.read(feature_file))
           builder.build(result)
         end
       end
