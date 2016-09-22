@@ -1,10 +1,11 @@
-require "gherkin"
+require "gherkin/parser"
+require "gherkin/token_scanner"
 
 module Turnip
   class Builder
     module Tags
       def tags
-        @raw.tags.map { |tag| tag.name.sub(/^@/, '') }
+        @raw[:tags].map { |tag| tag[:name].sub(/^@/, '') }
       end
 
       def tags_hash
@@ -18,13 +19,30 @@ module Turnip
 
     module Name
       def name
-        @raw.name
+        @raw[:name]
       end
     end
 
     module Line
       def line
-        @raw.line
+        @raw[:location][:line]
+      end
+    end
+
+    module Steps
+      def steps
+        @steps ||= @raw[:steps].map do |step|
+          extra_args = []
+          if (arg = step[:argument])
+            if arg[:type] == :DataTable
+              table = Turnip::Table.new(arg[:rows].map {|r| r[:cells].map {|c| c[:value]}})
+              extra_args.push(table)
+            else
+              extra_args.push arg[:content]
+            end
+          end
+          Step.new(step[:text], extra_args, step[:location][:line], step[:keyword])
+        end
       end
     end
 
@@ -48,10 +66,10 @@ module Turnip
     end
 
     class Background
-      attr_reader :steps
+      include Steps
+
       def initialize(raw)
         @raw = raw
-        @steps = []
       end
     end
 
@@ -59,47 +77,48 @@ module Turnip
       include Tags
       include Name
       include Line
+      include Steps
 
-      attr_accessor :steps
+      attr_writer :steps
 
       def initialize(raw)
         @raw = raw
-        @steps = []
       end
     end
 
     class ScenarioOutline
       include Tags
       include Name
-
-      attr_reader :steps
+      include Steps
 
       def initialize(raw)
         @raw = raw
-        @steps = []
       end
 
-      def to_scenarios(examples)
-        rows = examples.rows.map(&:cells)
-        headers = rows.shift
-        rows.map do |row|
-          Scenario.new(@raw).tap do |scenario|
-            scenario.steps = steps.map do |step|
-              new_description = substitute(step.description, headers, row)
-              new_extra_args = step.extra_args.map do |ea|
-                case ea
-                when String
-                  substitute(ea, headers, row)
-                when Turnip::Table
-                  Turnip::Table.new(ea.map {|t_row| t_row.map {|t_col| substitute(t_col, headers, row) } })
-                else
-                  ea
+      def to_scenarios
+        return [] unless @raw[:examples]
+        @raw[:examples].map { |example|
+          headers = example[:tableHeader][:cells].map {|c| c[:value]}
+          rows = example[:tableBody].map {|r| r[:cells].map {|c| c[:value]}}
+          rows.map do |row|
+            Scenario.new(@raw).tap do |scenario|
+              scenario.steps = steps.map do |step|
+                new_description = substitute(step.description, headers, row)
+                new_extra_args = step.extra_args.map do |ea|
+                  case ea
+                  when String
+                    substitute(ea, headers, row)
+                  when Turnip::Table
+                    Turnip::Table.new(ea.map {|t_row| t_row.map {|t_col| substitute(t_col, headers, row) } })
+                  else
+                    ea
+                  end
                 end
+                Step.new(new_description, new_extra_args, step.line, step.keyword)
               end
-              Step.new(new_description, new_extra_args, step.line, step.keyword)
             end
           end
-        end
+        }.flatten
       end
 
       private
@@ -120,8 +139,9 @@ module Turnip
     class << self
       def build(feature_file)
         Turnip::Builder.new.tap do |builder|
-          parser = Gherkin::Parser::Parser.new(builder, true)
-          parser.parse(File.read(feature_file), feature_file, 0)
+          parser = Gherkin::Parser.new
+          result = parser.parse(File.read(feature_file))
+          builder.build(result)
         end
       end
     end
@@ -130,44 +150,21 @@ module Turnip
       @features = []
     end
 
-    def background(background)
-      @current_step_context = Background.new(background)
-      @current_feature.backgrounds << @current_step_context
-    end
-
-    def feature(feature)
-      @current_feature = Feature.new(feature)
-      @features << @current_feature
-    end
-
-    def scenario(scenario)
-      @current_step_context = Scenario.new(scenario)
-      @current_feature.scenarios << @current_step_context
-    end
-
-    def scenario_outline(outline)
-      @current_step_context = ScenarioOutline.new(outline)
-    end
-
-    def examples(examples)
-      @current_feature.scenarios.push(*@current_step_context.to_scenarios(examples))
-    end
-
-    def step(step)
-      extra_args = []
-      if step.doc_string
-        extra_args.push step.doc_string.value
-      elsif step.rows
-        table = Turnip::Table.new(step.rows.map(&:cells).map(&:to_a))
-        extra_args.push(table)
+    def build(attributes)
+      return unless attributes[:feature]
+      attr = attributes[:feature]
+      feature = Feature.new(attr)
+      attr[:children].each do |child|
+        case child[:type]
+        when :Background
+          feature.backgrounds << Background.new(child)
+        when :Scenario
+          feature.scenarios << Scenario.new(child)
+        else
+          feature.scenarios.push(*ScenarioOutline.new(child).to_scenarios)
+        end
       end
-      @current_step_context.steps << Step.new(step.name, extra_args, step.line, step.keyword)
-    end
-
-    def uri(*)
-    end
-
-    def eof
+      @features << feature
     end
   end
 end
