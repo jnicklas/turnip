@@ -26,6 +26,15 @@ module Turnip
           Tag.new(tag)
         end
       end
+
+      #
+      # Convert for hash to be used in RSpec
+      #
+      # @return  [Hash]
+      #
+      def metadata_hash
+        Hash[tags.map { |t| [t.name.to_sym, true] }]
+      end
     end
   end
 end

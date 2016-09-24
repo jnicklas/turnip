@@ -68,6 +68,10 @@ module Turnip
           end
         end.flatten.compact
       end
+
+      def metadata_hash
+        super.merge(:type => Turnip.type, :turnip => true)
+      end
     end
   end
 end
