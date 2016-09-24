@@ -34,6 +34,10 @@ module Turnip
                       end
       end
 
+      def to_s
+        "#{keyword}#{text}"
+      end
+
       private
 
       def doc_string(doc)
