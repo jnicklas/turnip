@@ -1,5 +1,4 @@
 require "gherkin/parser"
-require "gherkin/token_scanner"
 require 'turnip/node/feature'
 
 module Turnip
