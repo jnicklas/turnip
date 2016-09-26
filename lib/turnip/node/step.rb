@@ -23,6 +23,13 @@ module Turnip
         @raw[:text]
       end
 
+      #
+      # Backward compatibility
+      #
+      def description
+        text
+      end
+
       def argument
         return nil if @raw[:argument].nil?
 

@@ -1,10 +1,13 @@
 module Turnip
   module Execute
     def step(step_or_description, *extra_args)
-      if step_or_description.respond_to?(:extra_args)
+
+      if step_or_description.respond_to?(:argument) # Turnip::Node::Step
         description = step_or_description.description
-        extra_args.concat(step_or_description.extra_args)
-      else
+        if step_or_description.argument
+          extra_args << step_or_description.argument
+        end
+      else # String
         description = step_or_description
       end
 

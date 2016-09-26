@@ -1,5 +1,6 @@
 require "gherkin/parser"
 require "gherkin/token_scanner"
+require 'turnip/node/feature'
 
 module Turnip
   class Builder
@@ -152,19 +153,8 @@ module Turnip
 
     def build(attributes)
       return unless attributes[:feature]
-      attr = attributes[:feature]
-      feature = Feature.new(attr)
-      attr[:children].each do |child|
-        case child[:type]
-        when :Background
-          feature.backgrounds << Background.new(child)
-        when :Scenario
-          feature.scenarios << Scenario.new(child)
-        else
-          feature.scenarios.push(*ScenarioOutline.new(child).to_scenarios)
-        end
-      end
-      @features << feature
+
+      @features << Node::Feature.new(attributes[:feature])
     end
   end
 end
