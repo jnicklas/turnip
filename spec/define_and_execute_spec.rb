@@ -41,13 +41,13 @@ describe Turnip::Execute do
   end
 
   it "can be executed with a builder step" do
-    builder_step = double(:description => "a cool step", :extra_args => [])
+    builder_step = double(:description => "a cool step", :argument => nil)
     mod.step("a :test step") { |test| test.upcase }
     obj.step(builder_step).should == "COOL"
   end
 
   it "sends in extra arg from a builder step" do
-    builder_step = double(:description => "a cool step", :extra_args => ["foo"])
+    builder_step = double(:description => "a cool step", :argument => "foo")
     mod.step("a :test step") { |test, foo| test.upcase + foo }
     obj.step(builder_step).should == "COOLfoo"
   end

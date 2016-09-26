@@ -66,10 +66,10 @@ describe Turnip::Builder do
         "I attack the monster and do 13 points damage",
         "the monster should be dead"
       ])
-      table = feature.scenarios[0].steps[0].extra_args.find {|a| a.instance_of?(Turnip::Table)}
-      table.hashes[0]['hit_points'].should == '10'
-      table = feature.scenarios[1].steps[0].extra_args.find {|a| a.instance_of?(Turnip::Table)}
-      table.hashes[0]['hit_points'].should == '8'
+      table = feature.scenarios[0].steps[0].argument
+      table.hashes[0]['hit_points'].should eq '10'
+      table = feature.scenarios[1].steps[0].argument
+      table.hashes[0]['hit_points'].should eq '8'
     end
   end
 
@@ -83,7 +83,7 @@ describe Turnip::Builder do
         'the monster introduced himself:'
       ])
 
-      multiline = steps[1].extra_args.first
+      multiline = steps[1].argument
       multiline.should eq %q(Ahhhhhhh! i'm "John Smith"!)
     end
   end
