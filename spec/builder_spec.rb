@@ -33,6 +33,16 @@ describe Turnip::Builder do
     end
   end
 
+  context 'with tags' do
+    let(:feature_file) { File.expand_path('../examples/tags.feature', File.dirname(__FILE__)) }
+
+    it 'extracts tags' do
+      expect(feature.tags[0]).to be_instance_of Turnip::Node::Tag
+      expect(feature.scenarios[0].tags[0].name).to eq 'cool'
+      expect(feature.scenarios[1].tag_names).to eq ['stealthy', 'wicked']
+    end
+  end
+
   context "with scenario outlines" do
     let(:feature_file) { File.expand_path('../examples/scenario_outline.feature', File.dirname(__FILE__)) }
 
