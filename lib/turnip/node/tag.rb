@@ -28,6 +28,13 @@ module Turnip
       end
 
       #
+      # @return [Array] Array of tag name
+      #
+      def tag_names
+        tags.map(&:name)
+      end
+
+      #
       # Convert for hash to be used in RSpec
       #
       # @return  [Hash]
