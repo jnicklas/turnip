@@ -1,8 +1,7 @@
 require 'spec_helper'
 
 describe Turnip::Builder do
-  let(:builder) { Turnip::Builder.build(feature_file) }
-  let(:feature) { builder.features.first }
+  let(:feature) { Turnip::Builder.build(feature_file) }
 
   context 'simple scenarios' do
     let(:feature_file) { File.expand_path('../examples/simple_feature.feature', File.dirname(__FILE__)) }

@@ -64,12 +64,12 @@ module Turnip
 
     class << self
       def run(feature_file)
-        Turnip::Builder.build(feature_file).features.each do |feature|
-          instance_eval <<-EOS, feature_file, feature.line
-            context = ::RSpec.describe feature.name, feature.metadata_hash
-            run_feature(context, feature, feature_file)
-          EOS
-        end
+        feature = Turnip::Builder.build(feature_file)
+
+        instance_eval <<-EOS, feature_file, feature.line
+          context = ::RSpec.describe feature.name, feature.metadata_hash
+          run_feature(context, feature, feature_file)
+        EOS
       end
 
       private
