@@ -3,6 +3,15 @@ require 'spec_helper'
 describe Turnip::Builder do
   let(:feature) { Turnip::Builder.build(feature_file) }
 
+  context 'blank file' do
+    let(:feature_file) { File.expand_path('../examples/blank.feature', File.dirname(__FILE__)) }
+
+    it 'has no feature' do
+      feature.should eq nil
+    end
+
+  end
+
   context 'simple scenarios' do
     let(:feature_file) { File.expand_path('../examples/simple_feature.feature', File.dirname(__FILE__)) }
     let(:steps) { feature.scenarios.first.steps }

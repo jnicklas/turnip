@@ -66,6 +66,8 @@ module Turnip
       def run(feature_file)
         feature = Turnip::Builder.build(feature_file)
 
+        return nil if feature.nil?
+
         instance_eval <<-EOS, feature_file, feature.line
           context = ::RSpec.describe feature.name, feature.metadata_hash
           run_feature(context, feature, feature_file)
