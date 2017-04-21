@@ -60,14 +60,11 @@ In accordance with the RSpec support policy https://github.com/jnicklas/turnip/i
 - Does not support **two version before the latest or earlier**
 - Does not work on **RSpec 2 or earlier**
 
-Example `If the latest version is 3.4.x`:
+Example `If the latest version is 3.5.x`:
 
+- Support `3.5.x`
 - Support `3.4.x`
-- Support `3.3.x`
-- Does not support `3.2.x`
-- Does not support `3.1.x`
-- Does not support `2.x.y`
-
+- Does not support (or does not work) `3.3.x` or earlier
 
 ## Usage
 
