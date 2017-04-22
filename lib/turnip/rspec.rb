@@ -11,7 +11,7 @@ module Turnip
     #
     module Loader
       def load(*a, &b)
-        if a.first.end_with?('.feature')
+        if a.first.end_with?('.feature', '.spec', '.story')
           require_if_exists 'turnip_helper'
           require_if_exists 'spec_helper'
 
@@ -109,6 +109,6 @@ end
 ::RSpec.configure do |config|
   config.include Turnip::RSpec::Execute, turnip: true
   config.include Turnip::Steps, turnip: true
-  config.pattern += ',**/*.feature'
+  config.pattern += ',**/*.feature,**/*.spec,**/*.story'
   config.add_setting :raise_error_for_unimplemented_steps, :default => false
 end
