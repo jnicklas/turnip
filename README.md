@@ -167,6 +167,18 @@ Given there is a monster called Jonas
 And there is a monster called "Jonas Nicklas"
 ```
 
+Note that you'll need to use quotes when you use two or more placeholders:
+
+``` ruby
+step "there is a monster called :name with :color fur" do |name, color|
+  @monster = Monster.new(:name => name, :color => color)
+end
+```
+
+``` cucumber
+Given there is a monster called "Jonas" with "orange" fur
+```
+
 You can also specify alternative words and optional parts of words, like this:
 
 ``` ruby
