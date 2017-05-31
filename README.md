@@ -244,7 +244,7 @@ for an example.
 
 Turnip automatically loads your `spec_helper` file. From there you can place
 your steps wherever you want, and load them however you like. For example, if
-you were to put your steps in `spec/steps`, you could load them like this:
+you want to put your steps in `spec/steps`, you could load them like this:
 
 ``` ruby
 Dir.glob("spec/steps/**/*steps.rb") { |f| load f, true }
