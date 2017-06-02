@@ -1,4 +1,22 @@
 module Turnip
+  class HashWithIndifferentAccess < Hash
+    def initialize hash = Hash.new
+      super
+
+      hash.each do |k,v|
+        self[k] = v
+      end
+
+      self.default_proc = Proc.new{|h,k|
+        if k.is_a?(String) && h.has_key?(k.to_sym)
+          h[k.to_sym]
+        elsif k.is_a?(Symbol) && h.has_key?(k.to_s)
+          h[k.to_s]
+        end
+      }
+    end
+  end
+  
   class Table
     class WidthMismatch < StandardError
       def initialize(expected, actual)
@@ -30,7 +48,7 @@ module Turnip
     end
 
     def hashes
-      rows.map { |row| Hash[headers.zip(row)] }
+      rows.map { |row| HashWithIndifferentAccess.new(Hash[headers.zip(row)]) }
     end
 
     def rows_hash

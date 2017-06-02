@@ -42,6 +42,13 @@ describe Turnip::Table do
         {'foo' => 'quox', 'bar' => '42'}
       ]
     end
+
+    it 'returns a list of hashes with indiferent access' do
+      table.hashes.each do |hash|
+        hash[:foo].should == hash['foo']
+        hash[:bar].should == hash['bar']
+      end
+    end
   end
 
   describe '#transpose' do
