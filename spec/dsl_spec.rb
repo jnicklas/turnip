@@ -16,9 +16,17 @@ describe Turnip::DSL do
       an_object.step("foo").should == "foo"
     end
 
+    it 'dynamically creates the module name from the tag' do
+      context.steps_for(:dynamic_foo) do
+        step("foo") { "foo" }
+      end
+
+      defined?(DynamicFooSteps).should == 'constant'
+    end
+
     it 'remembers the name of the module' do
-      mod = context.steps_for(:foo) {}
-      mod.tag.should == :foo
+      mod = context.steps_for(:bar) {}
+      mod.tag.should == :bar
     end
 
     it 'tells RSpec to include the module' do
@@ -26,7 +34,7 @@ describe Turnip::DSL do
       RSpec.should_receive(:configure).and_yield(config)
       config.should_receive(:include)
 
-      context.steps_for(:foo) {}
+      context.steps_for(:foo_bar) {}
     end
 
     it 'warns of deprecation when called with :global' do

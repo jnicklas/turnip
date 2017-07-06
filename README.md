@@ -240,6 +240,28 @@ Check out [features/alignment_steps.rb](https://github.com/jnicklas/turnip/blob/
 
 for an example.
 
+The `steps_for` method will also define a module based on the tag it is passed. This allows
+you to include a steps_for module in a different steps_for definition.
+
+Example:
+
+``` ruby
+steps_for :interface_steps
+  step "I do interface things" do
+    ...
+  end
+end
+
+steps_for :database_steps
+  include InterfaceSteps
+
+  step "I do database stuff" do
+    ...
+  end
+end
+```
+
+
 ### Where to place steps
 
 Turnip automatically loads your `spec_helper` file. From there you can place
