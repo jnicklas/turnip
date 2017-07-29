@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
   s.authors     = ["Jonas Nicklas"]
   s.email       = ["jonas.nicklas@gmail.com"]
   s.homepage    = ""
+  s.license     = "MIT"
   s.summary     = %q{Gherkin extension for RSpec}
   s.description = %q{Provides the ability to define steps and run Gherkin files from with RSpec}
 
