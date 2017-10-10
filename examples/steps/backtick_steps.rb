@@ -3,7 +3,7 @@ step "I run :cmd" do |cmd|
 end
 
 placeholder :cmd do
-  match /`([^`]*)`/ do |cmd|
+  match (/`([^`]*)`/) do |cmd|
     cmd
   end
 end
