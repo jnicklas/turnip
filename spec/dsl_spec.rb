@@ -31,7 +31,7 @@ describe Turnip::DSL do
 
     it 'warns of deprecation when called with :global' do
       context.should_receive(:warn)
-      mod = context.steps_for(:global) do
+      context.steps_for(:global) do
         step("foo") { "foo" }
       end
       an_object.extend Turnip::Steps

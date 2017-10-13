@@ -108,13 +108,13 @@ step "raise error" do
 end
 
 placeholder :count do
-  match /\d+/ do |count|
+  match (/\d+/) do |count|
     count.to_i
   end
 end
 
 placeholder :color do
-  match /blue|green|red/ do |color|
+  match (/blue|green|red/) do |color|
     color.to_sym
   end
 end
