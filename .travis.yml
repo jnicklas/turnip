@@ -7,21 +7,12 @@ branches:
   only:
     - master
 
-matrix:
-  allow_failures:
-    - gemfile: Gemfile
-    - gemfile: gemfiles/Gemfile-rspec-3.3.x
-    - rvm: ruby-head
-
 rvm:
   - 2.2
-  - 2.3.0
-  - 2.4.0
-  - ruby-head
+  - 2.3.5
+  - 2.4.2
   - jruby-19mode
 
 gemfile:
-  - Gemfile
-  - gemfiles/Gemfile-rspec-3.3.x
   - gemfiles/Gemfile-rspec-3.4.x
   - gemfiles/Gemfile-rspec-3.5.x
