@@ -45,8 +45,7 @@ describe Turnip::StepDefinition do
       Turnip::Placeholder.stub(:resolve).with(:count).and_return(/\d+/)
       Turnip::Placeholder.should_receive(:find).with(:count).twice.and_return(placeholder)
       step = Turnip::StepDefinition.new(":count monsters and :count knights") {}
-      match = step.match("3 monsters and 2 knights")
-      #match.params.should eq([3, 2])
+      step.match("3 monsters and 2 knights")
     end
 
     it "does apply the same custom placeholder several times" do
@@ -54,7 +53,7 @@ describe Turnip::StepDefinition do
       Turnip::Placeholder.stub(:resolve).with(:count).and_return(/\d+/)
       placeholder.should_receive(:apply).twice
       step = Turnip::StepDefinition.new(":count monsters and :count knights") {}
-      match = step.match("3 monsters and 2 knights")
+      step.match("3 monsters and 2 knights")
     end
 
     it "matches quoted placeholders" do
