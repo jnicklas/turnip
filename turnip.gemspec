@@ -19,6 +19,8 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
+  s.required_ruby_version = '>= 2.2.0'
+
   s.add_runtime_dependency "rspec", [">=3.0", "<4.0"]
   s.add_runtime_dependency "gherkin", "~> 5.0"
   s.add_development_dependency "rake"
