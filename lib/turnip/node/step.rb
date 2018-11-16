@@ -31,13 +31,11 @@ module Turnip
       end
 
       def argument
-        return nil if @raw[:argument].nil?
-
-        @argument ||= case @raw[:argument][:type]
-                      when :DocString
-                        doc_string(@raw[:argument])
-                      when :DataTable
-                        data_table(@raw[:argument])
+        @argument ||= case
+                      when @raw[:doc_string]
+                        doc_string(@raw[:doc_string])
+                      when @raw[:data_table]
+                        data_table(@raw[:data_table])
                       end
       end
 

@@ -65,13 +65,11 @@ module Turnip
             metadata[:steps].each do |step|
               step[:text] = substitute(step[:text], header, row)
 
-              next if step[:argument].nil?
-
-              case step[:argument][:type]
-              when :DocString
-                step[:argument][:content] = substitute(step[:argument][:content], header, row)
-              when :DataTable
-                step[:argument][:rows].map do |table_row|
+              case
+              when step[:doc_string]
+                step[:doc_string][:content] = substitute(step[:doc_string][:content], header, row)
+              when step[:data_table]
+                step[:data_table][:rows].map do |table_row|
                   table_row[:cells].map do |cell|
                     cell[:value] = substitute(cell[:value], header, row)
                   end

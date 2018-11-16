@@ -7,11 +7,18 @@ branches:
   only:
     - master
 
+#
+# Ignore JRuby until https://github.com/cucumber/cucumber/pull/486 is merged
+#
+matrix:
+  allow_failures:
+  - rvm: jruby
+
 rvm:
   - 2.3.6
   - 2.4.3
   - 2.5.3
-  - jruby-19mode
+  - jruby
 
 gemfile:
   - gemfiles/Gemfile-rspec-3.7.x

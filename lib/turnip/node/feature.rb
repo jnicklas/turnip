@@ -40,16 +40,28 @@ module Turnip
       end
 
       def children
-        @children ||= @raw[:children].map do |c|
-          case c[:type]
-          when :Background
-            Background.new(c)
-          when :Scenario
-            Scenario.new(c)
-          when :ScenarioOutline
-            ScenarioOutline.new(c)
-          end
-        end.compact
+        @children ||= @raw[:children].map do |child|
+          #
+          # @TODO
+          #
+          #   rule = unless child[:rule].nil?
+          #            Rule.new(child[:rule])
+          #          end
+          #
+          background = unless child[:background].nil?
+                         Background.new(child[:background])
+                       end
+
+          scenario = unless child[:scenario].nil?
+                       if child[:scenario][:examples].empty?
+                         Scenario.new(child[:scenario])
+                       else
+                         ScenarioOutline.new(child[:scenario])
+                       end
+                     end
+
+          [background, scenario]
+        end.flatten.compact
       end
 
       def backgrounds
