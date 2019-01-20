@@ -12,9 +12,8 @@ branches:
 #
 matrix:
   allow_failures:
-  - rvm:
-    - jruby
-    - 2.6.0
+  - rvm: jruby
+  - rvm: 2.6.0
 
 rvm:
   - 2.3.6
