@@ -1,5 +1,6 @@
 require "turnip"
 require "rspec"
+require "rspec/core/formatters/console_codes"
 
 module Turnip
   module RSpec
@@ -40,6 +41,7 @@ module Turnip
       include Turnip::Execute
 
       def run_step(feature_file, step)
+        output = "#{' ' * 4}#{step.to_s}"
         begin
           instance_eval <<-EOS, feature_file, step.line
             step(step)
@@ -53,12 +55,17 @@ module Turnip
             e.backtrace.push "#{feature_file}:#{step.line}:in `#{step.description}'"
             raise
           end
+          
+          puts ::RSpec::Core::Formatters::ConsoleCodes.wrap(output, :pending)
 
           skip("No such step: '#{e}'")
         rescue StandardError, ::RSpec::Expectations::ExpectationNotMetError => e
+          puts ::RSpec::Core::Formatters::ConsoleCodes.wrap(output, :failure)
           e.backtrace.push "#{feature_file}:#{step.line}:in `#{step.description}'"
           raise e
         end
+        
+        puts ::RSpec::Core::Formatters::ConsoleCodes.wrap(output, :success)
       end
     end
 
@@ -86,12 +93,9 @@ module Turnip
         end
 
         feature.scenarios.each do |scenario|
-          step_names = (background_steps + scenario.steps).map(&:to_s)
-          description = step_names.join(' -> ')
-
           context.describe scenario.name, scenario.metadata_hash do
             instance_eval <<-EOS, filename, scenario.line
-              it description do
+              it ' ' do
                 scenario.steps.each do |step|
                   run_step(filename, step)
                 end
