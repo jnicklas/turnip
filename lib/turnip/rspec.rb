@@ -70,14 +70,19 @@ module Turnip
 
         instance_eval <<-EOS, feature_file, feature.line
           context = ::RSpec.describe feature.name, feature.metadata_hash
-          run_feature(context, feature, feature_file)
+          run_scenario_group(context, feature, feature_file)
         EOS
       end
 
       private
 
-      def run_feature(context, feature, filename)
-        background_steps = feature.backgrounds.map(&:steps).flatten
+      #
+      # @param  [RSpec::ExampleGroups]  context
+      # @param  [Turnip::Node::Feature|Turnip::Node::Rule]  group
+      # @param  [String]  filename
+      #
+      def run_scenario_group(context, group, filename)
+        background_steps = group.backgrounds.map(&:steps).flatten
 
         context.before do
           background_steps.each do |step|
@@ -85,7 +90,7 @@ module Turnip
           end
         end
 
-        feature.scenarios.each do |scenario|
+        group.scenarios.each do |scenario|
           step_names = (background_steps + scenario.steps).map(&:to_s)
           description = step_names.join(' -> ')
 
@@ -97,6 +102,13 @@ module Turnip
                 end
               end
             EOS
+          end
+        end
+
+        if group.is_a?(Turnip::Node::Feature)
+          group.rules.each do |rule|
+            rule_context = context.context(rule.name, { turnip: true })
+            run_scenario_group(rule_context, rule, filename)
           end
         end
       end
