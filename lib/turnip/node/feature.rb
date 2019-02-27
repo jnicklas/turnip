@@ -28,13 +28,6 @@ module Turnip
 
       def children
         @children ||= @raw[:children].map do |child|
-          #
-          # @TODO
-          #
-          #   rule = unless child[:rule].nil?
-          #            Rule.new(child[:rule])
-          #          end
-          #
           unless child[:background].nil?
             next Background.new(child[:background])
           end
@@ -43,7 +36,17 @@ module Turnip
             klass = child[:scenario][:examples].empty? ? Scenario : ScenarioOutline
             next klass.new(child[:scenario])
           end
+
+          unless child[:rule].nil?
+            next Rule.new(child[:rule])
+          end
         end.compact
+      end
+
+      def rules
+        @rules ||= children.select do |c|
+          c.is_a?(Rule)
+        end
       end
 
       def metadata_hash
