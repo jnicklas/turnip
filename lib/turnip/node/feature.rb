@@ -1,8 +1,7 @@
 require 'turnip/node/base'
 require 'turnip/node/tag'
-require 'turnip/node/scenario'
-require 'turnip/node/scenario_outline'
-require 'turnip/node/background'
+require 'turnip/node/scenario_group_definition'
+require 'turnip/node/rule'
 
 module Turnip
   module Node
@@ -20,23 +19,11 @@ module Turnip
     #       children: [], # Array of Background, Scenario and Scenario Outline
     #     }
     #
-    class Feature < Base
+    class Feature < ScenarioGroupDefinition
       include HasTags
-
-      def name
-        @raw[:name]
-      end
 
       def language
         @raw[:language]
-      end
-
-      def keyword
-        @raw[:keyword]
-      end
-
-      def description
-        @raw[:description]
       end
 
       def children
@@ -61,23 +48,6 @@ module Turnip
                      end
 
           [background, scenario]
-        end.flatten.compact
-      end
-
-      def backgrounds
-        @backgrounds ||= children.select do |c|
-          c.is_a?(Background)
-        end
-      end
-
-      def scenarios
-        @scenarios ||= children.map do |c|
-          case c
-          when Scenario
-            c
-          when ScenarioOutline
-            c.to_scenarios
-          end
         end.flatten.compact
       end
 
