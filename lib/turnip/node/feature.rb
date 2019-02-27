@@ -35,20 +35,15 @@ module Turnip
           #            Rule.new(child[:rule])
           #          end
           #
-          background = unless child[:background].nil?
-                         Background.new(child[:background])
-                       end
+          unless child[:background].nil?
+            next Background.new(child[:background])
+          end
 
-          scenario = unless child[:scenario].nil?
-                       if child[:scenario][:examples].empty?
-                         Scenario.new(child[:scenario])
-                       else
-                         ScenarioOutline.new(child[:scenario])
-                       end
-                     end
-
-          [background, scenario]
-        end.flatten.compact
+          unless child[:scenario].nil?
+            klass = child[:scenario][:examples].empty? ? Scenario : ScenarioOutline
+            next klass.new(child[:scenario])
+          end
+        end.compact
       end
 
       def metadata_hash
