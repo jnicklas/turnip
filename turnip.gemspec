@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Turnip::VERSION
   s.authors     = ["Jonas Nicklas"]
   s.email       = ["jonas.nicklas@gmail.com"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/jnicklas/turnip/"
   s.license     = "MIT"
   s.summary     = %q{Gherkin extension for RSpec}
   s.description = %q{Provides the ability to define steps and run Gherkin files from with RSpec}
