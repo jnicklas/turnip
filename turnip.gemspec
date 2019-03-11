@@ -3,6 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "turnip/version"
 
 Gem::Specification.new do |s|
+  s.required_ruby_version = ">= 2.3"
   s.name        = "turnip"
   s.version     = Turnip::VERSION
   s.authors     = ["Jonas Nicklas"]
