@@ -425,6 +425,17 @@ step "there are the following monsters:" do |table|
 end
 ```
 
+or the equivalent:
+
+``` ruby
+step "there are the following monsters:" do |table|
+  @monsters = {}
+  table.rows.each do |(name, hp)|
+    @monsters[name] = hp.to_i
+  end
+end
+```
+
 ## Unimplemented steps
 Turnip mark a scenario as pending when steps in the scenario is not implemented.
 If you sets `raise_error_for_unimplemented_steps` as `true`, turnip will mark a scenario as fail.
