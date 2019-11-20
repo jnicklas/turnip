@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_runtime_dependency "rspec", [">=3.0", "<4.0"]
-  s.add_runtime_dependency "gherkin", "~> 6.0.17"
+  s.add_runtime_dependency "gherkin", "~> 8.0"
   s.add_development_dependency "rake"
   s.add_development_dependency "pry"
   s.add_development_dependency "pry-byebug"
