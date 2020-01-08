@@ -4,6 +4,11 @@ module Turnip
 
     class << self
       def add(name, &block)
+        if placeholders.key?(name)
+          location = caller_locations.detect { |l| l.to_s !~ /lib\/turnip\/dsl\.rb/ }
+          warn "Placeholder :#{name} was replaced at #{location}."
+        end
+
         placeholders[name] = Placeholder.new(name, &block)
       end
 

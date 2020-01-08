@@ -9,6 +9,8 @@ describe Turnip::Placeholder do
       end
     end
 
+    after { Turnip::Placeholder.send(:placeholders).clear }
+
     it 'returns a regexp for the given placeholder' do
       resolved = described_class.resolve(:test)
 
@@ -147,6 +149,21 @@ describe Turnip::Placeholder do
 
       it 'should not multiple incorrect fragments' do
         expect('bar').not_to match(placeholder.regexp)
+      end
+    end
+  end
+
+  describe 'replacing placeholders' do
+    before do
+      described_class.add(:test) do
+        match(/foo/)
+      end
+    end
+
+    it 'issues a warning' do
+      expect(described_class).to receive(:warn).with(/Placeholder :test was replaced/)
+      described_class.add(:test) do
+        match(/bar/)
       end
     end
   end

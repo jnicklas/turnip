@@ -3,6 +3,8 @@ require "spec_helper"
 describe Turnip::StepDefinition do
   let(:all_steps) { [] }
 
+  after { Turnip::Placeholder.send(:placeholders).clear }
+
   describe "#match" do
     it "matches a simple step" do
       step = Turnip::StepDefinition.new("there are monsters") {}
