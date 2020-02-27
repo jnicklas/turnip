@@ -22,7 +22,7 @@ module Turnip
           end
 
           unless child[:scenario].nil?
-            klass = child[:scenario][:examples].empty? ? Scenario : ScenarioOutline
+            klass = child[:scenario][:examples].blank? ? Scenario : ScenarioOutline
             next klass.new(child[:scenario])
           end
         end.compact
