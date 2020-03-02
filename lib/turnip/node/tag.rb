@@ -22,7 +22,7 @@ module Turnip
       # @return [Array] Array of Tag
       #
       def tags
-        @tags ||= @raw[:tags].map do |tag|
+        @tags ||= @raw.fetch(:tags, []).map do |tag|
           Tag.new(tag)
         end
       end
