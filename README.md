@@ -48,8 +48,8 @@ Please create a topic branch for every separate change you make.
 
 ### 1. Ruby
 
-- Support Ruby 2.3 or higher
-- Does not support Ruby (or does not work) 2.2.X or earlier
+- Support Ruby 2.5 or higher
+- Does not support Ruby (or does not work) 2.4.X or earlier
 
 ### 2. RSpec
 
