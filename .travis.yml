@@ -16,3 +16,4 @@ rvm:
 gemfile:
   - gemfiles/Gemfile-rspec-3.7.x
   - gemfiles/Gemfile-rspec-3.8.x
+  - gemfiles/Gemfile-rspec-3.9.x
