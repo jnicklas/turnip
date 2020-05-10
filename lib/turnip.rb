@@ -6,6 +6,7 @@ require "turnip/builder"
 require "turnip/step_definition"
 require "turnip/placeholder"
 require "turnip/table"
+require "turnip/documentation_formatter_extensions"
 
 module Turnip
   class Pending < StandardError; end

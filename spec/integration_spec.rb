@@ -8,11 +8,11 @@ describe 'The CLI', :type => :integration do
   it "shows the correct description" do
     @result.should include('A simple feature')
     @result.should include('This is a simple feature')
-    @result.should include('Given there is a monster -> When I attack it -> Then it should die')
+    @result.should match /Given there is a monster\n\s*When I attack it\n\s*Then it should die/
   end
 
   it "prints out failures and successes" do
-    @result.should include('42 examples, 4 failures, 5 pending')
+    @result.should include('45 examples, 5 failures, 6 pending')
   end
 
   it "includes features in backtraces" do
@@ -39,5 +39,10 @@ describe 'The CLI', :type => :integration do
     result_with_line_number.should include('rspec ./examples/errors.feature:4')
     result_with_line_number.should_not include('rspec ./examples/errors.feature:6')
     result_with_line_number.should_not include('rspec ./examples/errors.feature:11')
+  end
+
+  it 'prints remaining steps after failure or pending' do
+    @result.should match /And raise error \(FAILED.*\n\s*Then it should die/
+    @result.should match /And do something unexpected \(PENDING.*\n\s*Then it should die/
   end
 end
