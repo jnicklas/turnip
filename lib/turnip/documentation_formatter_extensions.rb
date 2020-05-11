@@ -1,7 +1,5 @@
 module Turnip
   module DocumentationFormatterExtensions
-    RSpec::Core::Formatters.register self, :example_started, :step_started, :step_passed
-
     def initialize(output)
       super
 
@@ -85,20 +83,27 @@ module Turnip
   end
 end
 
-class ::RSpec::Core::Formatters::DocumentationFormatter
-  prepend Turnip::DocumentationFormatterExtensions
-end
+# Only extend documentation formatter if it's loaded
+if defined?(RSpec::Core::Formatters::DocumentationFormatter)
+  module Turnip::DocumentationFormatterExtensions
+    RSpec::Core::Formatters.register self, :example_started, :step_started, :step_passed
+  end
 
-class RSpec::Core::Formatters::ExceptionPresenter
-  def encoded_description(description)
-    return if description.nil?
+  class ::RSpec::Core::Formatters::DocumentationFormatter
+    prepend Turnip::DocumentationFormatterExtensions
+  end
 
-    if example.metadata[:turnip] && example.metadata[:failed_step]
-      step = example.metadata[:failed_step].to_s
-      error = ::RSpec::Core::Formatters::ConsoleCodes.wrap(step, :failure)
-      description = description.gsub(step, error)
+  class RSpec::Core::Formatters::ExceptionPresenter
+    def encoded_description(description)
+      return if description.nil?
+
+      if example.metadata[:turnip] && example.metadata[:failed_step]
+        step = example.metadata[:failed_step].to_s
+        error = ::RSpec::Core::Formatters::ConsoleCodes.wrap(step, :failure)
+        description = description.gsub(step, error)
+      end
+
+      encoded_string(description)
     end
-
-    encoded_string(description)
   end
 end
