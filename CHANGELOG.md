@@ -4,7 +4,20 @@
 
 ## [4.2.0] - 2020-09-02
 
-TBD
+### Changed
+
+- Update gherkin version
+    - v11 [[GH-222](https://github.com/jnicklas/turnip/pull/222)]
+    - v12 [[GH-224](https://github.com/jnicklas/turnip/pull/224)]
+    - v14 [[GH-229](https://github.com/jnicklas/turnip/pull/229)]
+
+### Fxied
+
+- Test against Ruby 2.7 [[GH-223](https://github.com/jnicklas/turnip/pull/223)]
+- Drop support Ruby 2.3 and 2.4 [[GH-225](https://github.com/jnicklas/turnip/pull/225)]
+- Update travis.yml [[GH-226](https://github.com/jnicklas/turnip/pull/226)]]
+- Setup GitHub Actions [[GH-227](https://github.com/jnicklas/turnip/pull/227)]
+- Suppress deprecation warning in Capybara 3.33.0 [[GH-232](https://github.com/jnicklas/turnip/pull/232)]
 
 ## [4.1.0] - 2020-03-02
 
@@ -42,6 +55,9 @@ TBD
 - Use Gherkin 6.0 [[GH-206](https://github.com/jnicklas/turnip/pull/206)] [[GH-208](https://github.com/jnicklas/turnip/pull/208)]
 - Support RSpec 3.7 and 3.8 (drop 3.6) [[GH-203](https://github.com/jnicklas/turnip/pull/203)]
 - Drop support Ruby 2.2 [[GH-204](https://github.com/jnicklas/turnip/pull/204)]
+
+### Fixed
+
 - Test against Ruby 2.6 (fail yet) [[GH-207](https://github.com/jnicklas/turnip/pull/207)]
 
 ## [3.1.0] - 2018-01-30
