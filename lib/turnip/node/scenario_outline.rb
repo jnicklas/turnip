@@ -57,7 +57,7 @@ module Turnip
           header = example.header
 
           example.rows.map do |row|
-            metadata = convert_metadata_to_scenario
+            metadata = convert_metadata_to_scenario(header, row)
 
             #
             # Replace <placeholder> using Example values
@@ -115,10 +115,11 @@ module Turnip
       # @todo :keyword is not considered a language (en only)
       # @return  [Hash]
       #
-      def convert_metadata_to_scenario()
+      def convert_metadata_to_scenario(header, row)
         # deep copy
         Marshal.load(Marshal.dump(raw)).tap do |new_raw|
           new_raw.delete(:examples)
+          new_raw[:name] = substitute(new_raw[:name], header, row)
           new_raw[:type] = :Scenario
           new_raw[:keyword] = 'Scenario'
         end
