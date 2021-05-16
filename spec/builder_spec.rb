@@ -75,6 +75,18 @@ describe Turnip::Builder do
     end
   end
 
+  context "with example scenario name in scenario outlines" do
+    let(:feature_file) { File.expand_path('../examples/scenario_outline_scenario_name_substitution.feature', File.dirname(__FILE__)) }
+
+    it "replaces placeholders in scenario name" do
+      feature.scenarios.map(&:name).should eq([
+        "a monster introduced himself as John",
+        'a monster introduced himself as "John Smith"',
+        %(a monster introduced himself as "O'Flannahan")
+      ])
+    end
+  end
+
   context "with example tables in scenario outlines" do
     let(:feature_file) { File.expand_path('../examples/scenario_outline_table_substitution.feature', File.dirname(__FILE__)) }
 
