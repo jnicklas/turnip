@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+## [4.3.0] - 2021-05-16
+
+### Added
+
+- Support scenario name substitution [[GH-237](https://github.com/jnicklas/turnip/pull/237)]
+
+### Fixed
+
+- Support RSpec 3.9 and 3.10 (drop 3.7 and 3.8) [[GH-238](https://github.com/jnicklas/turnip/pull/238)]
+- Replace TravisCI with GitHub Workflows [[GH-239](https://github.com/jnicklas/turnip/pull/239)]
+
 ## [4.2.0] - 2020-09-02
 
 ### Changed
