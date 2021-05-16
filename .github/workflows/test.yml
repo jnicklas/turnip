@@ -11,9 +11,8 @@ jobs:
           - '2.7'
           - jruby
         gemfiles:
-          - gemfiles/Gemfile-rspec-3.7.x
-          - gemfiles/Gemfile-rspec-3.8.x
           - gemfiles/Gemfile-rspec-3.9.x
+          - gemfiles/Gemfile-rspec-3.10.x
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
