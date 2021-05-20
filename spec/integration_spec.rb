@@ -18,6 +18,7 @@ describe 'The CLI', :type => :integration do
   it "includes features in backtraces" do
     @result.should include('examples/errors.feature:5:in `raise error')
     @result.should include('examples/errors.feature:11:in `a step just does not exist')
+    @result.should include("No such step: 'a step just does not exist'")
   end
 
   it "includes the right step name when steps call steps" do

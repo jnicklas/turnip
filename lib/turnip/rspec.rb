@@ -49,12 +49,13 @@ module Turnip
           example.metadata[:line_number] = step.line
           example.metadata[:location] = "#{example.metadata[:file_path]}:#{step.line}"
 
+          missing_step_message = "No such step: '#{e}' #{feature_file}:#{step.line}"
           if ::RSpec.configuration.raise_error_for_unimplemented_steps
             e.backtrace.push "#{feature_file}:#{step.line}:in `#{step.description}'"
-            raise
+            raise e, missing_step_message
           end
 
-          skip("No such step: '#{e}'")
+          skip(missing_step_message)
         rescue StandardError, ::RSpec::Expectations::ExpectationNotMetError => e
           e.backtrace.push "#{feature_file}:#{step.line}:in `#{step.description}'"
           raise e

@@ -440,7 +440,7 @@ end
 Turnip mark a scenario as pending when steps in the scenario is not implemented.
 If you sets `raise_error_for_unimplemented_steps` as `true`, turnip will mark a scenario as fail.
 
-It defaults to `false`, you can change it by following configuration:
+It defaults to `false`, you can change it by adding following configuration to `spec/turnip_helper.rb`:
 
 ```ruby
 RSpec.configure do |config|
