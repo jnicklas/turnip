@@ -33,7 +33,7 @@ module Turnip
           end
 
           unless child[:scenario].nil?
-            klass = child.dig(:scenario, :examples).nil? ? Scenario : ScenarioOutline
+            klass = child.dig(:scenario, :examples).empty? ? Scenario : ScenarioOutline
             next klass.new(child[:scenario])
           end
 
