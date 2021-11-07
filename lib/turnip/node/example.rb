@@ -20,15 +20,15 @@ module Turnip
       include HasTags
 
       def keyword
-        @raw[:keyword]
+        @raw.keyword
       end
 
       def name
-        @raw[:name]
+        @raw.name
       end
 
       def description
-        @raw[:description]
+        @raw.description
       end
 
       #

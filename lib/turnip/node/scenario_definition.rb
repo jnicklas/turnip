@@ -9,11 +9,11 @@ module Turnip
       end
 
       def keyword
-        @raw[:keyword]
+        @raw.keyword
       end
 
       def description
-        @raw[:description]
+        @raw.description
       end
 
       def steps
