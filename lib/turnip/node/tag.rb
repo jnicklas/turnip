@@ -13,7 +13,7 @@ module Turnip
     #
     class Tag < Base
       def name
-        @name ||= @raw[:name].gsub(/^@/, '')
+        @name ||= @raw.name.gsub(/^@/, '')
       end
     end
 
@@ -22,7 +22,7 @@ module Turnip
       # @return [Array] Array of Tag
       #
       def tags
-        @tags ||= @raw.fetch(:tags, []).map do |tag|
+        @tags ||= @raw.tags.map do |tag|
           Tag.new(tag)
         end
       end

@@ -7,7 +7,7 @@ module Turnip
   module Node
     class ScenarioGroupDefinition < Base
       def name
-        @raw[:name]
+        @raw.name
       end
 
       def keyword

@@ -16,11 +16,12 @@ module Turnip
     #
     class Step < Base
       def keyword
-        @raw[:keyword]
+        # TODO: Do we want to keep the whitespace?
+        @raw.keyword + ' '
       end
 
       def text
-        @raw[:text]
+        @raw.text
       end
 
       #
@@ -32,10 +33,10 @@ module Turnip
 
       def argument
         @argument ||= case
-                      when @raw[:doc_string]
-                        doc_string(@raw[:doc_string])
-                      when @raw[:data_table]
-                        data_table(@raw[:data_table])
+                      when @raw.block&.is_a?(CukeModeler::DocString)
+                        doc_string(@raw.block)
+                      when @raw.block&.is_a?(CukeModeler::Table)
+                        data_table(@raw.block)
                       end
       end
 
@@ -46,13 +47,13 @@ module Turnip
       private
 
       def doc_string(doc)
-        doc[:content]
+        doc.content
       end
 
       def data_table(table)
-        rows = table[:rows].map do |row|
-          row[:cells].map do |cell|
-            cell[:value]
+        rows = table.rows.map do |row|
+          row.cells.map do |cell|
+            cell.value
           end
         end
         Turnip::Table.new(rows)

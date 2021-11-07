@@ -23,7 +23,17 @@ module Turnip
       # @return [Location]
       #
       def location
-        @location ||= Location.new(@raw[:location][:line], @raw[:location][:column])
+        # TODO: Update CukeModeler so that it models the column as well as the line. That way accessing the raw data can be avoided.
+        case
+          when raw.is_a?(CukeModeler::Background)
+            @location ||= Location.new(@raw.parsing_data.background.location.line, @raw.parsing_data.background.location.column)
+          when raw.is_a?(CukeModeler::Rule)
+            @location ||= Location.new(@raw.parsing_data.rule.location.line, @raw.parsing_data.rule.location.column)
+          when raw.is_a?(CukeModeler::Scenario) || raw.is_a?(CukeModeler::Outline)
+            @location ||= Location.new(@raw.parsing_data.scenario.location.line, @raw.parsing_data.scenario.location.column)
+          else
+            @location ||= Location.new(@raw.parsing_data.location.line, @raw.parsing_data.location.column)
+        end
       end
 
       def line

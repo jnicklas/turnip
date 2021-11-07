@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_runtime_dependency "rspec", [">=3.0", "<4.0"]
-  s.add_runtime_dependency "cucumber-gherkin", "~> 14.0"
+  s.add_runtime_dependency "cuke_modeler", "~> 3.2"
   s.add_development_dependency "rake"
   s.add_development_dependency "pry"
   s.add_development_dependency "pry-byebug"

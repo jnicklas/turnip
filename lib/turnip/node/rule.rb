@@ -16,14 +16,17 @@ module Turnip
     #
     class Rule < ScenarioGroupDefinition
       def children
-        @children ||= @raw[:children].map do |child|
-          unless child[:background].nil?
-            next Background.new(child[:background])
+        @children ||= @raw.children.map do |child|
+          if child.is_a?(CukeModeler::Background)
+            next Background.new(child)
           end
 
-          unless child[:scenario].nil?
-            klass = child.dig(:scenario, :examples).nil? ? Scenario : ScenarioOutline
-            next klass.new(child[:scenario])
+          if child.is_a?(CukeModeler::Scenario)
+            next Scenario.new(child)
+          end
+
+          if child.is_a?(CukeModeler::Outline)
+            next ScenarioOutline.new(child)
           end
         end.compact
       end

@@ -42,7 +42,7 @@ module Turnip
       # @return [Array]
       #
       def header
-        @header ||= @raw[:table_header][:cells].map { |c| c[:value] }
+        @header ||= @raw.parameter_row.cells.map { |c| c.value }
       end
 
       #
@@ -56,8 +56,8 @@ module Turnip
       # @return [Array]
       #
       def rows
-        @rows ||= @raw[:table_body].map do |row|
-          row[:cells].map { |c| c[:value] }
+        @rows ||= @raw.argument_rows.map do |row|
+          row.cells.map { |c| c.value }
         end
       end
     end

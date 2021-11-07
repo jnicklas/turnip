@@ -1,19 +1,13 @@
-require "gherkin"
+require "cuke_modeler"
 require 'turnip/node/feature'
 
 module Turnip
   class Builder
     def self.build(feature_file)
-      messages = Gherkin.from_paths(
-        [feature_file],
-        include_source: false,
-        include_gherkin_document: true,
-        include_pickles: false
-      )
-      result = messages.first&.gherkin_document&.to_hash
+      feature_file = CukeModeler::FeatureFile.new(feature_file)
 
-      return nil if result.nil? || result[:feature].nil?
-      Node::Feature.new(result[:feature])
+      return nil unless feature_file.feature
+      Node::Feature.new(feature_file.feature)
     end
   end
 end
