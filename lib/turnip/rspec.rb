@@ -40,11 +40,16 @@ module Turnip
       include Turnip::Execute
 
       def run_step(feature_file, step)
+        reporter = ::RSpec.current_example.reporter
+        reporter.publish(:step_started, { step: step })
+
         begin
           instance_eval <<-EOS, feature_file, step.line
             step(step)
           EOS
         rescue Turnip::Pending => e
+          reporter.publish(:step_pending, { step: step })
+
           example = ::RSpec.current_example
           example.metadata[:line_number] = step.line
           example.metadata[:location] = "#{example.metadata[:file_path]}:#{step.line}"
@@ -56,9 +61,13 @@ module Turnip
 
           skip("No such step: '#{e}'")
         rescue StandardError, ::RSpec::Expectations::ExpectationNotMetError => e
+          reporter.publish(:step_failed, { step: step })
+
           e.backtrace.push "#{feature_file}:#{step.line}:in `#{step.description}'"
           raise e
         end
+
+        reporter.publish(:step_passed, { step: step })
       end
     end
 
