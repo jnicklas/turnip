@@ -100,10 +100,11 @@ module Turnip
         end
 
         group.scenarios.each do |scenario|
-          step_names = (background_steps + scenario.steps).map(&:to_s)
-          description = step_names.join(' -> ')
+          all_steps = background_steps + scenario.steps
+          description = all_steps.map(&:to_s).join(' -> ')
+          metadata = scenario.metadata_hash.merge(turnip_steps: all_steps)
 
-          context.describe scenario.name, scenario.metadata_hash do
+          context.describe scenario.name, metadata do
             instance_eval <<-EOS, filename, scenario.line
               it description do
                 scenario.steps.each do |step|
