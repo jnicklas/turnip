@@ -123,7 +123,8 @@ module Turnip
           scenario.name = substitute(original.name, header, row)
           scenario.keyword = 'Scenario' # TODO: Do we need to worry about dialects other than English?
           scenario.steps = original.steps
-          scenario.parsing_data = original.parsing_data
+          scenario.source_line = original.source_line
+          scenario.source_column = original.source_column
         end
       end
 
