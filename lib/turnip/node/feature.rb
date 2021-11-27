@@ -23,7 +23,7 @@ module Turnip
       include HasTags
 
       def language
-        @raw.parsing_data.language
+        @raw.language
       end
 
       def children
