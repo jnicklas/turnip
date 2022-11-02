@@ -23,22 +23,25 @@ module Turnip
       include HasTags
 
       def language
-        @raw[:language]
+        @raw.language
       end
 
       def children
-        @children ||= @raw[:children].map do |child|
-          unless child[:background].nil?
-            next Background.new(child[:background])
+        @children ||= @raw.children.map do |child|
+          if child.is_a?(CukeModeler::Background)
+            next Background.new(child)
           end
 
-          unless child[:scenario].nil?
-            klass = child.dig(:scenario, :examples).nil? ? Scenario : ScenarioOutline
-            next klass.new(child[:scenario])
+          if child.is_a?(CukeModeler::Scenario)
+            next Scenario.new(child)
           end
 
-          unless child[:rule].nil?
-            next Rule.new(child[:rule])
+          if child.is_a?(CukeModeler::Outline)
+            next ScenarioOutline.new(child)
+          end
+
+          if child.is_a?(CukeModeler::Rule)
+            next Rule.new(child)
           end
         end.compact
       end

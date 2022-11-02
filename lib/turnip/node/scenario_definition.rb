@@ -5,19 +5,19 @@ module Turnip
   module Node
     class ScenarioDefinition < Base
       def name
-        @raw[:name]
+        @raw.name
       end
 
       def keyword
-        @raw[:keyword]
+        @raw.keyword
       end
 
       def description
-        @raw[:description]
+        @raw.description
       end
 
       def steps
-        @steps ||= @raw[:steps].map do |step|
+        @steps ||= @raw.steps.map do |step|
           Step.new(step)
         end
       end

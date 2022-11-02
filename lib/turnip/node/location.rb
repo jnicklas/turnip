@@ -23,7 +23,7 @@ module Turnip
       # @return [Location]
       #
       def location
-        @location ||= Location.new(@raw[:location][:line], @raw[:location][:column])
+        @location ||= Location.new(@raw.source_line, @raw.source_column)
       end
 
       def line

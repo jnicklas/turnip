@@ -20,7 +20,7 @@ module Turnip
       include HasTags
 
       def examples
-        @examples ||= @raw[:examples].map do |raw|
+        @examples ||= @raw.examples.map do |raw|
           Example.new(raw)
         end
       end
@@ -57,27 +57,27 @@ module Turnip
           header = example.header
 
           example.rows.map do |row|
-            metadata = convert_metadata_to_scenario(header, row)
+            scenario = convert_metadata_to_scenario(header, row)
 
             #
             # Replace <placeholder> using Example values
             #
-            metadata[:steps].each do |step|
-              step[:text] = substitute(step[:text], header, row)
+            scenario.steps.each do |step|
+              step.text = substitute(step.text, header, row)
 
               case
-              when step[:doc_string]
-                step[:doc_string][:content] = substitute(step[:doc_string][:content], header, row)
-              when step[:data_table]
-                step[:data_table][:rows].map do |table_row|
-                  table_row[:cells].map do |cell|
-                    cell[:value] = substitute(cell[:value], header, row)
+              when step.block&.is_a?(CukeModeler::DocString)
+                step.block.content = substitute(step.block.content, header, row)
+              when step.block&.is_a?(CukeModeler::Table)
+                step.block.rows.map do |table_row|
+                  table_row.cells.map do |cell|
+                    cell.value = substitute(cell.value, header, row)
                   end
                 end
               end
             end
 
-            Scenario.new(metadata)
+            Scenario.new(scenario)
           end
         end.flatten.compact
       end
@@ -117,11 +117,14 @@ module Turnip
       #
       def convert_metadata_to_scenario(header, row)
         # deep copy
-        Marshal.load(Marshal.dump(raw)).tap do |new_raw|
-          new_raw.delete(:examples)
-          new_raw[:name] = substitute(new_raw[:name], header, row)
-          new_raw[:type] = :Scenario
-          new_raw[:keyword] = 'Scenario'
+        original = Marshal.load(Marshal.dump(raw))
+
+        CukeModeler::Scenario.new.tap do |scenario|
+          scenario.name = substitute(original.name, header, row)
+          scenario.keyword = 'Scenario' # TODO: Do we need to worry about dialects other than English?
+          scenario.steps = original.steps
+          scenario.source_line = original.source_line
+          scenario.source_column = original.source_column
         end
       end
 

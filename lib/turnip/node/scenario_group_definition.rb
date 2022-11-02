@@ -7,15 +7,15 @@ module Turnip
   module Node
     class ScenarioGroupDefinition < Base
       def name
-        @raw[:name]
+        @raw.name
       end
 
       def keyword
-        @raw[:keyword]
+        @raw.keyword
       end
 
       def description
-        @raw[:description]
+        @raw.description
       end
 
       def backgrounds
