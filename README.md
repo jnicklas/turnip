@@ -476,24 +476,6 @@ tags you'd use in Cucumber to switch between drivers e.g.  `@javascript` or
 metadata, so that Capybara is included and also any other extensions you might
 want to add.
 
-## RSpec custom formatters
-
-Turnip sends notifications to the RSpec reporter about step progress. You can
-listen for these by registering your formatter class with the following
-notifications:
-
-``` ruby
-class MyFormatter
-  RSpec::Core::Formatters.register self, :step_started, :step_passed, :step_failed, :step_pending
-  
-  def step_passed(step)
-    puts "Starting step: #{step.text}"
-  end
-
-  # …
-end
-```
-
 ## License
 
 (The MIT License)
