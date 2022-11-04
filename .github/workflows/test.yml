@@ -6,13 +6,13 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
-          - '2.5'
-          - '2.6'
           - '2.7'
+          - '3.0'
+          - '3.1'
           - jruby
         gemfiles:
-          - gemfiles/Gemfile-rspec-3.9.x
-          - gemfiles/Gemfile-rspec-3.10.x
+          - gemfiles/Gemfile-rspec-3.11.x
+          - gemfiles/Gemfile-rspec-3.12.x
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
