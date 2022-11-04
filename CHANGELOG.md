@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## [4.4.0] - 2022-11-04
+
+### Added
+
+- Add CukeModeler as Gherkin abstraction layer [[GH-244](https://github.com/jnicklas/turnip/pull/244)]
+- Send step notifications and add metadata for RSpec reporter [[GH-249](https://github.com/jnicklas/turnip/pull/249)]
+
+### Fixed
+
+- Add "missing step" context when raising error for unimplemented steps [[GH-240](https://github.com/jnicklas/turnip/pull/240)]
+- Support rspec 3.11 and 3.12 and deprecate EOL rubies [[GH-250](https://github.com/jnicklas/turnip/pull/250)]
+
 ## [4.3.0] - 2021-05-16
 
 ### Added
