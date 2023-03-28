@@ -125,6 +125,7 @@ module Turnip
           scenario.steps = original.steps
           scenario.source_line = original.source_line
           scenario.source_column = original.source_column
+          scenario.tags = original.tags
         end
       end
 

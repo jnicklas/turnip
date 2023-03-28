@@ -12,3 +12,15 @@ Feature: With tags
     When I attack it
     And I attack it
     Then it should die
+
+  @variety
+  Scenario Outline: With tag on scenario outline
+    Given there is a <Monster Type> monster
+    When I attack it
+    And I attack it
+    Then it should die
+
+  Examples:
+    | Monster Type |
+    | weak         |
+    | strong       |
