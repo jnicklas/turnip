@@ -48,6 +48,8 @@ describe Turnip::Builder do
       expect(feature.tags[0]).to be_instance_of Turnip::Node::Tag
       expect(feature.scenarios[0].tags[0].name).to eq 'cool'
       expect(feature.scenarios[1].tag_names).to eq ['stealthy', 'wicked']
+      expect(feature.scenarios[2].tag_names).to eq ['variety']
+      expect(feature.scenarios[3].tag_names).to eq ['variety']
     end
   end
 
