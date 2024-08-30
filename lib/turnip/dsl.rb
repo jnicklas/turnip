@@ -9,6 +9,12 @@ module Turnip
     def step(description, &block)
       Turnip::Steps.step(description, &block)
     end
+    
+    alias_method :Given, :step
+    alias_method :When, :step
+    alias_method :Then, :step
+    alias_method :And, :step
+    alias_method :But, :step
 
     def steps_for(tag, &block)
       if tag.to_s == "global"
